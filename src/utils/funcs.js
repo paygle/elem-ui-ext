@@ -2,6 +2,27 @@
 
 import dateUtil from './date';
 
+/**
+ * 
+ * @param tag 标签名
+ * @param attrs 属性对象
+ * @param children 子结点对象
+ */
+export const createDomElement = (tag, attrs, children) => {
+  var el = document.createElement(tag);
+  if (attrs) {
+    for (var key in attrs) {
+      attrs.hasOwnProperty(key) && el.setAttribute(key, attrs[key]);
+    }
+  }
+  if (children) {
+    for (var i = 0, length = children.length; i < length; i++) {
+      el.appendChild(children[i]);
+    }
+  }
+  return el;
+};
+
 /**获取本地数据
  * @param  {} feild       数据字段名称
  * @param  {} dat         存入库名称
@@ -70,10 +91,10 @@ export const cssUnitsCalc = (operator, unitA, unitB) => {
 
   if (operator && typeof unitA !== 'undefined' && typeof unitB !== 'undefined') {
 
-    let regxNum = /^\-?\d+/g,
-      regxUnit = /[A-Za-z\-]+$/gi;
-    let a_num = String(unitA).replace(regxUnit, ''),
-      a_unit = String(unitA).replace(regxNum, '');
+    let regxNum = /^\-?\d+/g;
+    let regxUnit = /[A-Za-z\-]+$/gi;
+    let a_num = String(unitA).replace(regxUnit, '');
+    let a_unit = String(unitA).replace(regxNum, '');
     let b_num = String(unitB).replace(regxUnit, '');
 
     if (!isNaN(b_num) && isNaN(a_num)) {
@@ -167,10 +188,7 @@ export const randomChar = (len, pre) => {
     let mr = Math.random();
     let rds = first ? String(t).replace('0.', '') + String(mr).replace('0.', '') : String(mr).replace('0.', '');
     let rdsLen = rds.length;
-    let rdnums = [],
-      c, c6, rdnumsLen, pos = 0,
-      rdpos = 0,
-      resultChars = [];
+    let rdnums = [], c, c6, rdnumsLen, pos = 0, rdpos = 0, resultChars = [];
 
     while (pos < rdsLen) {
       c = rds.substring(pos, pos + 1);
@@ -311,10 +329,7 @@ export const UniqueEditArray = (existList, newList, delList, editList) => {
   let newLst = TypeOf(newList) === 'Array' ? UniqueArray(newList) : [];
   let delLst = TypeOf(delList) === 'Array' ? UniqueArray(delList) : [];
   let editLst = TypeOf(editList) === 'Array' ? UniqueArray(editList) : [];
-  let newListCp = [],
-    delListCp = [],
-    editListCp = [],
-    isFind = false;
+  let newListCp = [], delListCp = [], editListCp = [], isFind = false;
 
   function clearList(type) {
     let searchList = newLst;
@@ -376,8 +391,7 @@ export const UniqueEditArray = (existList, newList, delList, editList) => {
 export const ObjectPlainIsEqual = (one, two) => {
   let oneType = TypeOf(one);
   let twoType = TypeOf(two);
-  let equal = true,
-    v;
+  let equal = true, v;
   // g 集合是否包含 s 集合内容且相等
   function subset(g, s) {
     for (let i in g) {

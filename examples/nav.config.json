@@ -60,8 +60,16 @@
               "title": "Button 按钮"
             },
             {
+              "path": "/rich-button",
+              "title": "RichButton 按钮"
+            },
+            {
               "path": "/freeze",
               "title": "freeze 冻结窗格"
+            },
+            {
+              "path": "/water-fall",
+              "title": "WaterFall 瀑布流"
             }
           ]
         },
@@ -73,16 +81,36 @@
               "title": "Radio 单选框"
             },
             {
+              "path": "/rich-radio",
+              "title": "RichRadio 单选框"
+            },
+            {
               "path": "/checkbox",
               "title": "Checkbox 多选框"
+            },
+            {
+              "path": "/checkbox",
+              "title": "Checkbox 多选框"
+            },
+            {
+              "path": "/rich-checkbox",
+              "title": "RichCheckbox 多选框"
             },
             {
               "path": "/input",
               "title": "Input 输入框"
             },
             {
+              "path": "/list-complete",
+              "title": "ListComplete 列表完成"
+            },
+            {
               "path": "/input-number",
               "title": "InputNumber 计数器"
+            },
+            {
+              "path": "/rate-number",
+              "title": "RateNumber 比率"
             },
             {
               "path": "/format-number",
@@ -139,6 +167,10 @@
             {
               "path": "/form",
               "title": "Form 表单"
+            },
+            {
+              "path": "/valid-item",
+              "title": "ValidItem 单独验证"
             }
           ]
         },
@@ -162,6 +194,18 @@
               "title": "Tree 树形控件"
             },
             {
+              "path": "/architecture",
+              "title": "Architecture 组织架构图"
+            },
+            {
+              "path": "/case-track",
+              "title": "CaseTrack 案件跟踪图"
+            },
+            {
+              "path": "/season-select",
+              "title": "SeasonSelect 季度选择"
+            },
+            {
               "path": "/pagination",
               "title": "Pagination 分页"
             },
@@ -181,6 +225,14 @@
             {
               "path": "/loading",
               "title": "Loading 加载"
+            },
+            {
+              "path": "/indicator",
+              "title": "Indicator 路径指示器"
+            },
+            {
+              "path": "/table-total",
+              "title": "TableTotal 表格统计"
             },
             {
               "path": "/message",
@@ -204,8 +256,24 @@
               "title": "NavMenu 导航菜单"
             },
             {
+              "path": "/nav-menus",
+              "title": "NavMenus 多页菜单"
+            },
+            {
+              "path": "/side-guide",
+              "title": "SideGuide 侧边导航"
+            },
+            {
               "path": "/tabs",
               "title": "Tabs 标签页"
+            },
+            {
+              "path": "/mesh-tabs",
+              "title": "MeshTabs 选项卡"
+            },
+            {
+              "path": "/tabs-frame",
+              "title": "TabsFrame 选项卡"
             },
             {
               "path": "/breadcrumb",
@@ -218,6 +286,10 @@
             {
               "path": "/steps",
               "title": "Steps 步骤条"
+            },
+            {
+              "path": "/guide-steps",
+              "title": "GuideSteps 步骤条"
             }
           ]
         },
@@ -247,6 +319,10 @@
             {
               "path": "/collapse",
               "title": "Collapse 折叠面板"
+            },
+            {
+              "path": "/icollapse",
+              "title": "ICollapse 折叠面板"
             }
           ]
         }

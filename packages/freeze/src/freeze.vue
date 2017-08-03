@@ -164,5 +164,4 @@ export default {
     on(window, 'scroll', debounce(10, function () { that.updatePosition(); }));
   }
 };
-
 </script>

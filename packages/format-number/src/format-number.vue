@@ -110,7 +110,7 @@ export default {
       return this.$refs.inputel.$el.querySelector('input');
     },
     formatRegx() {
-      return '^[\\d\\" + this.splitMark + "]*(\\.?\\d*)$';
+      return '^[\\d\\' + this.splitMark + ']*(\\.?\\d*)$';
     }
   },
 
@@ -236,5 +236,4 @@ export default {
     this.formatValue = this.getFormatVal();
   }
 };
-
 </script>

@@ -123,12 +123,17 @@ export default {
   methods: {
     inputMSEnter(e) {
       getAddressData.call(this); // 如果未加载数据再次载入数据
-      if (this.innerTipShow) {
-        this.tipTimeHander = setTimeout(() => {
-          let pos = this.$el.parentElement.getBoundingClientRect();
-          let gapw = this.notifyWidth > 0 ? (this.notifyWidth - pos.width) / 2 : 0;
-          let style = `left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
-          this.noticeDom = createDomElement('div', { class: 'itxt-notify-popw', style: style });
+      let pos, gapw, style;
+      let inputEl = this.$el.querySelector('input');
+      let inputWidth = this.getPlaceWidth(inputEl);
+      this.notifyWidth = this.getTipContentWidth(inputEl, this.tipContent);
+      
+      if(this.innerTipShow){
+        this.tipTimeHander = setTimeout(()=>{
+          pos = inputEl.getBoundingClientRect();
+          gapw = this.notifyWidth > 0 ? (this.notifyWidth - inputWidth)/2 : 0;
+          style = `left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
+          this.noticeDom = createDomElement('div', {class:"itxt-notify-popw", style: style});
           this.noticeDom.innerHTML = this.tipContent;
           document.body.appendChild(this.noticeDom);
         });
@@ -136,19 +141,51 @@ export default {
     },
     inputMSOut(e) {
       clearTimeout(this.tipTimeHander);
-      $(this.noticeDom).remove();
+      let delDoms = document.querySelectorAll('.itxt-notify-popw');
+      if(delDoms.length && this.noticeDom) {
+        for(let i=0; i<delDoms.length; i++){
+          document.body.removeChild(delDoms[i]);
+        }
+        this.noticeDom = null;
+      }
+    },
+    getPlaceWidth(el){  // 计算组件除padding的宽度
+      let elStyl, paddingLeft, paddingRight;
+      if(el) {
+        elStyl = getComputedStyle(el);
+        paddingLeft =  parseInt(elStyl.paddingLeft.replace('px',''), 10);
+        paddingRight =  parseInt(elStyl.paddingRight.replace('px',''), 10);
+        return el.getBoundingClientRect().width - paddingLeft - paddingRight;
+      }else{
+        return 0;
+      }
+    },
+    getTipContentWidth(el, text){ // 计算文本宽度
+      let elStyl, fontSize,  zhword, zhWidth;
+      text = text || '';
+      elStyl = getComputedStyle(el);
+      fontSize = parseInt(elStyl.fontSize.replace('px',''), 10);
+      zhword = String(text).replace(/[0-9A-Za-z\-\:]/ig, '');
+      zhWidth = zhword.length * fontSize;
+      return (String(text).length - zhword.length) * fontSize * 0.5 + zhWidth;
     },
     tipUpdateStatus() {  // 获取tip动态配置
       this.$nextTick(function () {
         if (!this.tipDisabled) {
+          let width, contentWidth;
           let el = this.$el.querySelector('.txt-box');
           this.tipContent = String(this.addressLabel);
-          if (el && el.scrollWidth > el.offsetWidth) {
-            this.innerTipShow = true;
-            this.notifyWidth = el.scrollWidth;
-          } else {
-            this.innerTipShow = false;
-
+ 
+          if(el){
+            width = this.getPlaceWidth(el);
+            contentWidth = this.getTipContentWidth(el, this.tipContent);
+            if(contentWidth > width){
+              this.innerTipShow =  true;
+            }else{
+              this.innerTipShow =  false;
+            }
+          }else{
+            this.innerTipShow =  false;
           }
         }
       });

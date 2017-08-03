@@ -171,9 +171,9 @@ export default {
       this.provinceWord = '请选择';
       this.cityWord = '请选择';
       this.areaWord = '请选择';
-      this.provinceData = null;
-      this.cityData = null;
-      this.areaData = null;
+      // this.provinceData = null;
+      // this.cityData = null;
+      // this.areaData = null;
       this.addressLabel = '';
       this.addressValue = '';
       this.isShowProvince = true;

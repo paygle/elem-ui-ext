@@ -1,3 +1,12 @@
+<script>
+  export default {
+    data() {
+      return {
+        input: ''
+      };
+    }
+  }
+</script>
 ## FormatNumber 格式化输入框
 
 通过鼠标或键盘输入字符
@@ -7,16 +16,7 @@
 ::: demo
 ```html
 <format-number v-model="input" placeholder="请输入内容"></format-number>
-
-<script>
-export default {
-  data() {
-    return {
-      input: ''
-    }
-  }
-}
-</script>
+ 
 ```
 :::
 

@@ -67,6 +67,29 @@ import Transfer from '../packages/transfer/index.js';
 import FormatNumber from '../packages/format-number/index.js';
 import AddressBox from '../packages/address-box/index.js';
 import Freeze from '../packages/freeze/index.js';
+import Architecture from '../packages/architecture/index.js';
+import CaseTrack from '../packages/case-track/index.js';
+import GuideSteps from '../packages/guide-steps/index.js';
+import GuideStep from '../packages/guide-step/index.js';
+import Icollapse from '../packages/icollapse/index.js';
+import IcollapseItem from '../packages/icollapse-item/index.js';
+import Indicator from '../packages/indicator/index.js';
+import ListComplete from '../packages/list-complete/index.js';
+import MeshTabs from '../packages/mesh-tabs/index.js';
+import NavMenus from '../packages/nav-menus/index.js';
+import RateNumber from '../packages/rate-number/index.js';
+import RichButton from '../packages/rich-button/index.js';
+import RichCheckbox from '../packages/rich-checkbox/index.js';
+import RichCheckboxGroup from '../packages/rich-checkbox-group/index.js';
+import RichRadio from '../packages/rich-radio/index.js';
+import RichRadioButton from '../packages/rich-radio-button/index.js';
+import RichRadioGroup from '../packages/rich-radio-group/index.js';
+import SeasonSelect from '../packages/season-select/index.js';
+import SideGuide from '../packages/side-guide/index.js';
+import TableTotal from '../packages/table-total/index.js';
+import TabsFrame from '../packages/tabs-frame/index.js';
+import ValidItem from '../packages/valid-item/index.js';
+import WaterFall from '../packages/water-fall/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
 
@@ -134,6 +157,29 @@ const components = [
   FormatNumber,
   AddressBox,
   Freeze,
+  Architecture,
+  CaseTrack,
+  GuideSteps,
+  GuideStep,
+  Icollapse,
+  IcollapseItem,
+  Indicator,
+  ListComplete,
+  MeshTabs,
+  NavMenus,
+  RateNumber,
+  RichButton,
+  RichCheckbox,
+  RichCheckboxGroup,
+  RichRadio,
+  RichRadioButton,
+  RichRadioGroup,
+  SeasonSelect,
+  SideGuide,
+  TableTotal,
+  TabsFrame,
+  ValidItem,
+  WaterFall,
   CollapseTransition
 ];
 
@@ -235,5 +281,28 @@ module.exports = {
   Transfer,
   FormatNumber,
   AddressBox,
-  Freeze
+  Freeze,
+  Architecture,
+  CaseTrack,
+  GuideSteps,
+  GuideStep,
+  Icollapse,
+  IcollapseItem,
+  Indicator,
+  ListComplete,
+  MeshTabs,
+  NavMenus,
+  RateNumber,
+  RichButton,
+  RichCheckbox,
+  RichCheckboxGroup,
+  RichRadio,
+  RichRadioButton,
+  RichRadioGroup,
+  SeasonSelect,
+  SideGuide,
+  TableTotal,
+  TabsFrame,
+  ValidItem,
+  WaterFall
 };
