@@ -44,7 +44,7 @@ export default {
       }
 
       function getLabel(name){
-        let currentObj={}, cname="";
+        let currentObj={}, cname='';
         let listLen = pathList.length;
 
         if(routedata){
@@ -57,21 +57,21 @@ export default {
               }else if(currentObj.children && currentObj.children[cname]){
                 currentObj = currentObj.children[cname];
               }else if(k < listLen - 1){
-                return "";
+                return '';
               }
             }
             if(currentObj.children && currentObj.children[name]){
               return currentObj.children[name]['label'];
             }else{
-              return "";
+              return '';
             }
 
           }else if(routedata[name]){
-            return routedata[name]['label'] || "";
+            return routedata[name]['label'] || '';
           }
           
         }
-        return "";
+        return '';
       }
 
       for(let i=0; i<paths.length; i++){

@@ -74,16 +74,18 @@ export default {
 
     initComponentName(args){
       if(TypeOf(this.getComponetName) === 'Function'){
-        this.componentName = this.getComponetName.call(null, args);
-        return this.componentName;
+        let name =  this.getComponetName.call(null, args);
+        this.componentName = name;
+        return name;
       }
       return false;
     },
 
     initComponetData(args) {
       if(TypeOf(this.getComponetData) === 'Function'){
-        this.componentData = this.getComponetData.call(null, args);
-        return this.componentData;
+        let data =  this.getComponetData.call(null, args);
+        this.componentData = data;
+        return data;
       }
       return null;
     },

@@ -3,7 +3,7 @@ import CaseTrackStore from './case-track-store';
 import CaseTrackGroup from './case-track-group';
 import CaseTrackItem from './case-track-item';
 import emitter from 'element-ui/src/mixins/emitter';
-import { hasClass, setStyle} from 'element-ui/src/utils/dom';
+import { hasClass, setStyle } from 'element-ui/src/utils/dom';
 
 export default {
   name: 'CaseTrack',

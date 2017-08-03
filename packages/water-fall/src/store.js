@@ -81,7 +81,7 @@ const Store = function (WaterFall, initState = {}) {
 Store.prototype.mutations = {
 
   setFields(states, data) {
-    states.fields !== data ? states.fields = data : "";
+    states.fields !== data ? states.fields = data : '';
   },
 
   setData(states, data) {

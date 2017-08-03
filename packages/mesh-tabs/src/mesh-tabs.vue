@@ -6,14 +6,14 @@
     @tab-click="tabClick"
     @tab-remove="removeTab">
     <el-tab-pane 
-      v-for="item in tabData" 
+      v-for="item in tabData"
       :key="item.name"
       :name="item.name"
       :label="item.label" 
       :disabled="item.disabled"
       :closable="item.closable">
       <span v-if="item.icon" slot="label"><i :class="item.icon"></i> {{item.label}}</span>
-      <div v-bind:is="item.component" :args="item.args"></div>
+      <div :ref="item.name" v-bind:is="item.component" :args="item.args"></div>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -52,6 +52,7 @@ export default {
     components:{},      // mesh-tabs 中需要使用到的组件
     type: String,
     activeName: String,
+    closeCall: Function,    // 关闭 tab 时的回调函数
     closable: {
       type: Boolean,
       default: false
@@ -91,8 +92,13 @@ export default {
         });
       }
       this.activeTab = activeName;
-      this.tabData = tabs.filter(tab => tab.name !== targetName);
-      this.$emit('tab-remove', JsonToObject(this.tabData), targetName);
+      // 删除处理
+      if(typeof this.closeCall === 'function') {
+        this.closeCall.call(null, JsonToObject(this.tabData), targetName);
+      } else {
+        this.tabData = tabs.filter(tab => tab.name !== targetName);
+        this.$emit('tab-remove', JsonToObject(this.tabData), targetName);
+      }
     },
     goLastActive() {
 

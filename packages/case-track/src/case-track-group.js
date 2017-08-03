@@ -168,7 +168,7 @@ export default {
         this.bottomShorts = bottomShorts;
         
         if(this.isLastNode){
-          this.dispatch('CaseTrack', "load-node-data", true);
+          this.dispatch('CaseTrack', 'load-node-data', true);
         }
       };
 

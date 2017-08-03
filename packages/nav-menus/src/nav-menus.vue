@@ -128,7 +128,7 @@ export default {
 				}
 			}
 		},
-		// 路由处理
+		// 导航处理
 		targetGo(e) {
 			let $this = this, attrs = e.target.attributes;
 			let Path = attrs['url'];
