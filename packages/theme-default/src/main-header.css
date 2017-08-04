@@ -1,0 +1,8 @@
+.header-right .el-dropdown-menu{
+  padding: 0;
+  margin: 0 0 5px 0;
+}
+.header-right .el-dropdown-menu li{
+  line-height: 28px;
+  height: 28px;
+}
