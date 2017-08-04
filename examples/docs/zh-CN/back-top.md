@@ -7,7 +7,7 @@
     }
   }
 </script>
-## NavMenus 多页面跳转主菜单
+## BackTop 回顶部
 
 通过鼠标或键盘输入字符
 
@@ -16,18 +16,17 @@
 ::: demo
 ```html
 <format-number v-model="input" placeholder="请输入内容"></format-number>
- 
 ```
 :::
 
 
-### NavMenus Attributes
+### BackTop Attributes
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
  
 
-### NavMenus Events
+### BackTop Events
 | 事件名称 | 说明 | 回调参数 |
 |---------|--------|---------|
  

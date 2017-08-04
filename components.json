@@ -66,6 +66,7 @@
 
   "format-number": "./packages/format-number/index.js",
   "address-box":  "./packages/address-box/index.js",
+  "back-top":  "./packages/back-top/index.js",
   "freeze":  "./packages/freeze/index.js",
   "architecture": "./packages/architecture/index.js",
   "case-track": "./packages/case-track/index.js",
@@ -76,6 +77,8 @@
   "indicator": "./packages/indicator/index.js",
   "list-complete": "./packages/list-complete/index.js",
   "mesh-tabs": "./packages/mesh-tabs/index.js",
+  "main-header": "./packages/main-header/index.js",
+  "main-nav": "./packages/main-nav/index.js",
   "nav-menus": "./packages/nav-menus/index.js",
   "rate-number": "./packages/rate-number/index.js",
   "rich-button": "./packages/rich-button/index.js",
@@ -89,5 +92,11 @@
   "table-total": "./packages/table-total/index.js",
   "tabs-frame": "./packages/tabs-frame/index.js",
   "valid-item": "./packages/valid-item/index.js",
-  "water-fall": "./packages/water-fall/index.js"
+  "water-fall": "./packages/water-fall/index.js",
+  "custom-switch": "./packages/custom-switch/index.js",
+  "dict-label": "./packages/dict-label/index.js",
+  "combo-table-column": "./packages/combo-table-column/index.js",
+  "combobox": "./packages/combobox/index.js",
+  "form-table": "./packages/form-table/index.js",
+  "form-table-column": "./packages/form-table-column/index.js"
 }

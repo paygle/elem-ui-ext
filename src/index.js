@@ -66,6 +66,7 @@ import ColorPicker from '../packages/color-picker/index.js';
 import Transfer from '../packages/transfer/index.js';
 import FormatNumber from '../packages/format-number/index.js';
 import AddressBox from '../packages/address-box/index.js';
+import BackTop from '../packages/back-top/index.js';
 import Freeze from '../packages/freeze/index.js';
 import Architecture from '../packages/architecture/index.js';
 import CaseTrack from '../packages/case-track/index.js';
@@ -76,6 +77,8 @@ import IcollapseItem from '../packages/icollapse-item/index.js';
 import Indicator from '../packages/indicator/index.js';
 import ListComplete from '../packages/list-complete/index.js';
 import MeshTabs from '../packages/mesh-tabs/index.js';
+import MainHeader from '../packages/main-header/index.js';
+import MainNav from '../packages/main-nav/index.js';
 import NavMenus from '../packages/nav-menus/index.js';
 import RateNumber from '../packages/rate-number/index.js';
 import RichButton from '../packages/rich-button/index.js';
@@ -90,6 +93,12 @@ import TableTotal from '../packages/table-total/index.js';
 import TabsFrame from '../packages/tabs-frame/index.js';
 import ValidItem from '../packages/valid-item/index.js';
 import WaterFall from '../packages/water-fall/index.js';
+import CustomSwitch from '../packages/custom-switch/index.js';
+import DictLabel from '../packages/dict-label/index.js';
+import ComboTableColumn from '../packages/combo-table-column/index.js';
+import Combobox from '../packages/combobox/index.js';
+import FormTable from '../packages/form-table/index.js';
+import FormTableColumn from '../packages/form-table-column/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
 
@@ -156,6 +165,7 @@ const components = [
   Transfer,
   FormatNumber,
   AddressBox,
+  BackTop,
   Freeze,
   Architecture,
   CaseTrack,
@@ -166,6 +176,8 @@ const components = [
   Indicator,
   ListComplete,
   MeshTabs,
+  MainHeader,
+  MainNav,
   NavMenus,
   RateNumber,
   RichButton,
@@ -180,6 +192,12 @@ const components = [
   TabsFrame,
   ValidItem,
   WaterFall,
+  CustomSwitch,
+  DictLabel,
+  ComboTableColumn,
+  Combobox,
+  FormTable,
+  FormTableColumn,
   CollapseTransition
 ];
 
@@ -281,6 +299,7 @@ module.exports = {
   Transfer,
   FormatNumber,
   AddressBox,
+  BackTop,
   Freeze,
   Architecture,
   CaseTrack,
@@ -291,6 +310,8 @@ module.exports = {
   Indicator,
   ListComplete,
   MeshTabs,
+  MainHeader,
+  MainNav,
   NavMenus,
   RateNumber,
   RichButton,
@@ -304,5 +325,11 @@ module.exports = {
   TableTotal,
   TabsFrame,
   ValidItem,
-  WaterFall
+  WaterFall,
+  CustomSwitch,
+  DictLabel,
+  ComboTableColumn,
+  Combobox,
+  FormTable,
+  FormTableColumn
 };

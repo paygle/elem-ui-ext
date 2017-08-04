@@ -33,7 +33,7 @@ import Clickoutside from 'element-ui/src/utils/clickoutside';
 import { addClass, removeClass } from 'element-ui/src/utils/dom';
 import { TypeOf, createDomElement, getLocalDataItem, setLocalDataItem } from 'element-ui/src/utils/funcs';
 
-const $ = window.$ || window.jQuery || {};  // 模拟引入jQuery
+const $ = window.$ || window.jQuery || console && console.warn('Need jQuery lib pre.'); // 引入jQuery
 
 const ADDRESS_DATA_URL = window.ComponentsConfig ? window.ComponentsConfig.ADDRESS_DATA_URL : '';
 

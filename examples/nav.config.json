@@ -133,6 +133,10 @@
               "title": "Switch 开关"
             },
             {
+              "path": "/custom-switch",
+              "title": "CustomSwitch 开关"
+            },
+            {
               "path": "/slider",
               "title": "Slider 滑块"
             },
@@ -180,6 +184,18 @@
             {
               "path": "/table",
               "title": "Table 表格"
+            },
+            {
+              "path": "/form-table",
+              "title": "FormTable 表单表格"
+            },
+            {
+              "path": "/dict-label",
+              "title": "DictLabel 翻译标签"
+            },
+            {
+              "path": "/combobox",
+              "title": "Combobox 下拉翻译框"
             },
             {
               "path": "/tag",
@@ -252,8 +268,20 @@
           "groupName": "Navigation",
           "list": [
             {
+              "path": "/main-header",
+              "title": "MainHeader 页首"
+            },
+            {
+              "path": "/main-nav",
+              "title": "MainNav 路由菜单"
+            },
+            {
               "path": "/menu",
-              "title": "NavMenu 导航菜单"
+              "title": "NavMenu 跳转菜单"
+            },
+            {
+              "path": "/back-top",
+              "title": "BackTop 回顶部"
             },
             {
               "path": "/nav-menus",
