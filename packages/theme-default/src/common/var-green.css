@@ -1,5 +1,41 @@
 :root {
 
+  /* 公共样式主题变量设置 */
+--white-color: #fff;
+--pmy-light1-color: #BFCBD9;
+--pmy-light2-color: #d1dbe5;
+--pmy-light-color: #c0ccda;
+--primary-color: #5d9cec;
+--pmy-deep1-color: #3b77b5;
+--pmy-deep-color: #1f2d3d;
+--architecture-color: #5bb1f3;
+--col-header-color: #1679d4;
+--season-color1: #5691DB;
+--season-color2: #5B99E8;
+--season-color3: #5E9EF0;
+--ztree-bgimg: url("../assets/zTreeDefault.png");
+
+/* 页面布局标准样式 */
+--input-inn-color: #fff;
+--tbl-hover-color: #e8f4d0;
+--disabled-bcolor: #d1dbe5;
+--disabled-color: #bfcbd9;
+--form-disabled-color: #eef1f6;  
+--main-navbg-color: #5d9cec;
+--date-picker-icon-color: #b8d6ff;
+--msg-info-color: #50bfff;
+--gray-black-color: #575757;
+--date-picker-color: #fffd97;
+--tbltr-color: #ffe9cf;
+--green-color: #79c942;
+--yellow-color: #fbb321;
+--red-color: #ec4e29;
+--msg-warn-color: #f7ba2a;
+--msg-success-color: #13ce66;
+--msg-error-color: #ff4949;
+--eee-color: #eee;
+--headbg-image: url("../assets/bg/date_head_bg.png");   /* 请更换日期对应主题的图片 */
+
   /* Transition
   -------------------------- */
   --all-transition: all .3s cubic-bezier(.645,.045,.355,1);
@@ -11,17 +47,17 @@
 
   /* Colors
   -------------------------- */
-  --color-primary: #20a0ff;
+  --color-primary: #5d9cec;
 
-  --color-success: #13ce66;
-  --color-warning: #f7ba2a;
-  --color-danger: #ff4949;
-  --color-info: #50bfff;
+  --color-success: #42d885;
+  --color-warning: #f9c855;
+  --color-danger: #ff6d6d;
+  --color-info: #73ccff;
 
   --color-secondary: color(var(--color-primary) s(99%) l(*0.9));
   --color-white: #fff;
   --color-dark-white: color(var(--color-white) blend(var(--color-primary) 2%));
-  --color-black: #000;
+  --color-black: #333;
 
   --color-base-black: color(var(--color-primary) h(+6) s(33%) l(18%));
   --color-light-black: color(var(--color-base-black) h(+5) s(27%) l(27%));
@@ -62,13 +98,13 @@
 
   /* Font
   -------------------------- */
-  --font-size-base: 14px;
+  --font-size-base: 12px;
   --font-color-base: var(--color-base-black);
   --font-color-disabled-base: #bbb;
 
   /* Size
   -------------------------- */
-  --size-base: 14px;
+  --size-base: 12px;
 
   /* z-index
   -------------------------- */
@@ -88,7 +124,7 @@
 
   /* Checkbox
   -------------------------- */
-  --checkbox-font-size: 14px;
+  --checkbox-font-size: 12px;
   --checkbox-color: var(--color-base-black);
   --checkbox-input-height: 18px;
   --checkbox-input-width: 18px;
@@ -121,7 +157,7 @@
 
   /* Radio
   -------------------------- */
-  --radio-font-size: 14px;
+  --radio-font-size: 12px;
   --radio-color: var(--color-base-black);
   --radio-input-height: 18px;
   --radio-input-width: 18px;
@@ -207,8 +243,8 @@
   -------------------------- */
   --msgbox-width: 420px;
   --msgbox-border-radius: 3px;
-  --msgbox-font-size: 16px;
-  --msgbox-content-font-size: 14px;
+  --msgbox-font-size: 14px;
+  --msgbox-content-font-size: 12px;
   --msgbox-content-color: var(--link-color);
   --msgbox-error-font-size: 12px;
 
@@ -239,7 +275,7 @@
   --notification-icon-size: 40px;
   --notification-font-size: var(--font-size-base);
   --notification-color: var(--border-color-hover);
-  --notification-title-font-size: 16px;
+  --notification-title-font-size: 14px;
   --notification-title-color: var(--color-base-black);
 
   --notification-close-color: var(--color-extra-light-silver);
@@ -277,7 +313,7 @@
   --input-disabled-color: var(--disabled-color-base);
   --input-disabled-placeholder-color: var(--color-extra-light-silver);
 
-  --input-large-font-size: 16px;
+  --input-large-font-size: 14px;
   --input-large-height: 42px;
 
   --input-small-font-size: 13px;
@@ -331,12 +367,12 @@
 
   /* Button
   -------------------------- */
-  --button-font-size: 14px;
+  --button-font-size: 12px;
   --button-border-radius: var(--border-radius-base);
   --button-padding-vertical: 10px;
   --button-padding-horizontal: 15px;
 
-  --button-large-font-size: 16px;
+  --button-large-font-size: 14px;
   --button-large-padding-vertical: 11px;
   --button-large-padding-horizontal: 19px;
 
@@ -410,8 +446,8 @@
   --dialog-large-width: 90%;
   --dialog-close-color: var(--color-extra-light-silver);
   --dialog-close-hover-color: var(--color-primary);
-  --dialog-title-font-size: 16px;
-  --dialog-font-size: 14px;
+  --dialog-title-font-size: 14px;
+  --dialog-font-size: 12px;
 
   /* Table
  -------------------------- */
