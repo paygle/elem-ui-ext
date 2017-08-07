@@ -18,66 +18,7 @@
             @click="handleShortcutClick(shortcut)">{{shortcut.text}}</button>
         </div>
         <div class="el-picker-panel__body">
-          <div class="el-date-range-picker__time-header" v-if="showTime">
-            <span class="el-date-range-picker__editors-wrap">
-              <span class="el-date-range-picker__time-picker-wrap">
-                <el-input
-                  size="small"
-                  ref="minInput"
-                  :placeholder="t('el.datepicker.startDate')"
-                  class="el-date-range-picker__editor"
-                  :value="minVisibleDate"
-                  @input.native="handleDateInput($event, 'min')"
-                  @change.native="handleDateChange($event, 'min')" />
-              </span>
-              <span class="el-date-range-picker__time-picker-wrap">
-                <el-input
-                  size="small"
-                  :placeholder="t('el.datepicker.startTime')"
-                  class="el-date-range-picker__editor"
-                  :value="minVisibleTime"
-                  @focus="minTimePickerVisible = !minTimePickerVisible"
-                  @change.native="handleTimeChange($event, 'min')" />
-                <time-picker
-                  :picker-width="minPickerWidth"
-                  ref="minTimePicker"
-                  :date="minDate"
-                  @pick="handleMinTimePick"
-                  :visible="minTimePickerVisible">
-                </time-picker>
-              </span>
-            </span>
-            <span class="el-icon-arrow-right"></span>
-            <span class="el-date-range-picker__editors-wrap is-right">
-              <span class="el-date-range-picker__time-picker-wrap">
-                <el-input
-                  size="small"
-                  :placeholder="t('el.datepicker.endDate')"
-                  class="el-date-range-picker__editor"
-                  :value="maxVisibleDate"
-                  :readonly="!minDate"
-                  @input.native="handleDateInput($event, 'max')"
-                  @change.native="handleDateChange($event, 'max')" />
-              </span>
-              <span class="el-date-range-picker__time-picker-wrap">
-                <el-input
-                  size="small"
-                  ref="maxInput"
-                  :placeholder="t('el.datepicker.endTime')"
-                  class="el-date-range-picker__editor"
-                  :value="maxVisibleTime"
-                  @focus="minDate && (maxTimePickerVisible = !maxTimePickerVisible)"
-                  :readonly="!minDate"
-                  @change.native="handleTimeChange($event, 'max')" />
-                <time-picker
-                  :picker-width="maxPickerWidth"
-                  ref="maxTimePicker"
-                  :date="maxDate"
-                  @pick="handleMaxTimePick"
-                  :visible="maxTimePickerVisible"></time-picker>
-              </span>
-            </span>
-          </div>
+          
           <div class="el-picker-panel__content el-date-range-picker__content is-left">
             <div class="el-date-range-picker__header">
               <button
@@ -129,6 +70,67 @@
               :first-day-of-week="firstDayOfWeek"
               @pick="handleRangePick">
             </date-table>
+          </div>
+          
+          <div class="el-date-range-picker__time-header" v-if="showTime">
+            <span class="el-date-range-picker__editors-wrap">
+              <span class="el-date-range-picker__time-picker-wrap">
+                <el-input
+                  size="small"
+                  ref="minInput"
+                  :placeholder="t('el.datepicker.startDate')"
+                  class="el-date-range-picker__editor"
+                  :value="minVisibleDate"
+                  @input.native="handleDateInput($event, 'min')"
+                  @change.native="handleDateChange($event, 'min')" />
+              </span>
+              <span class="el-date-range-picker__time-picker-wrap">
+                <el-input
+                  size="small"
+                  :placeholder="t('el.datepicker.startTime')"
+                  class="el-date-range-picker__editor"
+                  :value="minVisibleTime"
+                  @focus="minTimePickerVisible = !minTimePickerVisible"
+                  @change.native="handleTimeChange($event, 'min')" />
+                <time-picker
+                  :picker-width="minPickerWidth"
+                  ref="minTimePicker"
+                  :date="minDate"
+                  @pick="handleMinTimePick"
+                  :visible="minTimePickerVisible">
+                </time-picker>
+              </span>
+            </span>
+            <span class="el-icon-dbarrow"></span>
+            <span class="el-date-range-picker__editors-wrap is-right">
+              <span class="el-date-range-picker__time-picker-wrap">
+                <el-input
+                  size="small"
+                  :placeholder="t('el.datepicker.endDate')"
+                  class="el-date-range-picker__editor"
+                  :value="maxVisibleDate"
+                  :readonly="!minDate"
+                  @input.native="handleDateInput($event, 'max')"
+                  @change.native="handleDateChange($event, 'max')" />
+              </span>
+              <span class="el-date-range-picker__time-picker-wrap">
+                <el-input
+                  size="small"
+                  ref="maxInput"
+                  :placeholder="t('el.datepicker.endTime')"
+                  class="el-date-range-picker__editor"
+                  :value="maxVisibleTime"
+                  @focus="minDate && (maxTimePickerVisible = !maxTimePickerVisible)"
+                  :readonly="!minDate"
+                  @change.native="handleTimeChange($event, 'max')" />
+                <time-picker
+                  :picker-width="maxPickerWidth"
+                  ref="maxTimePicker"
+                  :date="maxDate"
+                  @pick="handleMaxTimePick"
+                  :visible="maxTimePickerVisible"></time-picker>
+              </span>
+            </span>
           </div>
         </div>
       </div>

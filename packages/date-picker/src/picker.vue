@@ -17,7 +17,7 @@
     <i slot="icon"
       class="el-input__icon"
       @click="handleClickIcon"
-      :class="[showClose ? 'el-icon-close' : triggerClass]"
+      :class="[showClose ? 'el-icon-circ-cross' : triggerClass]"
       @mouseenter="handleMouseEnterIcon"
       @mouseleave="showClose = false"
       v-if="haveTrigger">
@@ -28,7 +28,7 @@
 <script>
 import Vue from 'vue';
 import Clickoutside from 'element-ui/src/utils/clickoutside';
-import { formatDate, parseDate, getWeekNumber, equalDate, isDate } from './util';
+import { compatDateStr, formatDate, parseDate, getWeekNumber, equalDate, isDate } from './util';
 import Popper from 'element-ui/src/utils/vue-popper';
 import Emitter from 'element-ui/src/mixins/emitter';
 import ElInput from 'element-ui/packages/input';
@@ -73,12 +73,14 @@ const DATE_FORMATTER = function(value, format) {
 const DATE_PARSER = function(text, format) {
   return parseDate(text, format);
 };
-const RANGE_FORMATTER = function(value, format, separator) {
+const RANGE_FORMATTER = function(value, format, separator, isReturn) {
   if (Array.isArray(value) && value.length === 2) {
     const start = value[0];
     const end = value[1];
 
     if (start && end) {
+      // 格式化日期输出值
+      if(isReturn) return [formatDate(start, format), formatDate(end, format)];
       return formatDate(start, format) + separator + formatDate(end, format);
     }
   }
@@ -187,11 +189,11 @@ const valueEquals = function(a, b) {
   const aIsArray = a instanceof Array;
   const bIsArray = b instanceof Array;
   if (aIsArray && bIsArray) {
-    return new Date(a[0]).getTime() === new Date(b[0]).getTime() &&
-           new Date(a[1]).getTime() === new Date(b[1]).getTime();
+    return new Date(compatDateStr(a[0])).getTime() === new Date(compatDateStr(b[0])).getTime() &&
+           new Date(compatDateStr(a[1])).getTime() === new Date(compatDateStr(b[1])).getTime();
   }
   if (!aIsArray && !bIsArray) {
-    return new Date(a).getTime() === new Date(b).getTime();
+    return new Date(compatDateStr(a)).getTime() === new Date(compatDateStr(b)).getTime();
   }
   return false;
 };
@@ -200,6 +202,10 @@ export default {
   mixins: [Emitter, NewPopper],
 
   props: {
+    dataType: {       // 日期绑定值的类型默认 date, 可选值： string | date
+      type: String,
+      default: 'date'
+    },
     size: String,
     format: String,
     readonly: Boolean,
@@ -256,7 +262,8 @@ export default {
     value: {
       immediate: true,
       handler(val) {
-        this.currentValue = isDate(val) ? new Date(val) : val;
+        // 自定义转换日期格式为 YYYY/MM/DD/ HH:MM:SS 兼容格式
+        this.currentValue = isDate(val) ? new Date(compatDateStr(val)) : val;
       }
     },
     displayValue(val) {
@@ -292,7 +299,8 @@ export default {
     },
 
     triggerClass() {
-      return this.type.indexOf('time') !== -1 ? 'el-icon-time' : 'el-icon-date';
+      // 自定义图标
+      return this.type.indexOf('time') !== -1 ? 'el-icon-timex' : 'el-icon-more-date';
     },
 
     selectionMode() {
@@ -404,6 +412,7 @@ export default {
 
     handleBlur() {
       this.$emit('blur', this);
+      this.dispatch('ElFormItem', 'el.form.blur', this);
     },
 
     handleKeydown(event) {
@@ -478,6 +487,7 @@ export default {
         }
       };
       updateOptions();
+      const _this = this; 
       this.unwatchPickerOptions = this.$watch('pickerOptions', () => updateOptions(), { deep: true });
 
       this.$el.appendChild(this.picker.$el);
@@ -485,9 +495,15 @@ export default {
 
       this.picker.$on('dodestroy', this.doDestroy);
       this.picker.$on('pick', (date = '', visible = false) => {
+
+        // 自定义格式化输出日期
+        const formatter = (TYPE_VALUE_RESOLVER_MAP[this.type] || TYPE_VALUE_RESOLVER_MAP['default']).formatter;
+        const format = DEFAULT_FORMATS[this.type];
+        const formatValue = _this.dataType == 'string' ? formatter(date, this.format || format, this.rangeSeparator,  true) : date;
+
         // do not emit if values are same
-        if (!valueEquals(this.value, date)) {
-          this.$emit('input', date);
+        if (!valueEquals(this.value, formatValue)) {
+          this.$emit('input', formatValue);
         }
         this.pickerVisible = this.picker.visible = visible;
         this.picker.resetView && this.picker.resetView();

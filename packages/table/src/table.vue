@@ -24,6 +24,7 @@
       ref="bodyWrapper"
       :style="[bodyHeight]">
       <table-body
+        :expand-only-one="expandOnlyOne"
         :context="context"
         :store="store"
         :stripe="stripe"
@@ -68,6 +69,7 @@
           fixedBodyHeight
         ]">
         <table-body
+          :expand-only-one="expandOnlyOne"
           fixed="left"
           :store="store"
           :stripe="stripe"
@@ -110,6 +112,7 @@
           fixedBodyHeight
         ]">
         <table-body
+          :expand-only-one="expandOnlyOne"
           fixed="right"
           :store="store"
           :stripe="stripe"
@@ -138,7 +141,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import ElCheckbox from 'element-ui/packages/checkbox';
   import throttle from 'throttle-debounce/throttle';
   import debounce from 'throttle-debounce/debounce';
@@ -200,7 +203,10 @@
 
       rowStyle: [Object, Function],
 
-      highlightCurrentRow: Boolean,
+      highlightCurrentRow: {    //设置默认点击单行时选定显示
+        type: Boolean,
+        default: true
+      },
 
       currentRowKey: [String, Number],
 
@@ -209,6 +215,16 @@
       expandRowKeys: Array,
 
       defaultExpandAll: Boolean,
+
+      expandOnlyOne: {    // 同时仅允许打开一行数据
+        type: Boolean,
+        default: false
+      },
+
+      expandIconHidden:{    // 是否隐藏展开图标
+        type: Boolean,
+        default: false
+      },
 
       defaultSort: Object,
 

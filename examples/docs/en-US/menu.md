@@ -34,7 +34,7 @@
       return {
         activeIndex: '1',
         activeIndex2: '1',
-        isCollapse: false
+        isCollapse: true
       };
     },
     methods: {

@@ -29,7 +29,8 @@
     },
     watch: {
       rules() {
-        this.validate();
+        this.fields.forEach(field => { field.resetStatus(); }); // 自定义状态清除
+        this.$nextTick(function(){ this.validate(); });
       }
     },
     data() {

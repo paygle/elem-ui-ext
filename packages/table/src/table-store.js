@@ -239,6 +239,16 @@ TableStore.prototype.mutations = {
 
     this.updateAllSelected();
   },
+  // 打开一个，其余全部关闭
+  toggleOneRowExpanded: function(states, row, expanded) {
+    if (states.expandRows.indexOf(row) === -1) {
+      states.expandRows = [];
+      states.expandRows.push(row);
+    } else {
+      states.expandRows = [];
+    }
+    this.table.$emit('expand', row);
+  },
 
   toggleRowExpanded: function(states, row, expanded) {
     const expandRows = states.expandRows;

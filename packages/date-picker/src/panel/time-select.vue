@@ -17,7 +17,7 @@
   </transition>
 </template>
 
-<script type="text/babel">
+<script>
   import ElScrollbar from 'element-ui/packages/scrollbar';
   import scrollIntoView from 'element-ui/src/utils/scroll-into-view';
 

@@ -113,7 +113,8 @@
         <div class={{
           'el-tabs': true,
           'el-tabs--card': type === 'card',
-          'el-tabs--border-card': type === 'border-card'
+          'el-tabs--border-card': type === 'border-card',
+          'el-tabs--strip': type === 'strip'
         }}>
           <div class="el-tabs__header">
             {newButton}

@@ -57,7 +57,7 @@
   </transition>
 </template>
 
-<script type="text/babel">
+<script>
   import { parseDate, limitRange } from '../util';
   import Locale from 'element-ui/src/mixins/locale';
   import TimeSpinner from '../basic/time-spinner';

@@ -19,17 +19,22 @@ const newArray = function(start, end) {
   return result;
 };
 
+ // 自定义转换日期格式为斜杠 YYYY/MM/DD/ HH:MM:SS 兼容格式
+export const compatDateStr = function(date){
+  return typeof date === 'string' ? String(date).replace('-', '/') : date;
+};
+
 export const equalDate = function(dateA, dateB) {
   return dateA === dateB || new Date(dateA).getTime() === new Date(dateB).getTime();
 };
 
 export const toDate = function(date) {
-  return isDate(date) ? new Date(date) : null;
+  return isDate(compatDateStr(date)) ? new Date(compatDateStr(date)) : null;
 };
 
 export const isDate = function(date) {
   if (date === null || date === undefined) return false;
-  if (isNaN(new Date(date).getTime())) return false;
+  if (isNaN(new Date(compatDateStr(date)).getTime())) return false;
   return true;
 };
 

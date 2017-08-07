@@ -13,6 +13,7 @@ export default {
   props: {
     space: [Number, String],
     active: Number,
+    currentStep: Function,  // 当前步骤回调
     direction: {
       type: String,
       default: 'horizontal'

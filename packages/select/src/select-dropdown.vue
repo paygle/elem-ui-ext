@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import Popper from 'element-ui/src/utils/vue-popper';
 
   export default {

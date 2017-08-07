@@ -108,9 +108,21 @@ export default {
     this.$parent.steps.push(this);
   },
 
+  beforeDestroy() {
+    const steps = this.$parent.steps;
+    const index = steps.indexOf(this);
+    if (index >= 0) {
+      steps.splice(index, 1);
+    }
+  },
+
   computed: {
     currentStatus() {
       return this.status || this.internalStatus;
+    },
+    prevStatus() {
+      const prevStep = this.$parent.steps[this.index - 1];
+      return prevStep ? prevStep.currentStatus : 'wait';
     },
     isLast: function() {
       const parent = this.$parent;
@@ -198,7 +210,7 @@ export default {
 
       if (val > this.index) {
         this.internalStatus = this.$parent.finishStatus;
-      } else if (val === this.index) {
+      } else if (val === this.index && this.prevStatus !== 'error') {
         this.internalStatus = this.$parent.processStatus;
       } else {
         this.internalStatus = 'wait';
@@ -208,11 +220,12 @@ export default {
     },
 
     calcProgress(status) {
-      let step = 100, style = {};
+      let step = 100;
+      const style = {};
 
       style.transitionDelay = 150 * this.index + 'ms';
       if (status === this.$parent.processStatus) {
-        step = 50;
+        step = this.currentStatus !== 'error' ? 50 : 0;
       } else if (status === 'wait') {
         step = 0;
         style.transitionDelay = (-150 * this.index) + 'ms';

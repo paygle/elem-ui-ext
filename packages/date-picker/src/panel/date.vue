@@ -20,32 +20,7 @@
             @click="handleShortcutClick(shortcut)">{{ shortcut.text }}</button>
         </div>
         <div class="el-picker-panel__body">
-          <div class="el-date-picker__time-header" v-if="showTime">
-            <span class="el-date-picker__editor-wrap">
-              <el-input
-                :placeholder="t('el.datepicker.selectDate')"
-                :value="visibleDate"
-                size="small"
-                @change.native="visibleDate = $event.target.value" />
-            </span>
-            <span class="el-date-picker__editor-wrap">
-              <el-input
-                ref="input"
-                @focus="timePickerVisible = !timePickerVisible"
-                :placeholder="t('el.datepicker.selectTime')"
-                :value="visibleTime"
-                size="small"
-                @change.native="visibleTime = $event.target.value" />
-              <time-picker
-                ref="timepicker"
-                :date="date"
-                :picker-width="pickerWidth"
-                @pick="handleTimePick"
-                :visible="timePickerVisible"
-                @mounted="$refs.timepicker.format=timeFormat">
-              </time-picker>
-            </span>
-          </div>
+          
           <div class="el-date-picker__header" v-show="currentView !== 'time'">
             <button
               type="button"
@@ -107,6 +82,33 @@
               :disabled-date="disabledDate">
             </month-table>
           </div>
+
+          <div class="el-date-picker__time-header" v-if="showTime">
+            <span class="el-date-picker__editor-wrap">
+              <el-input
+                :placeholder="t('el.datepicker.selectDate')"
+                :value="visibleDate"
+                size="small"
+                @change.native="visibleDate = $event.target.value" />
+            </span>
+            <span class="el-date-picker__editor-wrap">
+              <el-input
+                ref="input"
+                @focus="timePickerVisible = !timePickerVisible"
+                :placeholder="t('el.datepicker.selectTime')"
+                :value="visibleTime"
+                size="small"
+                @change.native="visibleTime = $event.target.value" />
+              <time-picker
+                ref="timepicker"
+                :date="date"
+                :picker-width="pickerWidth"
+                @pick="handleTimePick"
+                :visible="timePickerVisible"
+                @mounted="$refs.timepicker.format=timeFormat">
+              </time-picker>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -126,7 +128,7 @@
   </transition>
 </template>
 
-<script type="text/babel">
+<script>
   import { formatDate, parseDate, getWeekNumber } from '../util';
   import Locale from 'element-ui/src/mixins/locale';
   import ElInput from 'element-ui/packages/input';

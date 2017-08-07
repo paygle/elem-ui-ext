@@ -9,7 +9,7 @@
       ref="tags"
       :style="{ 'max-width': inputWidth - 32 + 'px' }">
       <transition-group @after-leave="resetInputHeight">
-        <el-tag
+        <el-tag v-if="!translated"
           v-for="item in selected"
           :key="getValueKey(item)"
           :closable="!disabled"
@@ -20,8 +20,12 @@
           <span class="el-select__tags-text">{{ item.currentLabel }}</span>
         </el-tag>
       </transition-group>
-
-      <input
+      <span style="padding:2px;"
+        v-if="translated"
+        v-for="item in selected">
+        {{ item.currentLabel }}
+      </span>
+      <input v-show="!translated"
         type="text"
         class="el-select__input"
         :class="`is-${ size }`"
@@ -40,10 +44,12 @@
         :style="{ width: inputLength + 'px', 'max-width': inputWidth - 42 + 'px' }"
         ref="input">
     </div>
-    <el-input
+    <span v-if="translated" v-text="selectedLabel"></span>
+    <el-input v-show="!translated"
       ref="reference"
       v-model="selectedLabel"
       type="text"
+      :tip-disabled="tipDisabled"
       :placeholder="currentPlaceholder"
       :name="name"
       :size="size"
@@ -70,7 +76,7 @@
       @after-leave="doDestroy">
       <el-select-menu
         ref="popper"
-        v-show="visible && emptyText !== false">
+        v-show="visible && !translated && emptyText !== false">
         <el-scrollbar
           tag="ul"
           wrap-class="el-select-dropdown__wrap"
@@ -90,7 +96,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import Emitter from 'element-ui/src/mixins/emitter';
   import Locale from 'element-ui/src/mixins/locale';
   import ElInput from 'element-ui/packages/input';
@@ -127,7 +133,7 @@
           !this.multiple &&
           this.value !== undefined &&
           this.value !== '';
-        return criteria ? 'circle-close is-show-close' : (this.remote && this.filterable ? '' : 'caret-top');
+        return criteria ? 'circ-cross is-show-close' : (this.remote && this.filterable ? '' : 'caret-top');
       },
 
       debounce() {
@@ -171,6 +177,19 @@
       value: {
         required: true
       },
+      tipDisabled: {                  // 默认不禁用显示tooltip
+        type: Boolean,
+        default(){
+          return false;
+        }
+      },
+      optionsData: [Array, Object],    // Option初始化数据
+      translated: {                    // 是否翻译代码为中文
+        type: [Boolean, String], 
+        default(){
+          return false;
+        }
+      },
       size: String,
       disabled: Boolean,
       clearable: Boolean,
@@ -206,6 +225,8 @@
       return {
         options: [],
         cachedOptions: [],
+        filterValue:'',      // 过滤暂存值
+        isFilterLoad: false, // 处理自定义过滤标志
         createdLabel: null,
         createdSelected: false,
         selected: this.multiple ? [] : {},
@@ -262,8 +283,14 @@
           this.remoteMethod(val);
           this.broadcast('ElOption', 'resetIndex');
         } else if (typeof this.filterMethod === 'function') {
-          this.filterMethod(val);
-          this.broadcast('ElOptionGroup', 'queryChange');
+          
+          if(val === this.filterValue && val!="" &&  this.filterValue!="") return;
+          // 自定义过滤方法处理
+          if(!this.isFilterLoad){
+            this.filterValue = val;
+            this.filterMethod(val);
+            this.broadcast('ElOptionGroup', 'queryChange');
+          }
         } else {
           this.filteredOptionsCount = this.optionsCount;
           this.broadcast('ElOption', 'queryChange', val);
@@ -320,6 +347,10 @@
             }
           }
         }
+
+        // 验证 valid-item 组件
+        this.dispatch(this.validItemName, 'valid.item.blur', [this.value]);
+        this.dispatch('ElFormItem', 'el.form.blur', [this.value]);
         this.$emit('visible-change', val);
       },
 
@@ -336,10 +367,39 @@
         if (this.defaultFirstOption && (this.filterable || this.remote) && this.filteredOptionsCount) {
           this.checkDefaultFirstOption();
         }
+      },
+      // 对自定义filterMethod方法处理
+      optionsData:{
+        immediate: true,
+        handler(optData){
+          this.isFilterLoad = true;
+          this.$nextTick(function(){
+            this.isFilterLoad = false;
+            this.query = this.filterValue;
+            this.selectedLabel = this.filterValue;
+            this.initSelected(this.cachedOptions);
+          });
+        }
+      },
+      cachedOptions(cacheData){  // Cache 初始化赋值
+        this.initSelected(cacheData);
       }
     },
 
     methods: {
+      
+      initSelected(cacheData){ // 重新初始化赋值
+        let this$0 = this;
+        if(cacheData.length>0) {
+          cacheData.forEach((item)=>{
+            if(item.value == this$0.value){
+              this$0.setSelected();
+              return;
+            }
+          });
+        }
+      },
+
       handleIconHide() {
         let icon = this.$el.querySelector('.el-input__icon');
         if (icon) {
@@ -349,7 +409,7 @@
 
       handleIconShow() {
         let icon = this.$el.querySelector('.el-input__icon');
-        if (icon && !hasClass(icon, 'el-icon-circle-close')) {
+        if (icon && !hasClass(icon, 'el-icon-circ-cross')) {
           addClass(icon, 'is-reverse');
         }
       },
@@ -367,20 +427,21 @@
       },
 
       getOption(value) {
+        // 自定义设置 cachedOption.value == value 和 let label
         let option;
         const isObject = Object.prototype.toString.call(value).toLowerCase() === '[object object]';
         for (let i = this.cachedOptions.length - 1; i >= 0; i--) {
           const cachedOption = this.cachedOptions[i];
           const isEqual = isObject
-            ? getValueByPath(cachedOption.value, this.valueKey) === getValueByPath(value, this.valueKey)
-            : cachedOption.value === value;
+            ? getValueByPath(cachedOption.value, this.valueKey) == getValueByPath(value, this.valueKey)
+            : cachedOption.value == value;
           if (isEqual) {
             option = cachedOption;
             break;
           }
         }
         if (option) return option;
-        const label = !isObject
+        let label = !isObject
           ? value : '';
         let newOption = {
           value: value,
@@ -423,7 +484,8 @@
       },
 
       handleIconClick(event) {
-        if (this.iconClass.indexOf('circle-close') > -1) {
+        // 自定义清除图标
+        if (this.iconClass.indexOf('circ-cross') > -1) {
           this.deleteSelected(event);
         } else {
           this.toggleMenu();
@@ -463,6 +525,7 @@
 
       deletePrevTag(e) {
         if (e.target.value.length <= 0 && !this.toggleLastOptionHitState()) {
+          this.filterValue = "";  // 自定义过滤暂存值清除
           const value = this.value.slice();
           value.pop();
           this.$emit('input', value);

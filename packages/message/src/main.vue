@@ -2,13 +2,14 @@
   <transition name="el-message-fade">
     <div
       class="el-message"
-      :class="customClass"
+      :class="customClass + ' is-' + type"
       v-show="visible"
       @mouseenter="clearTimer"
       @mouseleave="startTimer">
       <img class="el-message__img" :src="typeImg" alt="" v-if="!iconClass">
       <div class="el-message__group" :class="{ 'is-with-icon': iconClass }">
-        <slot><p><i class="el-message__icon" :class="iconClass" v-if="iconClass"></i>{{ message }}</p></slot>
+        <slot><p><i class="el-message__icon" :class="iconClass" v-if="iconClass"></i>
+          <span v-for="cell in msgList" v-text="cell"></span></p></slot>
         <div v-if="showClose" class="el-message__closeBtn el-icon-close" @click="close"></div>
       </div>
     </div>
@@ -35,6 +36,9 @@
     computed: {
       typeImg() {
         return require(`../assets/${ this.type }.svg`);
+      },
+      msgList() { // 自定义换行处理
+        return this.message.split('<br>');
       }
     },
 

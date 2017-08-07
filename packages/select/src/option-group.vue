@@ -9,7 +9,7 @@
   </ul>
 </template>
 
-<script type="text/babel">
+<script>
   import Emitter from 'element-ui/src/mixins/emitter';
 
   export default {

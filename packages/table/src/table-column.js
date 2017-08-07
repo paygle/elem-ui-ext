@@ -136,7 +136,10 @@ export default {
     align: String,
     headerAlign: String,
     showTooltipWhenOverflow: Boolean,
-    showOverflowTooltip: Boolean,
+    showOverflowTooltip: {     // 修改为默认显示提示
+      type: Boolean,
+      default: true
+    },
     fixed: [Boolean, String],
     formatter: Function,
     selectable: Function,
@@ -246,9 +249,14 @@ export default {
     this.columnConfig = column;
 
     let renderCell = column.renderCell;
-    let _self = this;
+    let _self = this, hiddenExpandIcon = "";
 
     if (type === 'expand') {
+       // 自定义隐藏展开式编辑
+      if(this.owner.store.table.expandIconHidden){
+        column.realWidth = 1;
+        hiddenExpandIcon = "hidden-expand-icon";
+      }
       owner.renderExpanded = function(h, data) {
         return _self.$scopedSlots.default
           ? _self.$scopedSlots.default(data)
@@ -256,7 +264,7 @@ export default {
       };
 
       column.renderCell = function(h, data) {
-        return <div class="cell">{ renderCell(h, data, this._renderProxy) }</div>;
+        return <div class={'cell ' + hiddenExpandIcon}>{ renderCell(h, data, this._renderProxy) }</div>;
       };
 
       return;

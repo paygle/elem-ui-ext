@@ -14,6 +14,7 @@ export default {
       default: 0
     },
     disabled: Boolean,
+    defree: Boolean,   // 自定义是否释放对象
     manual: Boolean,
     effect: {
       type: String,

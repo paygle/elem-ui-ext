@@ -22,7 +22,7 @@
   </transition>
 </template>
 
-<script type="text/babel">
+<script>
   let typeMap = {
     success: 'circle-check',
     info: 'information',

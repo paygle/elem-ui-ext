@@ -113,7 +113,7 @@ class TableLayout {
 
     if (flexColumns.length > 0 && fit) {
       flattenColumns.forEach((column) => {
-        bodyMinWidth += column.width || column.minWidth || 80;
+        bodyMinWidth += parseInt(column.width || column.minWidth || 80, 10);
       });
 
       if (bodyMinWidth < bodyWidth - this.gutterWidth) { // DON'T HAVE SCROLL BAR

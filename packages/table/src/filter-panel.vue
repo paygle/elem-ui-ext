@@ -32,7 +32,7 @@
   </transition>
 </template>
 
-<script type="text/babel">
+<script>
   import Popper from 'element-ui/src/utils/vue-popper';
   import { PopupManager } from 'element-ui/src/utils/popup';
   import Locale from 'element-ui/src/mixins/locale';

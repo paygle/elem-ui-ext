@@ -11,6 +11,7 @@ export default {
   },
 
   props: {
+    expandOnlyOne: Boolean,   // 同时仅允许打开一行数据
     store: {
       required: true
     },
@@ -61,7 +62,7 @@ export default {
                       on-mouseenter={ ($event) => this.handleCellMouseEnter($event, row) }
                       on-mouseleave={ this.handleCellMouseLeave }>
                       {
-                        column.renderCell.call(this._renderProxy, h, { row, column, $index, store: this.store, _self: this.context || this.table.$vnode.context }, columnsHidden[cellIndex])
+                        column.renderCell.call(this._renderProxy, h, { row, column, $index, store: this.store, _self: this.context || this.table.$vnode.context , expand: this.store.states.expandRows.indexOf(row) > -1 }, columnsHidden[cellIndex])
                       }
                     </td>
                   )
@@ -73,7 +74,7 @@ export default {
                 this.store.states.expandRows.indexOf(row) > -1
                 ? (<tr>
                     <td colspan={ this.columns.length } class="el-table__expanded-cell">
-                      { this.table.renderExpanded ? this.table.renderExpanded(h, { row, $index, store: this.store }) : ''}
+                      { this.table.renderExpanded ? this.table.renderExpanded(h, { row, $index, store: this.store, expand: this.store.states.expandRows.indexOf(row) > -1 }) : ''}
                     </td>
                   </tr>)
                 : ''
@@ -81,7 +82,7 @@ export default {
             ).concat(
               this._self.$parent.$slots.append
             ).concat(
-              <el-tooltip effect={ this.table.tooltipEffect } placement="top" ref="tooltip" content={ this.tooltipContent }></el-tooltip>
+              <el-tooltip effect={ this.table.tooltipEffect } placement="top" ref="tooltip" content={ this.tooltipContent } defree></el-tooltip>
             )
           }
         </tbody>
@@ -275,7 +276,11 @@ export default {
     },
 
     handleExpandClick(row) {
-      this.store.commit('toggleRowExpanded', row);
+      if(this.expandOnlyOne){  // 同时仅允许打开一行数据
+        this.store.commit('toggleOneRowExpanded', row);
+      }else{
+        this.store.commit('toggleRowExpanded', row);
+      }
     }
   }
 };

@@ -18,8 +18,13 @@
 <script>
   import AsyncValidator from 'async-validator';
   import emitter from 'element-ui/src/mixins/emitter';
+  import { TypeOf } from 'element-ui/src/utils/funcs';
 
   function noop() {}
+  // 自定义日期兼容转换
+  const compatDateStr = function(date){
+    return typeof date === 'string' ? String(date).replace('-', '/') : date;
+  };
 
   function getPropByPath(obj, path) {
     let tempObj = obj;
@@ -146,6 +151,27 @@
       };
     },
     methods: {
+      getTypeData(value, rules){ // 自定义获取日期数据类型
+        let typevalue="", cdate;
+        if(TypeOf(rules) === 'Array'){
+          for(let i=0; i<rules.length; i++){
+            if(TypeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && TypeOf(value) === "String"){
+              cdate = new Date(compatDateStr(value));
+            }
+          }
+        }else if(TypeOf(rules) === 'Object' && rules.type === 'date' && TypeOf(value) === "String"){
+          cdate = new Date(compatDateStr(value));
+        }
+
+        if(TypeOf(value) === 'Date'){
+          typevalue = value;
+        }else if(TypeOf(cdate) === 'Date' && !isNaN(cdate.getTime())){
+          typevalue = cdate;
+        }else{
+          typevalue = value;
+        }
+        return typevalue;
+      },
       validate(trigger, callback = noop) {
         var rules = this.getFilteredRule(trigger);
         if (!rules || rules.length === 0) {
@@ -161,7 +187,7 @@
         var validator = new AsyncValidator(descriptor);
         var model = {};
 
-        model[this.prop] = this.fieldValue;
+        model[this.prop] = this.getTypeData(this.fieldValue, rules);
 
         validator.validate(model, { firstFields: true }, (errors, fields) => {
           this.validateState = !errors ? 'success' : 'error';
@@ -170,6 +196,12 @@
           callback(this.validateMessage);
         });
       },
+      // 自定义清除状态
+      resetStatus() {
+        this.validateState = '';
+        this.validateMessage = '';
+      },
+
       resetField() {
         this.validateState = '';
         this.validateMessage = '';

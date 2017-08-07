@@ -12,14 +12,15 @@
         :class="['is-' + $parent.direction, { 'is-icon': icon }]">
         <i class="el-step__line-inner" :style="lineStyle"></i>
       </div>
-
-      <span class="el-step__icon">
+      <span class="el-step__icon" @click="nodeClick">
         <slot
           v-if="currentStatus !== 'success' && currentStatus !== 'error'"
           name="icon">
-          <i v-if="icon" :class="['el-icon-' + icon]"></i>
+          <div v-if="isCurrentStep && currentStatus == 'finish'"> {{ index + 1 }} </div>
+          <i v-else-if="icon" :class="['el-icon-' + icon]"></i>
           <div v-else>{{ index + 1 }}</div>
         </slot>
+        <div v-else-if="isCurrentStep"> {{ index + 1 }} </div>
         <i
           v-else
           :class="['el-icon-' + (currentStatus === 'success' ? 'check' : 'close')]">
@@ -60,7 +61,8 @@ export default {
       index: -1,
       lineStyle: {},
       mainOffset: 0,
-      internalStatus: ''
+      internalStatus: '',
+      isCurrentStep: false  // 当前步骤回调
     };
   },
 
@@ -79,6 +81,10 @@ export default {
   computed: {
     currentStatus() {
       return this.status || this.internalStatus;
+    },
+    prevStatus() {
+      const prevStep = this.$parent.steps[this.index - 1];
+      return prevStep ? prevStep.currentStatus : 'wait';
     },
     isLast: function() {
       const parent = this.$parent;
@@ -109,12 +115,30 @@ export default {
   },
 
   methods: {
+    resetCurretStep(){ // 重置 isCurrentStep
+      this.isCurrentStep = false;
+    },
+
+    nodeClick(e){  // 节点点击事件 处理 currentStep
+      let active = this.$parent.active;
+      let index = this.index;
+
+      if(index <= active && typeof this.$parent.currentStep === 'function'){ // 允许被点击并改变样式的结点
+        // 是否处理当前步骤回调
+        this.isCurrentStep = true;
+        this.$parent.steps.forEach((child, idx) => {
+          if(idx !== index){ child.resetCurretStep(); }
+        });
+        this.$parent.currentStep.call(null, index);  // 当前步骤回调
+      }
+    },
+
     updateStatus(val) {
       const prevChild = this.$parent.$children[this.index - 1];
 
       if (val > this.index) {
         this.internalStatus = this.$parent.finishStatus;
-      } else if (val === this.index) {
+      } else if (val === this.index && this.prevStatus !== 'error') {
         this.internalStatus = this.$parent.processStatus;
       } else {
         this.internalStatus = 'wait';
@@ -129,7 +153,7 @@ export default {
 
       style.transitionDelay = 150 * this.index + 'ms';
       if (status === this.$parent.processStatus) {
-        step = 50;
+        step = this.currentStatus !== 'error' ? 50 : 0;
       } else if (status === 'wait') {
         step = 0;
         style.transitionDelay = (-150 * this.index) + 'ms';

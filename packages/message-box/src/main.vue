@@ -41,7 +41,7 @@
   </transition>
 </template>
 
-<script type="text/babel">
+<script>
   import Popup from 'element-ui/src/utils/popup';
   import Locale from 'element-ui/src/mixins/locale';
   import ElInput from 'element-ui/packages/input';
