@@ -27,6 +27,6 @@ themes.forEach((theme) => {
       console.log(theme, ' 创建遗漏的 ', fileName, ' 文件');
     }
   });
-  indexContent += '@import "./page-layout.css";\n'; // 添加自定义样式
+  indexContent += '@import "./common/page-layout.css";\n'; // 添加自定义样式
   fs.writeFileSync(path.resolve(basepath, theme, 'src', 'index.css'), indexContent);
 });
