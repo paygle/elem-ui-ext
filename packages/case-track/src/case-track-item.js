@@ -151,7 +151,7 @@ export default {
 
     initComponentName(args){
       if(TypeOf(this.getComponetName) === 'Function'){
-        let name =  this.getComponetName.call(null, args);
+        let name =  this.getComponetName(args);
         this.componentName = name;
         return name;
       }
@@ -160,7 +160,7 @@ export default {
 
     initComponetData(args) {
       if(TypeOf(this.getComponetData) === 'Function'){
-        let data =  this.getComponetData.call(null, args);
+        let data =  this.getComponetData(args);
         this.componentData = data;
         return data;
       }
@@ -168,7 +168,7 @@ export default {
     },
 
     hasComponent(name){
-      if(TypeOf(this.$options.components[name]) === 'Object'){
+      if(name && this.$options.components[name]){
           return true;
         }
       return false;
@@ -178,7 +178,7 @@ export default {
       this.dataLoading = v;
     },
 
-    getFormatTitle(t){
+    getFormatTitle(h, t){
       if(t){
         let tp=[];
         let rgx = /(<br>|<br\/>)/ig;
@@ -197,7 +197,7 @@ export default {
   created(){
     if(TypeOf(this.itemComponents) === 'Object'){
       for(let i in this.itemComponents){
-        if(TypeOf(this.itemComponents[i]) === 'Object'){
+        if(this.itemComponents.hasOwnProperty(i)){
           this.$options.components[i] = this.itemComponents[i];
         }
       }
@@ -212,7 +212,6 @@ export default {
 
   render(h){
     let directives = [ { name: 'popover', arg:'itemPopv' } ];
- 
     return (
       <div class="case-track-item">
         <el-popover 
@@ -250,7 +249,7 @@ export default {
               class={ "title-box " + this.node.status }
               style={ this.node.shapeIcon ? { border:0, backgroundColor:'transparent'} : {}}
               on-click={ ($event)=> this.itemClick(this.node, $event) }>
-              { !this.node.shapeIcon ? this.getFormatTitle(this.node.title) : '' }
+              { !this.node.shapeIcon ? this.getFormatTitle(h, this.node.title) : '' }
               { this.node.shapeIcon ? <span class={ "shape " + this.node.shapeIcon }></span> : '' }
               {
                 (this.node.nextLevel == 1) && !this.node.shapeIcon 

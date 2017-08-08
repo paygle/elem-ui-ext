@@ -1,5 +1,5 @@
 // 独立的导航指示器
-import { on } from 'element-ui/src/utils/dom';
+import { on,off } from 'element-ui/src/utils/dom';
 
 export default {
 
@@ -109,7 +109,9 @@ export default {
   mounted(){
     on(document.querySelector('body'), 'click', this.onClickInit);
   },
-
+  beforDestroy(){
+    off(document.querySelector('body'), 'click', this.onClickInit);
+  },
   render(h){
     return (
       <div class="single-indicator el-icon-home">

@@ -9,7 +9,7 @@
 import debounce from 'throttle-debounce/debounce';
 import merge from 'element-ui/src/utils/merge';
 import { TypeOf } from 'element-ui/src/utils/funcs';
-import { on } from 'element-ui/src/utils/dom';
+import { on,off } from 'element-ui/src/utils/dom';
 
 // const getBodyPosAttr = function(name) {
 //   if(typeof document.documentElement[name] !== 'undefined' 
@@ -149,10 +149,11 @@ export default {
 
     addListen() {
       this.$nextTick(function () {
-        let clkItems = document.querySelectorAll('.el-tabs .el-tabs__item');
+       /* 先注释掉，多tab页时freeze组件是否有问题？  
+       let clkItems = document.querySelectorAll('.el-tabs .el-tabs__item');
         for (let i = 0; i < clkItems.length; i++) {
           on(clkItems[i], 'click', (e) => this.setLocation());
-        }
+        }  */
         this.setLocation();
       });
     }
@@ -161,7 +162,12 @@ export default {
   mounted() {
     let that = this;
     this.addListen();
-    on(window, 'scroll', debounce(10, function () { that.updatePosition(); }));
+    this.debounceUpdatePosition = debounce(10, function () { that.updatePosition(); });
+    on(window, 'scroll', this.debounceUpdatePosition);
+  },
+  //销毁时释放事件
+  beforeDestroy(){
+    off(window, 'scroll', this.debounceUpdatePosition);
   }
 };
 </script>

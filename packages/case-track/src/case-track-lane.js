@@ -74,7 +74,7 @@ export default {
 
     initComponentName(args){
       if(TypeOf(this.getComponetName) === 'Function'){
-        let name =  this.getComponetName.call(null, args);
+        let name =  this.getComponetName( args);
         this.componentName = name;
         return name;
       }
@@ -83,7 +83,7 @@ export default {
 
     initComponetData(args) {
       if(TypeOf(this.getComponetData) === 'Function'){
-        let data =  this.getComponetData.call(null, args);
+        let data =  this.getComponetData(args);
         this.componentData = data;
         return data;
       }

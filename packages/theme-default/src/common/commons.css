@@ -309,8 +309,10 @@ div .el-collapse-item__content {
 }
 
 .case-track-item .title-box {
+  box-sizing: content-box;
   border-radius: 4px;
   padding: 5px 10px;
+  height: 18px;
   cursor: default;
 }
 

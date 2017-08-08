@@ -12,6 +12,7 @@
 				:class="{tapnomore:!om.subMenu}" 
 				:clicked="om.clicked"
 				:url="om.url" 
+				:label="om.label"
 				v-text="om.label">
 			</span>
 
@@ -28,6 +29,7 @@
 							:clicked="om.clicked" 
 							:url="sub.url" 
 							v-show="sub.label" 
+							:label="sub.label"
 							v-text="sub.label">
 						</h3>
 					<ul class="list-box-l2" v-if="!!sub.subMenu.length">
@@ -42,6 +44,7 @@
 										@click="targetGo"
 										:clicked="om.clicked"
 										:url="sub2.url" 
+										:label="sub2.label"
 										v-text="sub2.label">
 									</h3>
 								<ul class="list-box-l3" v-if="!!sub2.subMenu.length">
@@ -55,6 +58,7 @@
 											@click="targetGo"
 											:clicked="om.clicked"
 											:url="sub3.url" 
+											:label="sub3.label"
 											v-text="sub3.label">
 										</span>
 									</li>
@@ -133,9 +137,10 @@ export default {
 			let $this = this, attrs = e.target.attributes;
 			let Path = attrs['url'];
 			let clicked = attrs['clicked'] ? (attrs['clicked'].value === 'true') : this.clicked;
+			let label = attrs['label'] ? attrs['label'].value : '' ;
 
 			if (Path) {
-				clicked ? this.$emit('menu-click', Path.value) : location.href = Path.value;
+				clicked ? this.$emit('menu-click', Path.value, label) : location.href = Path.value;
 				this.toggleHide = true;
 				setTimeout(function () { $this.toggleHide = false; }, 1000);
 			}
