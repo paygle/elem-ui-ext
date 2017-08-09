@@ -1,9 +1,7 @@
 <script>
   export default {
     data() {
-      return {
-        input: ''
-      };
+      return {};
     }
   }
 </script>
@@ -15,7 +13,9 @@
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
+<freeze pos="top" mode="max">
+ 这是你的代码区
+</freeze>
  
 ```
 :::
@@ -23,11 +23,11 @@
 
 ### Freeze Attributes
 
-| 参数          | 说明            | 类型            | 可选值                 | 默认值   |
-|-------------  |---------------- |---------------- |---------------------- |-------- |
- 
-
-### Freeze Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
+| 参数     | 说明            | 类型            | 可选值                 | 默认值   |
+|-----------|---------------- |---------------- |---------------------- |-------- |
+|    pos  |  冻结区位置    |   String | top/bottom/left/right   |   'top' |
+|   mode  |  浮框展开模式  |   String |max/parent|  'max'; 冻结区为top/bottom时有效 |
+|   width |  浮框宽|   String| ——   |—— |
+|  height |浮框高  |   String| ——   |——  |
+|   styl  |  自定义浮框样式 |Object| ——   |   可以覆盖 width/height 属性 |
  

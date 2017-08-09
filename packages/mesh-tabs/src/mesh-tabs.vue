@@ -11,6 +11,7 @@
       :name="item.name"
       :label="item.label" 
       :disabled="item.disabled"
+      :ref="'pane'+item.name"
       :closable="item.closable">
       <span v-if="item.icon" slot="label"><i :class="item.icon"></i> {{item.label}}</span>
       <div :ref="item.name" v-bind:is="item.component" :args="item.args"></div>
@@ -81,6 +82,14 @@ export default {
     removeTab(targetName) {
       let tabs = this.tabData;
       let activeName = this.activeName;
+      if(this.$refs[targetName][0] && this.$refs[targetName][0].$destroy) {
+        this.$refs[targetName][0].$destroy() ;
+        this.$refs[targetName][0]=null;
+      } 
+      if(this.$refs['pane'+targetName][0]){
+        this.$refs['pane'+targetName][0].$destroy();
+        this.$refs['pane'+targetName]=null
+      } 
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
@@ -135,9 +144,10 @@ export default {
     }
   },
   created(){
-    this.tabData = this.routeData;
+    let type; this.tabData = this.routeData;
     for(let i in this.components){
-      if(TypeOf(this.components[i]) === 'Object'){
+      type = TypeOf(this.components[i]);
+      if(type === 'Object' || type === 'Function'){
         Vue.component(i, Vue.extend(this.components[i]));
       }
     }

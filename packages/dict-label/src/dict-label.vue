@@ -94,6 +94,10 @@ export default {
     //加载远程数据
     loadRemoteData() {
       var self = this;
+      if(!this.$store){  // 警告提示
+        console && console.warn('Vuex $store required!');
+        return;
+      }
       if (this.dictFilter) { //大数据量的翻译
         var text = cacheUtil.getDictText(this.dictId, this.value);
         if (text) {
@@ -158,6 +162,10 @@ export default {
           this.dictText = text;
           return;
         }
+      }
+      if(!this.$store){  // 警告提示
+        console && console.warn('Vuex $store required!');
+        return;
       }
       var data = this.$store.state.dictStore.dict[this.dictId];
       if (data && data.length > 0) {

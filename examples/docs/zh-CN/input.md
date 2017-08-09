@@ -779,6 +779,19 @@ export default {
 | form | 原生属性 | string | — | — |
 | on-icon-click | 点击 Input 内的图标的钩子函数 | function | — | — |
 
+### 新增属性
+
+|     参数    |     说明	        |   类型 	     |        可选值	     |  默认值  |
+|-------------  |---------------- |---------------- |---------------------- |-------- |
+|  fast-do    | 允许值变化快速响应  |   Boolean   |         ——        |    true |
+|  histype    |  输入框值类型      |   String    |  number | string   |   string （设定number时精度生效） |
+|  max        |  最大值           |   Number    |          ——        |     ——   |
+|  min        |  最小值           |   Number    |          ——        |     ——   |
+|  precision  |  小数精度位数      |   Number    |          ——        |   0 |
+|  roundoff   | 是否四舍五入取值   |   Boolean    |         ——        |   false |
+| tip-disabled | 是否禁用tootip   |   Boolean    |         ——        |   false |
+| valid-item-name | 单组件验证组件名称   |   String   |         ——     |   ValidItem |
+
 ### Input Events
 | 事件名称 | 说明 | 回调参数 |
 |---------|--------|---------|
@@ -786,6 +799,7 @@ export default {
 | blur | 在 Input 失去焦点时触发 | (event: Event) |
 | focus | 在 Input 获得焦点时触发 | (event: Event) |
 | change | 在 Input 值改变时触发 | (value: string \| number) |
+|any-change| 任何修改此事件都会被调用 | (value: string \| number) |
 
 ### Autocomplete Attributes
 

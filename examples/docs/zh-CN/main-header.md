@@ -1,8 +1,7 @@
 <script>
   export default {
     data() {
-      return {
-        input: ''
+      return { 
       };
     }
   }
@@ -15,7 +14,7 @@
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
+
  
 ```
 :::
@@ -25,9 +24,9 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
- 
-
-### MainHeader Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
+|   nowuser  |  当前用户名称         |  String     |   ——     |   匿名 |
+|   nowdate  |  当前系统时间         |  Array      |   ——     |   0000-000-000 |
+|   editpwd  |  点击修改密码         |  Function   |   ——     |   —— |
+|   logout   | 	点击退出             |  Function   |   ——     |   —— |
+| click-user | 	点击用户名           |  Function   |   ——     |   —— |
  

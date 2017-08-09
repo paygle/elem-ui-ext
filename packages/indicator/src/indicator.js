@@ -96,7 +96,7 @@ export default {
       return paths.concat(hashPath);
     },
 
-    getCellContent(item, $index){
+    getCellContent(h, item, $index){
       let angleIcon = $index<this.pathList.length -1 ? 'el-icon-arrow-right' : '';
       return <a class={ angleIcon } href={ item.link }>{ item.label }</a>;
     },
@@ -116,7 +116,7 @@ export default {
     return (
       <div class="single-indicator el-icon-home">
         {
-          this._l(this.pathList, (item, $index)=>[ this.getCellContent(item, $index) ])
+          this._l(this.pathList, (item, $index)=>[ this.getCellContent(h, item, $index) ])
         }
       </div>
     );

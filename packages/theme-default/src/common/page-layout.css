@@ -1,6 +1,19 @@
 @charset "UTF-8";
 @import "./var.css";
  
+.el-input-group__append,
+.el-input-group__prepend {
+  overflow: hidden;
+}
+
+/* guide-steps */
+.guide-steps.is-horizontal.is-center {
+  margin-right: 100px;
+}
+.is-horizontal.is-last .styl-dotline .el-step__description {
+  width: auto;
+}
+
 /* main-nav 组件样式 */
 .main-nav{
 	position: relative;
@@ -50,7 +63,6 @@
     display:block;
 	  text-align: center;
 		cursor:pointer;
-    width:100%;
     text-overflow: ellipsis;
 		font-size: 13px;
 		line-height: 2em;

@@ -789,6 +789,10 @@
       //加载远程数据
       loadRemoteData(callback){ 
         var self=this;
+        if(!this.$store){  // 警告提示
+          console && console.warn('Vuex $store required!');
+          return;
+        }
         this.$store.dispatch('loadDict',{
             dictId:this.dictId,
             dictParams:this.realParams,
@@ -881,6 +885,11 @@
           this.inputWidth = this.$refs.reference.$el.getBoundingClientRect().width;
         }
       });
+
+      if(!this.$store){  // 警告提示
+        console && console.warn('Vuex $store required!');
+        return;
+      }
       //如果dictId不为空，则加载已有的下拉框数据
       if(this.dictId){
         var data=this.$store.state.dictStore.dict[this.dictId];

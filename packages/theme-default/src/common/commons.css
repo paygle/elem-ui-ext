@@ -787,6 +787,7 @@ div .el-collapse-item__content {
 .col-header .label {
   background-color: var(--primary-color);
   width: 140px;
+  line-height: 16px;
   color: white;
   padding: 8px 0 0 0;
   box-sizing: border-box;
@@ -1238,7 +1239,6 @@ div .el-step__head.is-success {
   margin: 10px 0 0 -30%;
   width: 80%;
 }
-
 
 /* vertical */
 

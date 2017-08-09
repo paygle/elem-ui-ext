@@ -206,7 +206,7 @@ export default {
       let this$0 = this;
       if (this$0.addNewRow) {
         let $Promise = new Promise(function (resolve, reject) {
-          resolve(this$0.addNewRow.call());
+          resolve(this$0.addNewRow());
         });
 
         $Promise.then(function (data) {
@@ -218,6 +218,9 @@ export default {
         }).catch(function (e) {
           throw new Error('Add Row Error : ' + e);
         });
+      }else{
+        getNewRow.call(this);
+        this$0.store.commit('addNewRow', this$0.newRow);
       }
     },
 

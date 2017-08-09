@@ -1,6 +1,6 @@
 <template>
   <div
-    class="el-steps"
+    class="el-steps guide-steps"
     :class="['is-' + direction, center ? 'is-center' : '', 'is-'+lineStyl]">
     <div :class="['is-' + direction, 'first-line']">
       <span class="sect-1"></span>

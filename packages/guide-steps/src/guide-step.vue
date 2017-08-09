@@ -2,7 +2,7 @@
   <div
     class="el-step"
     :style="[style, isLast ? '' : { marginRight: - ($parent.stepOffset + 10) + 'px' }]"
-    :class="['is-' + $parent.direction]">
+    :class="['is-' + $parent.direction, isLast ? 'is-last': '']">
     <div
       v-if="lineStyl==='default'"
       class="el-step__head"
@@ -136,9 +136,17 @@ export default {
       // if (isCenter && this.isLast) {
       //   return {};
       // }
+      function getSpace(islast, len) {
+        let perc = 100 / len;
+        if(islast){
+          return (perc - (perc * 0.1 * (len - 1))) + '%';
+        }else{
+          return (perc + perc * 0.1) + '%';
+        }
+      }
 
       const space = (typeof parent.space === 'number' ? parent.space + 'px'
-        : parent.space ? parent.space : (100 / (len + 0.32)) + '%');
+        : parent.space ? parent.space : getSpace(this.isLast, len));
       if (parent.direction === 'horizontal') {
         return { width: space };
       } else if (!this.isLast) {

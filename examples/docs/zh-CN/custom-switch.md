@@ -15,19 +15,15 @@
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
- 
+<custom-switch 
+  v-model="input" 
+  on-value="Y" 
+  off-value="N" 
+  on-text="Y" 
+  off-text="N">
+</custom-switch>
 ```
 :::
 
 
-### CustomSwitch Attributes
-
-| 参数          | 说明            | 类型            | 可选值                 | 默认值   |
-|-------------  |---------------- |---------------- |---------------------- |-------- |
- 
-
-### CustomSwitch Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
- 
+### 与 el-switch 文档一致，仅用于 form-table 组件中代替 el-switch

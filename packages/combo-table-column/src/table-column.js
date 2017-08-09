@@ -419,6 +419,10 @@ export default {
       if(!code){
         return '';
       }
+      if(!this.$store){  // 警告提示
+        console && console.warn('Vuex $store required!');
+        return;
+      }
       if(this.dictFilter){ //大数据量的翻译
           var text=cacheUtil.getDictText(this.dictId,code);
           if(text){
@@ -457,6 +461,10 @@ export default {
         let dictParams=objectAssign({},this.columnConfig.dictParams);
         if(this.dictFilter){
           dictParams=objectAssign(dictParams,{'filter_codes': self.getUncachedCode()});
+        }
+        if(!this.$store){  // 警告提示
+          console && console.warn('Vuex $store required!');
+          return;
         }
         this.$store.dispatch('loadDict',{
             dictId:this.columnConfig.dictId,
