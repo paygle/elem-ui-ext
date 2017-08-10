@@ -2,32 +2,54 @@
   export default {
     data() {
       return {
-        input: ''
+        input: '',
+        checklist: []
       };
     }
   }
 </script>
+<style>
+ .sp {
+   margin-top: 20px;
+ }
+</style>
 ## RichCheckbox 增强样式Checkbox
-
-通过鼠标或键盘输入字符
+```
+其他参数参考 Checkbox 文档
+```
 
 ### 基础用法
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
- 
+<div class="sp">单个RichCheckbox</div>
+<rich-checkbox v-model="input" icon="hammer">啥都没有</rich-checkbox>
+<div class="sp">RichCheckboxGroup组合</div>
+<rich-checkbox-group v-model="checklist">
+  <rich-checkbox label="你选择了我" disabled></rich-checkbox>
+  <rich-checkbox label="啥都没有" icon="hammer"></rich-checkbox>
+  <rich-checkbox label="你选了我"></rich-checkbox>
+  <rich-checkbox label="啥没有"></rich-checkbox>
+</rich-checkbox-group>
+
+<script>
+  export default {
+    data() {
+      return {
+        input: '',
+        checklist: []
+      };
+    }
+  }
+</script>
 ```
 :::
 
 
 ### RichCheckbox Attributes
 
-| 参数          | 说明            | 类型            | 可选值                 | 默认值   |
-|-------------  |---------------- |---------------- |---------------------- |-------- |
- 
+| 参数          | 说明                    | 类型            | 可选值                 | 默认值   |
+|-------------  |------------------------|---------------- |---------------------- |-------- |
+| icon          |   图标样式类名  | String | — | — |   
 
-### RichCheckbox Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
  

@@ -6,6 +6,10 @@
   overflow: hidden;
 }
 
+.rich-checkbox__inner>i, .rich-radio__inner>i{
+  margin-right: 3px;
+}
+
 /* guide-steps */
 .guide-steps.is-horizontal.is-center {
   margin-right: 100px;
@@ -220,6 +224,11 @@ div[class*="col-"]{
     bottom: -6px;
     left: 48%;
   }
+}
+
+table{
+  border-collapse: collapse;
+  background-color: transparent;
 }
 
 div{

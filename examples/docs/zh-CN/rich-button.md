@@ -1,21 +1,20 @@
 <script>
   export default {
     data() {
-      return {
-        input: ''
-      };
+      return {};
     }
   }
 </script>
 ## RichButton 增强样式Button
-
-通过鼠标或键盘输入字符
+```
+其他参数参见 ElButton 组件
+```
 
 ### 基础用法
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
+<rich-button shape="capsule" >RichButton</rich-button>
  
 ```
 :::
@@ -25,9 +24,6 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
- 
+|   shape    |  按钮形状      |   String   |   capsule      |     default 普通按钮 |
 
-### RichButton Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
  

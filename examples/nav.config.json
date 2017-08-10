@@ -89,10 +89,6 @@
               "title": "Checkbox 多选框"
             },
             {
-              "path": "/checkbox",
-              "title": "Checkbox 多选框"
-            },
-            {
               "path": "/rich-checkbox",
               "title": "RichCheckbox 多选框"
             },
@@ -276,16 +272,16 @@
               "title": "MainNav 路由菜单"
             },
             {
+              "path": "/nav-menus",
+              "title": "NavMenus 多页菜单"
+            },
+            {
               "path": "/menu",
               "title": "NavMenu 跳转菜单"
             },
             {
               "path": "/back-top",
               "title": "BackTop 回顶部"
-            },
-            {
-              "path": "/nav-menus",
-              "title": "NavMenus 多页菜单"
             },
             {
               "path": "/side-guide",

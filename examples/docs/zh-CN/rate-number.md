@@ -2,21 +2,32 @@
   export default {
     data() {
       return {
-        input: ''
+        input: 0
       };
     }
   }
 </script>
 ## RateNumber 比率（百分比/千分比）
-
-通过鼠标或键盘输入字符
+```
+其他参数参见 el-input
+```
 
 ### 基础用法
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
- 
+<div style="margin-bottom: 20px;">实际值：<span v-text="input"></span></div>
+<rate-number v-model="input" rate="permillage"></rate-number>
+
+<script>
+  export default {
+    data() {
+      return {
+        input: 0
+      };
+    }
+  }
+</script>
 ```
 :::
 
@@ -25,9 +36,11 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
- 
+|    rate    |    比率类型     |   String     |  percent 或 permillage   |  percent |
 
-### RateNumber Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
+
+### 注意事项
+```
+  你选择比率类型为percent 时，输入 100实际得到的值是 1， 因此在写验证规则时，应该写 0到1之间的值
+```
  

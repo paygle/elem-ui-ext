@@ -24,19 +24,19 @@
             icon: 'el-icon-circle-plus',
             name: 'pan1',
             component: 'Pane',
-            args:'参数'
+            args:'参数A'
           },{
             label:'第2个',
             name: 'pan2',
             closable: true,
             component: 'Pane',
-            args:'参数'
+            args:'参数B'
           },{
             label:'第3--个',
             name: 'pan31',
             
             component: 'Pane',
-            args:'参数'
+            args:'参数C'
            }
         ]
       };

@@ -9,10 +9,11 @@
       }"
     >
       <span v-if="layout==='tick'" class="rich-checkbox__inner">
-        <i :class="'el-icon-' + icon" v-if="icon"></i>
-        <span class="rich-checkbox__label" v-if="$slots.default || label">
-          <slot></slot>
-          <template v-if="!$slots.default">{{label}}</template>
+        <i :class="'el-icon-' + icon" v-if="icon"></i
+        ><span class="rich-checkbox__label" 
+          v-if="$slots.default || label"
+        ><slot></slot><template 
+          v-if="!$slots.default">{{label}}</template>
         </span>
       </span>
       <input

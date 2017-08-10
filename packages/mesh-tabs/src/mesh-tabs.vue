@@ -88,7 +88,7 @@ export default {
       } 
       if(this.$refs['pane'+targetName][0]){
         this.$refs['pane'+targetName][0].$destroy();
-        this.$refs['pane'+targetName]=null
+        this.$refs['pane'+targetName]=null;
       } 
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {

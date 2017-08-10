@@ -129,13 +129,17 @@ export default {
     },
     doDestroy(){
       if (this.$el && this.updateStyle) off(window, 'resize', this.updateStyle);
+      this.$destroy();
     }
   },
   
   mounted(){
     setTimeout(()=>{ this.updateStyle(); }, 300);
-    this.$on('updateStyle', (e)=>this.updateStyle());
-    on(window, 'resize', (e)=>this.updateStyle());
+    this.$on('updateStyle', this.updateStyle);
+    on(window, 'resize', this.updateStyle);
+  },
+  beforDestroy(){
+    off(window, 'resize', this.updateStyle);
   }
 };
 </script>

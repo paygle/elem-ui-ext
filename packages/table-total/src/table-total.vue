@@ -140,6 +140,7 @@ export default {
   mounted() {
     this.$nextTick(function () {
       this.computedWidths();
+      this.$el.parentElement.style.paddingBottom = '20px';
     });
   }
 };

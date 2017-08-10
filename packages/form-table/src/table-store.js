@@ -52,8 +52,8 @@ const toggleRowSelection = function (states, row, selected) {
 const tableInputChange = function (states, row, column, val) {
   let changed = false;
   if (column.property in row) {
+    if(row[column.property] !== val) changed = true;
     row[column.property] = val;
-    changed = true;
   }
   return changed;
 };
@@ -96,8 +96,8 @@ const checkAllboxChanged = function (states, column, store) {
 const tableCheckboxChange = function (states, row, column, val) {
   let changed = false;
   if (typeof row[column.property] !== 'undefined') {
+    if(row[column.property] !== val) changed = true;
     row[column.property] = val;
-    changed = true;
   }
   return changed;
 };
@@ -105,8 +105,8 @@ const tableCheckboxChange = function (states, row, column, val) {
 const tableSwitchChanged = function (states, row, column, val) {
   let changed = false;
   if (typeof row[column.property] !== 'undefined') {
+    if(row[column.property] !== val) changed = true;
     row[column.property] = val;
-    changed = true;
   }
   return changed;
 };
@@ -114,8 +114,8 @@ const tableSwitchChanged = function (states, row, column, val) {
 const tableSelectChange = function (states, row, column, val) {
   let changed = false;
   if (column.property in row) {
+    if(row[column.property] !== val) changed = true;
     row[column.property] = val;
-    changed = true;
   }
   return changed;
 };
@@ -125,8 +125,8 @@ const tableDatePickerChanged = function (states, row, column, date) {
   if (!date) date = '';
 
   if (column.property in row) {
+    if(row[column.property] !== date) changed = true;
     row[column.property] = date;
-    changed = true;
   }
   return changed;
 };
@@ -134,8 +134,8 @@ const tableDatePickerChanged = function (states, row, column, date) {
 const tableAddressChanged = function (states, row, column, val) {
   let changed = false;
   if (column.property in row) {
+    if(row[column.property] !== val) changed = true;
     row[column.property] = val;
-    changed = true;
   }
   return changed;
 };

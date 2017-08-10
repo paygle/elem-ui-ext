@@ -30,6 +30,8 @@ const install = function(Vue, opts = {}) {
   });
 
   Vue.use(Loading.directive);
+  Vue.use(SideGuide.directive);
+  Vue.use(TableTotal.directive);
 
   Vue.prototype.$loading = Loading.service;
   Vue.prototype.$msgbox = MessageBox;

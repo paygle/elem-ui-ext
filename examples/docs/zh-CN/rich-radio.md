@@ -2,21 +2,46 @@
   export default {
     data() {
       return {
-        input: ''
+        input: '',
+        radioGVal: ''
       };
     }
   }
 </script>
+<style>
+ .sp {
+   margin-top: 20px;
+ }
+</style>
 ## RichRadio 增强样式 Radio
-
-通过鼠标或键盘输入字符
+```
+其他参数参考 Radio 文档
+```
 
 ### 基础用法
 
 ::: demo
 ```html
-<format-number v-model="input" placeholder="请输入内容"></format-number>
- 
+<div class="sp">单个RichRadio</div>
+<rich-radio v-model="input" label="11">RichRadio</rich-radio>
+<div class="sp">RichRadioGroup</div>
+<rich-radio-group v-model="radioGVal">
+  <rich-radio canceled icon="edit" label="43">组选项A</rich-radio>
+  <rich-radio canceled label="54" disabled>组选项B</rich-radio>
+  <rich-radio canceled label="72">组选项C</rich-radio>
+  <rich-radio canceled label="76">组选项C</rich-radio>
+</rich-radio-group>
+
+<script>
+  export default {
+    data() {
+      return {
+        input: '',
+        radioGVal: ''
+      };
+    }
+  }
+</script>
 ```
 :::
 
@@ -25,9 +50,7 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
- 
+| icon          |   图标样式类名  | String | — | — |
+| canceled     | 是否允许取消选择 | Boolean | — | — |  
 
-### RichRadio Events
-| 事件名称 | 说明 | 回调参数 |
-|---------|--------|---------|
  
