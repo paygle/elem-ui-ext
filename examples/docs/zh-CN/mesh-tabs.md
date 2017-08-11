@@ -54,8 +54,15 @@
       tabClick(tab, event){
         console.log('tabClick', tab, event)
       },
-      tabRemove(tabData, name){
-        this.meshTabsData = tabData                     
+      closeCall(delTarget, targetName, filterData){ 
+        delTarget(targetName);                     
+        this.meshTabsData = filterData             
+        console.log('tabRemoveCall', filterData, targetName);
+      },
+      tabRemove(tabData, name){                  
+        this.meshTabsData = tabData             
+        this.activeName = "pan1"
+        console.log('tabRemove', tabData, name)
       }
     }
   }
@@ -72,6 +79,7 @@
   ref="meshTab"
   :components="tabsComponents"
   @tab-click="tabClick"
+  :close-call="closeCall"
   @tab-remove="tabRemove"
   :showLast="false"
   :route-data="meshTabsData"
@@ -122,8 +130,15 @@
       tabClick(tab, event){
         console.log('tabClick', tab, event)
       },
-      tabRemove(tabData, name){
-        this.meshTabsData = tabData                     
+      closeCall(delTarget, targetName, filterData){ // 注意下面两条语句的顺序不能颠倒
+        delTarget(targetName);                      // 顺序1. 必须删除对应的tab
+        this.meshTabsData = filterData              // 顺序2. tabs 删除功能必须配置这条语句
+        console.log('tabRemoveCall', filterData, targetName);
+      },
+      tabRemove(filterData, name){      // closeCall 和 tabRemove 同时只能选用一个，closeCall优先
+        this.meshTabsData = filterData  // tabs 删除功能必须配置这条语句
+        this.activeName = "pan1"
+        console.log('tabRemove', filterData, name)
       }
     }
   }
@@ -159,7 +174,9 @@ routeData 格式：
 |    type   	|      风格类型     	|  string	    | card/strip/border-card | — |
 |   closable	|   标签是否可关闭    |   boolean	  |      —	|    false |
 | active-name	| 选中选项卡的 name 	|   string	   |      —	 |   第一个选项卡的 name |
-|  tab-click	| tab 被选中的钩子	  |   Function   |  被选中的标签 tab 实例 参数（panel, event） |
-| tab-remove	| tab 被删除的钩子	  |   Function   |  被删除的标签 tab 实例 参数 (tabData, name) |
-
+| close-call	| tab关闭前回调函数，用于自定义关闭	|   Function | —	 | (delTarget, targetName, filterData)|
  
+| 事件名称 | 说明 | 回调参数 |
+|---------|--------|---------|
+| tab-click	| tab 被选中的钩子	  | 被选中的标签 tab 实例 参数（panel, event） |
+| tab-remove	| tab 被删除的钩子，close-call优先本事件	|  参数 (filterData, name) |

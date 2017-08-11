@@ -79,17 +79,24 @@ export default {
       this.$emit('tab-click', panel, e);
       this.broadcast('Architecture', 'draw-update');
     },
+    delTarget(targetName) {
+      // 删除目标对象
+      if(this.$refs[targetName]) {
+        if(this.$refs[targetName][0] && this.$refs[targetName][0].$destroy) {
+          this.$refs[targetName][0].$destroy() ;
+          this.$refs[targetName][0] = null;
+        } 
+        if(this.$refs['pane'+targetName][0]){
+          this.$refs['pane'+targetName][0].$destroy();
+          this.$refs['pane'+targetName] = null;
+        } 
+      }
+    },
     removeTab(targetName) {
       let tabs = this.tabData;
       let activeName = this.activeName;
-      if(this.$refs[targetName][0] && this.$refs[targetName][0].$destroy) {
-        this.$refs[targetName][0].$destroy() ;
-        this.$refs[targetName][0]=null;
-      } 
-      if(this.$refs['pane'+targetName][0]){
-        this.$refs['pane'+targetName][0].$destroy();
-        this.$refs['pane'+targetName]=null;
-      } 
+      let filterData = JsonToObject(tabs.filter(tab => tab.name !== targetName));
+  
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
@@ -103,10 +110,10 @@ export default {
       this.activeTab = activeName;
       // 删除处理
       if(typeof this.closeCall === 'function') {
-        this.closeCall.call(null, JsonToObject(this.tabData), targetName);
+        this.closeCall.call(null, this.delTarget, targetName, filterData);
       } else {
-        this.tabData = tabs.filter(tab => tab.name !== targetName);
-        this.$emit('tab-remove', JsonToObject(this.tabData), targetName);
+        this.delTarget(targetName);
+        this.$emit('tab-remove', filterData, targetName);
       }
     },
     goLastActive() {

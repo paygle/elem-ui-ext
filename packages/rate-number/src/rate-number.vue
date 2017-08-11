@@ -19,6 +19,7 @@
 <script>
 import emitter from 'element-ui/src/mixins/emitter';
 import ElInput from 'element-ui/packages/input';
+import math from 'element-ui/src/utils/math';
 
 export default{
   name: 'RateNumber',
@@ -131,9 +132,9 @@ export default{
       if(val === ""){
         return "";
       }else if(this.getRate() === 'percent'){ 
-        return  this.setPrecision(val) * 1000000000 / 100000000000;
+        return math.div(this.setPrecision(val), 100);
       }else{
-        return  this.setPrecision(val, 3) * 1000000000 / 1000000000000;
+        return math.div(this.setPrecision(val, 3), 1000);
       }
     },
     blurChange(e){
@@ -175,8 +176,7 @@ export default{
     },
     getRateValue(value) {
       return this.getRate() === 'percent'
-        ? parseFloat(value * 1000000000 * 100 / 1000000000) 
-        : parseFloat(value * 1000000000 * 1000 / 1000000000);
+        ? math.multi(value, 100) : math.multi(value, 1000);
     },
     getRate() {
       let _rate = 'percent';
