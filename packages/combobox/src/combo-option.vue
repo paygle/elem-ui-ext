@@ -14,7 +14,8 @@
     </slot>
   </li>
 </template>
-<script>
+
+<script type="text/babel">
   import Emitter from 'element-ui/src/mixins/emitter';
   import { getValueByPath } from 'element-ui/src/utils/util';
 

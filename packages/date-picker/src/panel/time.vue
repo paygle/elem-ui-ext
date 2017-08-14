@@ -30,7 +30,7 @@
   </transition>
 </template>
 
-<script>
+<script type="text/babel">
   import { limitRange } from '../util';
   import Locale from 'element-ui/src/mixins/locale';
 

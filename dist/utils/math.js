@@ -1,13 +1,16 @@
-"use strict";
+'use strict';
 
 exports.__esModule = true;
 exports.default = {
   // 除法
   div: function div(arg1, arg2) {
+    arg1 = typeof arg1 === 'undefined' ? 0 : arg1;
+    arg2 = typeof arg2 === 'undefined' ? 0 : arg2;
     var t1 = 0,
         t2 = 0,
         r1,
         r2;
+
     try {
       t1 = arg1.toString().split(".")[1].length;
     } catch (e) {}
@@ -21,9 +24,12 @@ exports.default = {
 
   //乘法 
   multi: function multi(arg1, arg2) {
+    arg1 = typeof arg1 === 'undefined' ? 0 : arg1;
+    arg2 = typeof arg2 === 'undefined' ? 0 : arg2;
     var m = 0,
         s1 = arg1.toString(),
         s2 = arg2.toString();
+
     try {
       m += s1.split(".")[1].length;
     } catch (e) {}
@@ -35,7 +41,10 @@ exports.default = {
 
   //加法  
   add: function add(arg1, arg2) {
+    arg1 = typeof arg1 === 'undefined' ? 0 : arg1;
+    arg2 = typeof arg2 === 'undefined' ? 0 : arg2;
     var r1, r2, m;
+
     try {
       r1 = arg1.toString().split(".")[1].length;
     } catch (e) {
@@ -52,7 +61,10 @@ exports.default = {
 
   //减法  
   sub: function sub(arg1, arg2) {
+    arg1 = typeof arg1 === 'undefined' ? 0 : arg1;
+    arg2 = typeof arg2 === 'undefined' ? 0 : arg2;
     var r1, r2, m, n;
+
     try {
       r1 = arg1.toString().split(".")[1].length;
     } catch (e) {

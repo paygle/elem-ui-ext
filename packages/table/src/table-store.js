@@ -18,7 +18,7 @@ const getKeysMap = function(array, rowKey) {
   return arrayMap;
 };
 
-const toggleRowSelection = function(states, row, selected) {
+const toggleRowSelection = function (states, row, selected) {
   let changed = false;
   const selection = states.selection;
   const index = selection.indexOf(row);

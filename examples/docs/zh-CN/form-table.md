@@ -146,7 +146,6 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
       const vadlidateRate = function(rule, value, callback, source, options){
         console.log("vadlidateRate value: ", value)
       }
-
       const vadlidateNumber = function(rule, value, callback, source, options){
         console.log("vadlidateNumber value: ", value)
       }

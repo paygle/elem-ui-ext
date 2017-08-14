@@ -128,7 +128,7 @@
   </transition>
 </template>
 
-<script>
+<script type="text/babel">
   import { formatDate, parseDate, getWeekNumber } from '../util';
   import Locale from 'element-ui/src/mixins/locale';
   import ElInput from 'element-ui/packages/input';

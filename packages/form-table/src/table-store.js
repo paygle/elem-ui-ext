@@ -12,13 +12,10 @@ const sortData = (data, states) => {
   return orderBy(data, states.sortProp, states.sortOrder, sortingColumn.sortMethod);
 };
 
-const getKeysMap = function (array, rowKey) {
+const getKeysMap = function(array, rowKey) {
   const arrayMap = {};
   (array || []).forEach((row, index) => {
-    arrayMap[getRowIdentity(row, rowKey)] = {
-      row,
-      index
-    };
+    arrayMap[getRowIdentity(row, rowKey)] = { row, index };
   });
   return arrayMap;
 };
@@ -139,7 +136,7 @@ const tableAddressChanged = function (states, row, column, val) {
   }
   return changed;
 };
-const TableStore = function (table, initialState = {}) {
+const TableStore = function(table, initialState = {}) {
   if (!table) {
     throw new Error('Table is required.');
   }
@@ -280,11 +277,7 @@ TableStore.prototype.mutations = {
   },
 
   filterChange(states, options) {
-    let {
-      column,
-      values,
-      silent
-    } = options;
+    let { column, values, silent } = options;
     if (values && !Array.isArray(values)) {
       values = [values];
     }
@@ -338,7 +331,7 @@ TableStore.prototype.mutations = {
       states.reserveSelection = column.reserveSelection;
     }
 
-    this.updateColumns(); // hack for dynamics insert column
+    this.updateColumns();  // hack for dynamics insert column
     this.scheduleLayout();
   },
 
@@ -348,7 +341,7 @@ TableStore.prototype.mutations = {
       _columns.splice(_columns.indexOf(column), 1);
     }
 
-    this.updateColumns(); // hack for dynamics remove column
+    this.updateColumns();  // hack for dynamics remove column
     this.scheduleLayout();
   },
 
@@ -453,7 +446,7 @@ TableStore.prototype.mutations = {
     }
   },
   // 打开一个，其余全部关闭
-  toggleOneRowExpanded: function (states, row, expanded) {
+  toggleOneRowExpanded: function(states, row, expanded) {
     if (states.expandRows.indexOf(row) === -1) {
       states.expandRows = [];
       states.expandRows.push(row);
@@ -463,7 +456,7 @@ TableStore.prototype.mutations = {
     this.table.$emit('expand', row);
   },
 
-  toggleRowExpanded: function (states, row, expanded) {
+  toggleRowExpanded: function(states, row, expanded) {
     const expandRows = states.expandRows;
     if (typeof expanded !== 'undefined') {
       const index = expandRows.indexOf(row);
@@ -508,7 +501,7 @@ TableStore.prototype.mutations = {
       states.data.splice(i, 1, o);
     }
   },
-  toggleAllSelection: debounce(10, function (states) {
+  toggleAllSelection: debounce(10, function(states) {
     const data = states.data || [];
     const value = !states.isAllSelected;
     const selection = this.states.selection;
@@ -556,7 +549,7 @@ const doFlattenColumns = (columns) => {
   return result;
 };
 
-TableStore.prototype.updateColumns = function () {
+TableStore.prototype.updateColumns = function() {
   const states = this.states;
   const _columns = states._columns || [];
   states.fixedColumns = _columns.filter((column) => column.fixed === true || column.fixed === 'left');
@@ -571,11 +564,11 @@ TableStore.prototype.updateColumns = function () {
   states.isComplex = states.fixedColumns.length > 0 || states.rightFixedColumns.length > 0;
 };
 
-TableStore.prototype.isSelected = function (row) {
+TableStore.prototype.isSelected = function(row) {
   return (this.states.selection || []).indexOf(row) > -1;
 };
 
-TableStore.prototype.clearSelection = function () {
+TableStore.prototype.clearSelection = function() {
   const states = this.states;
   states.isAllSelected = false;
   const oldSelection = states.selection;
@@ -585,7 +578,7 @@ TableStore.prototype.clearSelection = function () {
   }
 };
 
-TableStore.prototype.setExpandRowKeys = function (rowKeys) {
+TableStore.prototype.setExpandRowKeys = function(rowKeys) {
   const expandRows = [];
   const data = this.states.data;
   const rowKey = this.states.rowKey;
@@ -601,14 +594,14 @@ TableStore.prototype.setExpandRowKeys = function (rowKeys) {
   this.states.expandRows = expandRows;
 };
 
-TableStore.prototype.toggleRowSelection = function (row, selected) {
+TableStore.prototype.toggleRowSelection = function(row, selected) {
   const changed = toggleRowSelection(this.states, row, selected);
   if (changed) {
     this.table.$emit('selection-change', this.states.selection);
   }
 };
 
-TableStore.prototype.cleanSelection = function () {
+TableStore.prototype.cleanSelection = function() {
   const selection = this.states.selection || [];
   const data = this.states.data;
   const rowKey = this.states.rowKey;
@@ -637,14 +630,9 @@ TableStore.prototype.cleanSelection = function () {
   }
 };
 
-TableStore.prototype.updateAllSelected = function () {
+TableStore.prototype.updateAllSelected = function() {
   const states = this.states;
-  const {
-    selection,
-    rowKey,
-    selectable,
-    data
-  } = states;
+  const { selection, rowKey, selectable, data } = states;
   if (!data || data.length === 0) {
     states.isAllSelected = false;
     return;
@@ -655,7 +643,7 @@ TableStore.prototype.updateAllSelected = function () {
     selectedMap = getKeysMap(states.selection, rowKey);
   }
 
-  const isSelected = function (row) {
+  const isSelected = function(row) {
     if (selectedMap) {
       return !!selectedMap[getRowIdentity(row, rowKey)];
     } else {
@@ -692,11 +680,11 @@ TableStore.prototype.updateAllSelected = function () {
   states.isAllSelected = isAllSelected;
 };
 
-TableStore.prototype.scheduleLayout = function () {
+TableStore.prototype.scheduleLayout = function() {
   this.table.debouncedLayout();
 };
 
-TableStore.prototype.setCurrentRowKey = function (key) {
+TableStore.prototype.setCurrentRowKey = function(key) {
   const states = this.states;
   const rowKey = states.rowKey;
   if (!rowKey) throw new Error('[Table] row-key should not be empty.');
@@ -708,7 +696,7 @@ TableStore.prototype.setCurrentRowKey = function (key) {
   }
 };
 
-TableStore.prototype.updateCurrentRow = function () {
+TableStore.prototype.updateCurrentRow = function() {
   const states = this.states;
   const table = this.table;
   const data = states.data || [];
@@ -723,7 +711,7 @@ TableStore.prototype.updateCurrentRow = function () {
   }
 };
 
-TableStore.prototype.commit = function (name, ...args) {
+TableStore.prototype.commit = function(name, ...args) {
   const mutations = this.mutations;
   if (mutations[name]) {
     mutations[name].apply(this, [this.states].concat(args));

@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script>
+<script type="text/babel">
   import ElInputNumber from 'element-ui/packages/input-number';
   import SliderButton from './button.vue';
   import Emitter from 'element-ui/src/mixins/emitter';

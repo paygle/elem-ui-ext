@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script>
+<script type="text/babel">
   import { hasClass } from 'element-ui/src/utils/dom';
 
   export default {

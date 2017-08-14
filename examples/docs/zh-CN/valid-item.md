@@ -25,7 +25,6 @@
         console.log('validateTest', valid.state, valid.msg, valid.prop)
       },
       submitValidItems(e){
-        debugger
         this.broadcast('ValidItem', 'valid.item.change')
       },
       resetValidItems(e){
@@ -92,7 +91,6 @@
         console.log('validateTest', valid.state, valid.msg, valid.prop)
       },
       submitValidItems(e){
-        debugger
         this.broadcast('ValidItem', 'valid.item.change')
       },
       resetValidItems(e){

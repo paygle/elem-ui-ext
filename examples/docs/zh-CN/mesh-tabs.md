@@ -175,7 +175,8 @@ routeData 格式：
 |   closable	|   标签是否可关闭    |   boolean	  |      —	|    false |
 | active-name	| 选中选项卡的 name 	|   string	   |      —	 |   第一个选项卡的 name |
 | close-call	| tab关闭前回调函数，用于自定义关闭	|   Function | —	 | (delTarget, targetName, filterData)|
- 
+
+### 事件
 | 事件名称 | 说明 | 回调参数 |
 |---------|--------|---------|
 | tab-click	| tab 被选中的钩子	  | 被选中的标签 tab 实例 参数（panel, event） |

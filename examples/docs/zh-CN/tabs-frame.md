@@ -8,7 +8,7 @@
             label:'首页',
             name: 'home',
             href: '/#/zh-CN/',
-            disabled: false
+            closable: true
           },{
             label:'指南',
             name: 'design',
@@ -57,7 +57,7 @@ tabsData 格式：
             label:'首页',
             name: 'home',
             href: '/#/zh-CN/',
-            disabled: false
+            closable: true
           },{
             label:'指南',
             name: 'design',
@@ -81,9 +81,15 @@ tabsData 格式：
 |    href 	  |  iframe 链接地址    |   string	  |      —	      |    -  可添加简单参数 |
 |   closable	|   标签是否可关闭    |   boolean	  |      —	|    false |
 | active-name	| 选中选项卡的 name 	|   string	   |      —	 |   第一个选项卡的 name |
-|  tab-click	| tab 被选中的钩子	  |   Function   |  被选中的标签 tab 实例 参数（panel, event） |
-| tab-remove	| tab 被删除的钩子	  |   Function   |  被删除的标签 tab 实例 参数 (tabData, name) |
+|  tab-click	| tab 被选中的钩子	  |   Function   |  —	 |被选中的标签 tab 实例 参数（panel, event） |
+| tab-remove	| tab 被删除的钩子	  |   Function   |  —	 |被删除的标签 tab 实例 参数 (tabData, name) |
+| close-call	| tab关闭前回调函数，用于自定义关闭	|   Function | —	 | (delTarget, targetName, filterData)|
 
+### 事件
+| 事件名称 | 说明 | 回调参数 |
+|---------|--------|---------|
+| tab-click	| tab 被选中的钩子	  | 被选中的标签 tab 实例 参数（panel, event） |
+| tab-remove	| tab 被删除的钩子，close-call优先本事件	|  参数 (filterData, name) |
 
 ### 在嵌入进iframe里面的html页面添加如下代码，否则无法自适应高度：
 ```

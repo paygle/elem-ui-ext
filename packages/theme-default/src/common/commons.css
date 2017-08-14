@@ -1557,6 +1557,7 @@ div .message-ebox {
   min-width: 30em;
   width: 100%;
   padding-top: 5px;
+  box-sizing: border-box;
   border: 1px solid #cecbce;
   box-shadow: 0 0 5px #ddd;
 }
@@ -1645,6 +1646,7 @@ div .message-ebox {
 .address-contents {
   width: 100%;
   padding: 10px;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -1689,7 +1691,6 @@ div .message-ebox {
 .el-switch {
   padding: 0;
 }
-
 
 /* Rich-checkbox 和 Rich-radio */
 

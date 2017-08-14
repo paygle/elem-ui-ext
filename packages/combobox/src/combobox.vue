@@ -22,7 +22,7 @@
       </transition-group>
       <span style="padding:2px;"
         v-if="translated"
-        v-for="(item, index) in selected">
+        v-for="item in selected">
         {{ item.currentLabel }}
       </span>
       <input v-show="!translated"
@@ -99,7 +99,8 @@
     </transition>
   </div>
 </template>
-<script>
+
+<script type="text/babel">
   import Emitter from 'element-ui/src/mixins/emitter';
   import Locale from 'element-ui/src/mixins/locale';
   import ElInput from 'element-ui/packages/input';
