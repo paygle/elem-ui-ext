@@ -53,7 +53,7 @@
 
 
 ### AddressBox Attributes
-全局配置对象：window.ComponentsConfig.ADDRESS_DATA_URL
+全局配置对象：window.COMPONENTS_CONFIG.ADDRESS_DATA_URL
 | 参数          | 说明            | 类型            | 可选值    | 默认值   |
 |------------- |---------------- |---------------- |---------- |---------------- |
 |   data-url  | JSON数据URL          |  String    |   ——     |  在全局对象中配置 ADDRESS_DATA_URL 

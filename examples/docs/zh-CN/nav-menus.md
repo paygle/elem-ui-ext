@@ -72,7 +72,7 @@
 ### NavMenus Attributes
 
 ```
-全局配置对象 window.ComponentsConfig.MAIN_MENUS 
+全局配置对象 window.COMPONENTS_CONFIG.MAIN_MENUS 
 ```
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |

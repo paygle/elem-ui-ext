@@ -2,8 +2,8 @@
 import {
   setStyle
 } from 'element-ui/src/utils/dom';
-//请用全局组件配置对象 ComponentsConfig
-const COLOR_THEME = window.ComponentsConfig ? window.ComponentsConfig.COLOR_THEME : null;
+//请用全局组件配置对象 COMPONENTS_CONFIG
+const COLOR_THEME = window.COMPONENTS_CONFIG ? window.COMPONENTS_CONFIG.COLOR_THEME : null;
 
 export default class Adapter {
 

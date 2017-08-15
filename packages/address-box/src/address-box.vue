@@ -35,7 +35,7 @@ import { TypeOf, createDomElement, getLocalDataItem, setLocalDataItem } from 'el
 
 const $ = window.$ || window.jQuery || console && console.warn('Need jQuery lib pre.'); // 引入jQuery
 
-const ADDRESS_DATA_URL = window.ComponentsConfig ? window.ComponentsConfig.ADDRESS_DATA_URL : '';
+const ADDRESS_DATA_URL = window.COMPONENTS_CONFIG ? window.COMPONENTS_CONFIG.ADDRESS_DATA_URL : '';
 
 const getAddressData = function () {
   let _this = this;

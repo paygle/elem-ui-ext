@@ -256,7 +256,7 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
 
 ### FormTable Attributes
 ```
-地址全局变量配置： window.ComponentsConfig.ADDRESS_DATA_URL
+地址全局变量配置： window.COMPONENTS_CONFIG.ADDRESS_DATA_URL
 ```
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |

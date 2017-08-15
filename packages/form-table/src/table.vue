@@ -320,9 +320,9 @@
           } else if (this.shouldUpdateHeight) {
             this.layout.updateHeight();
           }
-          if (this.$el) {
-            this.isHidden = this.$el.clientWidth === 0;
-          }
+          // if (this.$el) { //导致无法展示
+          //   this.isHidden = this.$el.clientWidth === 0;
+          // }
         });
       },
       errChange(){

@@ -664,6 +664,25 @@
           this.$emit('input', option.value);
           this.visible = false;
         }
+        this.$nextTick(() => this.scrollToOption(option));
+      },
+
+      getValueIndex(arr = [], value) {
+        const isObject = Object.prototype.toString.call(value).toLowerCase() === '[object object]';
+        if (!isObject) {
+          return arr.indexOf(value);
+        } else {
+          const valueKey = this.valueKey;
+          let index = -1;
+          arr.some((item, i) => {
+            if (getValueByPath(item, valueKey) === getValueByPath(value, valueKey)) {
+              index = i;
+              return true;
+            }
+            return false;
+          });
+          return index;
+        }
       },
 
       toggleMenu() {

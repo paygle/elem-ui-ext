@@ -74,7 +74,7 @@
 </div>
 </template>
 <script>
-const MAIN_MENUS = window.ComponentsConfig ? window.ComponentsConfig.MAIN_MENUS : [];
+const MAIN_MENUS = window.COMPONENTS_CONFIG ? window.COMPONENTS_CONFIG.MAIN_MENUS : [];
 
 export default {
 	name: 'NavMenus',
