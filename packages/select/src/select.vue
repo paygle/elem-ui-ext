@@ -252,6 +252,7 @@
       },
 
       value(val) {
+        if (val === null || val === 'null') this.$emit('input', '');  // 处理值为null时为空
         if (this.multiple) {
           this.resetInputHeight();
           if (val.length > 0 || (this.$refs.input && this.query !== '')) {

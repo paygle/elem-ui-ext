@@ -138,8 +138,7 @@
 | msg-width  | 滚动窗口宽度  |  Number     |   ——    |   200 |
 | msg-height  | 是否显示滚动消息  |  Number     |    ——     |   38 |
 | pop-width  | 是否显示滚动消息  |  Number     |    ——     |   380 |
-| placement  | 弹出窗口位置  |  String   |top/top-start/top-end/bottom/bottom-start/
-bottom-end/left/left-start/left-end/right/right-start/right-end |   bottom |
+| placement  | 弹出窗口位置  |  String   |top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end |   bottom |
 | trigger  | 弹出窗口触发方式  |  String     | click/focus/hover/manual   |   hover |
 
 ### 事件  

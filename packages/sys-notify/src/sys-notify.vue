@@ -37,8 +37,8 @@
       <div 
         class="scroll-box"
         v-if="scroller"
-        @mouseover="msgMouseover"
-        @mouseout="msgMouseout"
+        @mouseenter="msgMouseEnter"
+        @mouseleave="msgMouseLeave"
         :style="scrollBoxStyl">
         <div class="inner-box" :style="innerBoxStyl" >
           <a class="scroll-link"
@@ -196,10 +196,10 @@ export default {
         return '[清除]';
       }
     },
-    msgMouseover(e){
+    msgMouseEnter(e){
       this.isHover = true;
     },
-    msgMouseout(e){
+    msgMouseLeave(e){
       this.isHover = false;
     },
     linkClick(item){

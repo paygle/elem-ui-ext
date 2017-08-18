@@ -69,8 +69,9 @@
   padding:0;
 
   li{
-    margin:0 10px;
+    padding:0 10px;
     list-style: none;
+    line-height: 1.5em;
     border-bottom: 1px solid #ccc;
 
     &:last-child{
