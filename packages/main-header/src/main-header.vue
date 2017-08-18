@@ -5,6 +5,7 @@
       <img :src="logolink">
     </div>
     <div class="header-right">
+      <slot name="notify"></slot>
       <span>欢迎您 :<el-dropdown @command="handleCommand">
           <span class="el-dropdown-link nor-btn">
             {{nowdept}}<i class="el-icon-caret-bottom el-icon--right"></i>

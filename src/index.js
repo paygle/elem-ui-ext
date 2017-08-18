@@ -99,6 +99,7 @@ import ComboTableColumn from '../packages/combo-table-column/index.js';
 import Combobox from '../packages/combobox/index.js';
 import FormTable from '../packages/form-table/index.js';
 import FormTableColumn from '../packages/form-table-column/index.js';
+import SysNotify from '../packages/sys-notify/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
 
@@ -198,6 +199,7 @@ const components = [
   Combobox,
   FormTable,
   FormTableColumn,
+  SysNotify,
   CollapseTransition
 ];
 
@@ -333,5 +335,6 @@ module.exports = {
   ComboTableColumn,
   Combobox,
   FormTable,
-  FormTableColumn
+  FormTableColumn,
+  SysNotify
 };

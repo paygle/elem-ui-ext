@@ -70,6 +70,7 @@
 
   li{
     margin:0 10px;
+    list-style: none;
     border-bottom: 1px solid #ccc;
 
     &:last-child{

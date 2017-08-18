@@ -394,6 +394,8 @@
 
 .el-icon-ntsearch:before { content: "\E6D9"; }
 
+.el-icon-msgbell:before { content: "\E6DA"; }
+
 .el-icon-loading {
   animation: rotating 1s linear infinite;
 }

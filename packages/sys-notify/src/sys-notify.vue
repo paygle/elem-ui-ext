@@ -1,5 +1,5 @@
 <template>
-  <div class="sys-notify">
+  <div class="sys-notify" :style="{lineHeight: msgHeight + 'px'}">
     <el-popover
       ref="notifyPoper"
       :placement="placement"
@@ -205,7 +205,7 @@ export default {
     linkClick(item){
       if(this.actDefault){
         if(this.target === 'blank') {
-          window.open(item.c_doc_url)
+          window.open(item.c_doc_url);
         }else{
           location.href = item.c_doc_url;
         }
@@ -216,7 +216,7 @@ export default {
     moreClick(){
       if(this.actDefault && this.more){
         if(this.target === 'blank') {
-          window.open(this.more)
+          window.open(this.more);
         }else{
           location.href = this.more;
         }
@@ -234,7 +234,7 @@ export default {
       let scrollWords = []; 
       let actived = 0, step = this.step;
       let msgWidth = this.msgWidth;
-      let Felm, Eelm, fleft, eleft, fwidth,ewidth;
+      let Felm, Eelm, fleft, eleft, fwidth;
 
       for(let i=0; i<this.msgList.length; i++){
         let elm = this.$refs['key'+i][0];
@@ -272,7 +272,6 @@ export default {
         fleft = Felm['left'] - step;
         eleft = Eelm['left'] - step;
         fwidth = Felm['width'];
-        ewidth = Eelm['width'];
 
         if(Math.abs(fleft) >= fwidth && Math.abs(fleft) <= fwidth + msgWidth) { // 同步前进
           Felm['el'].style.left = fleft + 'px';
@@ -316,5 +315,5 @@ export default {
     this.msgList = this.msgData;
     this.msgTotal = this.msgCount;
   }
-}
+};
 </script>
