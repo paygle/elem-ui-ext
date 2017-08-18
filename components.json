@@ -98,5 +98,6 @@
   "combo-table-column": "./packages/combo-table-column/index.js",
   "combobox": "./packages/combobox/index.js",
   "form-table": "./packages/form-table/index.js",
-  "form-table-column": "./packages/form-table-column/index.js"
+  "form-table-column": "./packages/form-table-column/index.js",
+  "sys-notify": "./packages/sys-notify/index.js"
 }

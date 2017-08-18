@@ -257,6 +257,10 @@
             {
               "path": "/notification",
               "title": "Notification 通知"
+            },
+            {
+              "path": "/sys-notify",
+              "title": "SysNotify 消息推送"
             }
           ]
         },
