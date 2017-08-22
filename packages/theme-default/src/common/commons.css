@@ -1347,6 +1347,7 @@ tbody tr:nth-child(odd) {
 
 body label {
   margin-bottom: 2px;
+  font-weight: normal;
 }
 
 body .el-table th>.cell {

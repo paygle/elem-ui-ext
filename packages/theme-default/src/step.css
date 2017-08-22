@@ -83,7 +83,7 @@
       transition: all 150ms;
 
       @when text {
-        font-size: 14px;
+        font-size: 12px;
         border-width: 2px;
         border-style: solid;
 
@@ -151,7 +151,7 @@
     }
 
     @e title {
-      font-size: 14px;
+      font-size: 12px;
       line-height: 32px;
       display: inline-block;
 

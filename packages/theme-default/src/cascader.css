@@ -43,7 +43,7 @@
       overflow: hidden;
       box-sizing: border-box;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 12px;
       text-align: left;
       span {
         color: var(--color-light-silver);

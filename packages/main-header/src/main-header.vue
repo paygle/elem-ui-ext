@@ -2,7 +2,7 @@
 <header class="main-header container">
   <div class="fr-w header-box">
     <div class="header-left">
-      <img :src="logolink">
+      <img :src="logoLink">
     </div>
     <div class="header-right">
       <slot name="notify"></slot>
@@ -46,6 +46,10 @@ export default {
     nowdate: String,
     nowdept: String,
     nowdeptCode: String,
+    logoLink: {
+      type: String,
+      default: 'static/img/logo.png'
+    },
     depts: {
       type: Array,
       default: function () {
@@ -73,11 +77,6 @@ export default {
         return fn;
       }
     }
-  },
-  data() {
-    return {
-      logolink: 'static/img/logo.png'
-    };
   },
   methods: {
     handleCommand(command, instance) {

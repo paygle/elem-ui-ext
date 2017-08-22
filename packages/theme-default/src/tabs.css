@@ -79,7 +79,7 @@
       line-height: @height;
       display: inline-block;
       list-style: none;
-      font-size: 14px;
+      font-size: 12px;
       color: var(--color-base-silver);
       position: relative;
 

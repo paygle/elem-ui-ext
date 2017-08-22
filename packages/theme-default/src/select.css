@@ -85,7 +85,7 @@
       height: 28px;
       background-color: transparent;
       @when mini {
-        height: 14px;
+        height: 12px;
       }
     }
 
