@@ -17,6 +17,7 @@ export default {
     laneComponents: Object,          // 需要使用到的模板组件
     lanePopDisabled: Boolean,        // 是否禁用弹出面板
     itemPopDisabled: Boolean,
+    statusIcons: Object,    // 状态图标
     placement: String,
     hasMoreIcon: String,
     lineColor: String,
@@ -63,13 +64,24 @@ export default {
   },
   methods:{
 
+    setIcons(self, status) { // 获取状态图标
+      let icon_class;
+      self = self || this;
+      if(self.statusIcons){
+        icon_class = self.statusIcons[status];
+      }
+      return icon_class;
+    },
+
     laneItemClick(lane, e){
       this.dispatch('CaseTrack', 'item-click', {node:lane, event:e});
     },
 
     laneIconClick(node, e){
       e.stopPropagation();
-      this.dispatch('CaseTrack', 'icon-click', {node:node, event:e});
+      if(this.lane.nextLevel == 1){ // 更多图标点击才有效
+        this.dispatch('CaseTrack', 'icon-click', {node:node, event:e});
+      }
     },
 
     initComponentName(args){
@@ -124,6 +136,18 @@ export default {
 
   render(h){
     let directives = [ { name: 'popover', arg:'lanePopv' } ];
+
+    function getIcons(self, status) {
+      let icons = 'icon ', 
+          icon_cls = self.setIcons(self, status);
+      if(self.lane.nextLevel == 1){
+        icons += self.hasMoreIcon;
+      }else if(icon_cls) {  
+        icons += 'status ' + icon_cls; 
+      }
+      return icons;
+    }
+
     return (
        <div class="lane" style={ this.laneHeight ? this.laneHeight : {} }>
         <el-popover 
@@ -141,13 +165,13 @@ export default {
             : <span class="el-icon-loading"></span>
           } 
         </el-popover>
-        <div { ...{ directives } } class="lane-title" 
+        <div { ...{ directives } } class={ "lane-title " + this.lane.status }
           on-click={ ($event)=> this.laneItemClick(this.lane, $event) }>
           { this.lane.title }
           { 
-            (this.lane.nextLevel == 1)
+            (this.lane.nextLevel == 1 || this.lane.status)
             ? <i 
-              class={ 'icon ' + this.hasMoreIcon }
+              class={ getIcons(this, this.lane.status) }
               on-click={ ($event)=> this.laneIconClick(this.node, $event) }>
             </i> : ''
           }
@@ -161,6 +185,7 @@ export default {
               get-componet-name={ this.getComponetName }
               get-componet-data={ this.getComponetData }
               item-components={ this.laneComponents }
+              status-icons={ this.statusIcons }
               placement={ this.placement }
               svg-color={ this.lineColor }
               width={ this.itemWidth }

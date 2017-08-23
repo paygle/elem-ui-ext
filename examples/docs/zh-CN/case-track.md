@@ -113,6 +113,7 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
+|  status-icons |  状态图标指定对象                  |   Object   |   ——       |  —— 
 |  relative-dom |  图形宽度自动调整关联节点           |   String   |   ——       |  body|
 |  components   |  需要使用到的弹窗模板组件            |   Object   |    ——      |  ——  |
 |  get-componet-name |  获取弹出窗口当前的模板名称    |  Function  |   ——       |  必需返回 String| 
@@ -125,6 +126,17 @@
 |  lane-pop-disabled  |  禁用lane弹出面板            |  Boolean    |    ——      |  false|
 |  item-pop-disabled  |  禁用节点弹出面板            |   Boolean   |    ——      |  false|
 |  placement  |  弹出框出现位置全局设置  | String |  默认值left | 可选值 top/top-start/top-end/bottom/bottom-start/bottom-end/left/left-start/left-end/right/right-start/right-end|
+
+#### statusIcons 状态图标数据格式
+```
+{
+  unreceived: "el-icon-circle-hook",      // 未接收状态图标
+  untriggered: "el-icon-circle-hook",     // 未触发状态图标 
+  processing: "el-icon-cir-caution",      // 处理中状态图标
+  complete: "el-icon-timex",              // 已完成状态图标
+  terminated: "el-icon-circle-l-arrow"    // 已终结状态图标
+}
+```
 
 #### mapData 数据元描述
 

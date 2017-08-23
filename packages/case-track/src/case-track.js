@@ -21,6 +21,7 @@ export default {
       }
     },
     mapData: Array,         // 图形数据
+    statusIcons: Object,    // 状态图标
     itemWidth: Number,
     rightPanelWidth:{       // 右侧固定面板宽度
       type: Number,
@@ -172,6 +173,7 @@ export default {
                   item-pop-disabled={ this.itemPopDisabled }
                   get-componet-name={ this.getComponetName }
                   get-componet-data={ this.getComponetData }
+                  status-icons={ this.statusIcons }
                   components={ this.components }
                   itemWidth={ this.innerItemWidth }
                   line-color={ this.lineColor }
@@ -190,6 +192,7 @@ export default {
                   is-group-start={ this.hasLanes(this.caseMapData, $index + 1) }
                   is-group-end={ this.hasLanes(this.caseMapData, $index - 1) }
                   is-last-node={ (this.caseMapData.length-1) === $index }
+                  status-icons={ this.statusIcons }
                   placement={ this.placement }
                   svg-color={ this.lineColor }
                   width={ this.innerItemWidth }

@@ -215,6 +215,7 @@ const forced = {
           column ={ column }
           store  ={ store }
           index  ={ $index }
+          width = { option.width }
           btnIcon = { option.btnIcon }
           btnClicked = { column.labelBtnClicked }
           disabled={column.editable ? !column.editable.call(null, row, $index) : false }

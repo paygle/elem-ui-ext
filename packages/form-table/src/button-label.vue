@@ -1,5 +1,6 @@
 <template>
   <div class="button-label">
+    <div class="lbl-txt">
     <el-tooltip :disabled="innerTipDisabled" :content="tipContent" placement="bottom" effect="light" defree>
       <span class="label-ctx" v-if="isFormatter" v-text="currentLabel"></span>
       <dict-label 
@@ -11,6 +12,7 @@
         :label-changed="labelChanged">
       </dict-label>
     </el-tooltip>
+    </div>
     <el-button :disabled="disabled" :plain="true" type="info" @click="iconButtonClick">
       <i :class="[btnIcon]"></i>
     </el-button>

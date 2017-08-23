@@ -312,7 +312,7 @@ div .el-collapse-item__content {
   box-sizing: content-box;
   border-radius: 4px;
   padding: 5px 10px;
-  height: 18px;
+  min-height: 18px;
   cursor: default;
 }
 
@@ -320,12 +320,18 @@ div .el-collapse-item__content {
   font-size: 12px;
   cursor: pointer;
 }
+.lane-title .icon.status {
+  cursor: default;
+}
 
 .title-box .icon {
   position: absolute;
   right: 8px;
   bottom: 8px;
   cursor: pointer;
+}
+.title-box .icon.status {
+  cursor: default;
 }
 
 .title-box p {
@@ -997,6 +1003,12 @@ div .el-form-item__error {
   margin: 0 5px;
   border: 1px solid var(--pmy-light-color);
   border-radius: 4px;
+}
+
+.button-label .lbl-txt{
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .el-table .button-label>span {

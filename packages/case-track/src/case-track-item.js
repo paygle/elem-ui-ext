@@ -37,6 +37,7 @@ export default {
     getComponetData: Function,       // 获取模板初始化数据
     itemComponents: Object,          // 需要使用到的模板组件
     itemPopDisabled: Boolean,        // 是否禁用弹出面板
+    statusIcons: Object,             // 状态图标
     hasMoreIcon: String,
     placement: String,
     width: Number,
@@ -76,6 +77,7 @@ export default {
     };
   },
   computed:{
+    
     ItemStyle(){
       if(this.width && !isNaN(this.width)){
         return {width: this.width + 'px'};
@@ -103,13 +105,24 @@ export default {
   },
   methods:{
 
+    setIcons(self, status) { // 获取状态图标
+      let icon_class;
+      self = self || this;
+      if(self.statusIcons){
+        icon_class = self.statusIcons[status];
+      }
+      return icon_class;
+    },
+
     itemClick(node, e){
       this.dispatch('CaseTrack', "item-click", {node:node, event:e});
     },
 
     iconClick(node, e){
       e.stopPropagation();
-      this.dispatch('CaseTrack', "icon-click", {node:node, event:e});
+      if(this.node.nextLevel == 1){ // 更多图标点击才有效
+        this.dispatch('CaseTrack', "icon-click", {node:node, event:e});
+      }
     },
 
     arrowDraw(){
@@ -212,6 +225,18 @@ export default {
 
   render(h){
     let directives = [ { name: 'popover', arg:'itemPopv' } ];
+    
+    function getIcons(self, status) {
+      let icons = 'icon ', 
+          icon_cls = self.setIcons(self, status);
+      if(self.node.nextLevel == 1){
+        icons += self.hasMoreIcon;
+      }else if(icon_cls) {  
+        icons += 'status ' + icon_cls; 
+      }
+      return icons;
+    }
+
     return (
       <div class="case-track-item">
         <el-popover 
@@ -252,9 +277,9 @@ export default {
               { !this.node.shapeIcon ? this.getFormatTitle(h, this.node.title) : '' }
               { this.node.shapeIcon ? <span class={ "shape " + this.node.shapeIcon }></span> : '' }
               {
-                (this.node.nextLevel == 1) && !this.node.shapeIcon 
+                (this.node.nextLevel == 1 || this.node.status) && !this.node.shapeIcon 
                   ? <i 
-                    class={ "icon " + this.hasMoreIcon } 
+                    class={ getIcons(this, this.node.status) } 
                     on-click={ ($event)=> this.iconClick(this.node, $event) }>
                   </i> : ''
               }

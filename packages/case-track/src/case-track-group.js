@@ -24,6 +24,7 @@ export default {
     itemPopDisabled: Boolean,
     getComponetName: Function,  // 获取弹出窗口的模板名称
     getComponetData: Function,   // 获取模板初始化数据
+    statusIcons: Object,    // 状态图标
     components: Object,
     placement: String,
     itemWidth: Number,
@@ -198,6 +199,7 @@ export default {
                 get-componet-name={ this.getComponetName }
                 get-componet-data={ this.getComponetData }
                 lane-components={ this.components }
+                status-icons={ this.statusIcons }
                 placement={ this.placement }
                 itemWidth={ this.itemWidth }
                 line-color={ this.lineColor }
