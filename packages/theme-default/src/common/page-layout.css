@@ -49,14 +49,9 @@
     overflow: hidden;
     height: 12px;
   }
-  .inner-box{
-    position: absolute;
-    min-width: 10px;
-    min-height: 12px;
-  }
+  
   .scroll-link{
-    position: absolute;
-    display: inline-block;
+    padding-right: 10px;
     white-space: nowrap;
     word-break: normal;
     color: #999;

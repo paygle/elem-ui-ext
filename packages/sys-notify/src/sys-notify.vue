@@ -40,7 +40,13 @@
         @mouseenter="msgMouseEnter"
         @mouseleave="msgMouseLeave"
         :style="scrollBoxStyl">
-        <div class="inner-box" :style="innerBoxStyl" >
+        <marquee 
+          ref="marquee"
+          direction="left" 
+          :width="msgWidth" 
+          :scrollamount="step"
+          :scrolldelay="time"
+          :height="msgHeight">
           <a class="scroll-link"
             v-for="(item, index) in msgList" 
             :ref="'key'+index"
@@ -48,16 +54,7 @@
             @click="linkClick(item)"
             v-text="item.c_msg_text">
           </a>
-          <template v-if="msgList.length === 1">
-            <a class="scroll-link"
-              v-for="(item, index) in msgList" 
-              ref="key1"
-              :key="index"
-              @click="linkClick(item)"
-              v-text="item.c_msg_text">
-            </a>
-          </template>
-        </div>
+        </marquee>
       </div>
       <span v-if="separate" class="separate">|</span>
     </div>
@@ -131,21 +128,13 @@ export default {
     return {
       msgList: [],
       shwCount: false,
-      msgTotal: 0,
-      thandle: null,
-      isHover: false,
-      isOutUpdate: false
+      msgTotal: 0
     };
   },
   watch: {
     'msgData'(n, o) {
       if(n !==o) {
-        this.isOutUpdate = true;
         this.msgList = n;
-        this.$nextTick(function(){
-          this.isOutUpdate = false;
-          if(this.msgList.length){ this.scrollWordsGo(); }
-        });
       }
     },
     'msgCount'(n, o) {
@@ -197,10 +186,10 @@ export default {
       }
     },
     msgMouseEnter(e){
-      this.isHover = true;
+      this.$refs.marquee.stop();
     },
     msgMouseLeave(e){
-      this.isHover = false;
+      this.$refs.marquee.start();
     },
     linkClick(item){
       if(this.actDefault){
@@ -226,73 +215,6 @@ export default {
     },
     delMsg(item){
       this.$emit('del-msg', item);
-    },
-    scrollWordsGo(){
-      if(!this.scroller) return;
-
-      clearInterval(this.thandle);
-      let scrollWords = []; 
-      let actived = 0, step = this.step;
-      let msgWidth = this.msgWidth;
-      let Felm, Eelm, fleft, eleft, fwidth;
-
-      for(let i=0; i<this.msgList.length; i++){
-        let elm = this.$refs['key'+i][0];
-        elm.style.left = 0;
-        scrollWords.push({
-          el: elm,
-          left: 0,
-          width: Number(getComputedStyle(elm).width.replace('px', '')) + 10
-        });
-
-        // 只有一条消息时
-        if(this.msgList.length === 1){
-          let elmt = this.$refs['key1'][0];
-          elmt.style.left = 0;
-          scrollWords.push({
-            el: elmt,
-            left: 0,
-            width: Number(getComputedStyle(elmt).width.replace('px', ''))
-          });
-        }
-      }
-
-      this.thandle = setInterval(()=>{
-
-        if(this.isHover) return;
-        
-        if(actived < scrollWords.length -1) {
-          Felm = scrollWords[actived];
-          Eelm =  scrollWords[actived+1];
-        }else{
-          Felm = scrollWords[actived];
-          Eelm =  scrollWords[0];
-        }
-           
-        fleft = Felm['left'] - step;
-        eleft = Eelm['left'] - step;
-        fwidth = Felm['width'];
-
-        if(Math.abs(fleft) >= fwidth && Math.abs(fleft) <= fwidth + msgWidth) { // 同步前进
-          Felm['el'].style.left = fleft + 'px';
-          Eelm['el'].style.left = eleft + 'px';
-          Felm['left'] = fleft;
-          Eelm['left'] = eleft;
-        }else if(Math.abs(fleft) < fwidth){  // 激活先行
-          Felm['el'].style.left = fleft + 'px';
-          Felm['left'] = fleft;
-        }else if(Math.abs(fleft) > fwidth + msgWidth){ // 激活隐藏
-          Felm['el'].style.left = 0;
-          Felm['left'] = 0;
-          Eelm['el'].style.left = eleft + 'px';
-          Eelm['left'] = eleft;
-          if(actived + 1 <  scrollWords.length){
-            actived += 1;
-          }else{
-            actived = 0;
-          }
-        }
-      }, this.time);
     }
   },
   updated(){
@@ -303,8 +225,6 @@ export default {
     setTimeout(()=>{
       this.shwCount =  true;
     }, 500);
-
-    if(this.msgList.length){ this.scrollWordsGo(); }
   },
   beforeDestroy(){
     if(this.$refs.notifyPoper) {

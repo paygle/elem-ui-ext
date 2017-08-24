@@ -14,7 +14,12 @@
       :ref="'pane'+item.name"
       :closable="item.closable">
       <span v-if="item.icon" slot="label"><i :class="item.icon"></i> {{item.label}}</span>
-      <div :ref="item.name" v-bind:is="item.component" :args="item.args"></div>
+      <div :ref="item.name" 
+        v-bind:is="item.component" 
+        :args="item.args"
+        :agent-height="agentHeight"
+        :active="activeTab">
+      </div>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -62,6 +67,7 @@ export default {
   data(){
     return {
       activeTab: this.activeName,
+      agentHeight: null,
       tabData: []
     };
   },
@@ -149,6 +155,13 @@ export default {
         }
       });
     }
+  },
+  updated(){ // 更新高度
+    setTimeout(()=>{
+      if(window.agentHeight && window.agentHeight!==this.agentHeight){
+        this.agentHeight = window.agentHeight;
+      }
+    }, 200);
   },
   created(){
     let type; this.tabData = this.routeData;
