@@ -151,9 +151,15 @@ export default {
 
 			if (_Path) {
 				let path = _Path.value.match(regx) ? _Path.value.match(regx)[0] : '';
-				location.href = '//' + location.host +
+				/** 支持 ~/ 跳转到根目录导航 */
+				if(/^~\//g.test(_Path.value)){
+					location.href = '//' + location.host + _Path.value.replace(/^~\//g, '/');
+				}else{
+					location.href = '//' + location.host +
 					location.pathname.replace(regx, '') + path + '#' +
 					_Path.value.replace(regx, '');
+				}
+				
 				this.toggleHide = true;
 				setTimeout(function () { $this.toggleHide = false; }, 1000);
 			}

@@ -89,13 +89,13 @@
 
     watch: {
       currentLabel() {
-        if (!this.created && !this.parent.remote){
+        if (!this.created && !this.parent.remote && !this.parent.showPager){
           this.dispatch('ElSelect', 'setSelected');
           this.dispatch('Combobox', 'setSelected');
         }
       },
       value() {
-        if (!this.created && !this.parent.remote){
+        if (!this.created && !this.parent.remote && !this.parent.showPager){
           this.dispatch('ElSelect', 'setSelected');
           this.dispatch('Combobox', 'setSelected');    //增加调用combobox by wangjingl@sunline.cn
         }

@@ -39,7 +39,7 @@
         @keydown.esc.stop.prevent="visible = false"
         @keydown.delete="deletePrevTag"
         v-model="query"
-        :debounce="remote ? 300 : 0"
+        :debounce="remote || showPager ? 300 : 0"
         v-if="filterable"
         :style="{ width: inputLength + 'px', 'max-width': inputWidth - 42 + 'px' }"
         ref="input">
@@ -87,7 +87,7 @@
             <combo-option 
               v-for="(item, index) in comboItems" 
               v-if="!!item" 
-              :key="index"
+              :key="item.c_cod"
               :label="item.c_cname" 
               :value="item.c_code">
             </combo-option>
@@ -95,6 +95,15 @@
           <slot v-else></slot>
         </el-scrollbar>
         <p class="el-select-dropdown__empty" v-if="emptyText && (allowCreate && options.length === 0 || !allowCreate)">{{ emptyText }}</p>
+
+        <el-pagination v-if="showPager"
+          layout="total, prev, pager, next"
+          :page-size="pageSize"
+          :current-page.sync="currentPage"
+           @current-change="onPageChange"
+          :total="total">
+        </el-pagination>
+
       </el-select-menu>
     </transition>
   </div>
@@ -116,6 +125,8 @@
   import scrollIntoView from 'element-ui/src/utils/scroll-into-view';
   import { getValueByPath } from 'element-ui/src/utils/util';
   import util from 'element-ui/src/utils/util-ext';
+  import ElPagination from 'element-ui/packages/pagination';
+
   const sizeMap = {
     'large': 42,
     'small': 30,
@@ -141,7 +152,7 @@
       },
 
       debounce() {
-        return this.remote ? 300 : 0;
+        return this.remote || this.showPager ? 300 : 0;
       },
 
       emptyText() {
@@ -167,6 +178,10 @@
         let hasExistingOption = this.options.filter(option => !option.created)
           .some(option => option.currentLabel === this.query);
         return this.filterable && this.allowCreate && this.query !== '' && !hasExistingOption;
+      },
+      //是否显示分页
+      showPager(){
+        return this.total > this.pageSize
       }
     },
 
@@ -175,7 +190,8 @@
       ElSelectMenu,
       ComboOption,
       ElTag,
-      ElScrollbar
+      ElScrollbar,
+      ElPagination
     },
 
     directives: { Clickoutside },
@@ -245,6 +261,11 @@
       autoSelectFirst:{
           type : Boolean,
           default : false
+      },
+      //分页每页显示数量
+      pageSize:{
+        default:30,
+        type : Number
       }
     },
 
@@ -273,7 +294,10 @@
         voidRemoteQuery: false,
         comboItems:[], //下拉框数据
         comboLoading:false, //是否加载后台数据
-        realParams:{} //下拉框参数
+        realParams:{}, //下拉框参数,
+        currentPage:1,
+        total:0,
+        _COMBO_DATAS:[]
       };
     },
 
@@ -328,12 +352,19 @@
             this.filterMethod(val);
             this.broadcast('ElOptionGroup', 'queryChange');
           }
-        } else {
+        }else if(this.showPager){
+            if(val === this.filterValue && val!="" &&  this.filterValue!="") return;
+            // 自定义过滤方法处理
+            if(!this.isFilterLoad){
+              this.filterValue = val;
+              this.filterAll(val);
+            }
+        }else {
           this.filteredOptionsCount = this.optionsCount;
           this.broadcast('ComboOption', 'queryChange', val);
           this.broadcast('ElOptionGroup', 'queryChange');
         }
-        if (this.defaultFirstOption && (this.filterable || this.remote) && this.filteredOptionsCount) {
+        if (this.defaultFirstOption &&!this.showPager && (this.filterable || this.remote) && this.filteredOptionsCount) {
           this.checkDefaultFirstOption();
         }
       },
@@ -424,7 +455,7 @@
         }
       },
       cachedOptions(cacheData){  // Cache 初始化赋值
-        this.initSelected(cacheData);
+        !this.showPager && this.initSelected(cacheData);
       },
 
       comboLoading(val) { 
@@ -766,6 +797,11 @@
         if (index > -1) {
           this.options.splice(index, 1);
         }
+        //从缓存中移除
+        let idx=this.cachedOptions.indexOf(option);
+        if(idx > -1){
+          this.cachedOptions.splice(index, 1);
+        }
         this.broadcast('ComboOption', 'resetIndex');
       },
 
@@ -820,7 +856,7 @@
             cacheable: !this.forceRefresh,
             successCallback:function(payload){
               self.comboLoading=false;
-              self.comboItems=payload.dictData;
+              self.fillComboDatas(payload.dictData);
               if(util.isFunction(callback)){
                 callback.call(this);
               }
@@ -867,6 +903,71 @@
           }
         }
         this.realParams=util.mixins({},this.dictParams,rowParams);
+      },
+
+      //下拉框翻页
+      onPageChange(val){
+        let start=(val-1)*this.pageSize;
+        let end=val*this.pageSize;
+        let data=this._COMBO_DATAS.slice(start,end);
+        let index=this.getValueIndexFromAll();
+        if(index !=-1 && (index < start || index>=end)){
+          let selected=this._COMBO_DATAS[index];
+          data.splice(0,0,selected);
+        }
+        this.comboItems=util.getOriginalData(data);
+      },
+
+      //填充下拉框数据，自动分页
+      fillComboDatas(datas){
+        this._COMBO_DATAS=datas;
+        this.total=datas.length;
+        //有值时，找到值对应的页
+        if(this.value && this.value.length>0 ){
+          let index=this.getValueIndexFromAll();
+          if(index < this.pageSize){
+            this.currentPage=1;
+          }else{
+            this.currentPage=Math.floor(index/this.pageSize)+1;
+          }
+        }else{
+          this.currentPage=1;
+        }
+        let start = (this.currentPage-1) * this.pageSize;
+        let end = this.currentPage * this.pageSize;
+        this.cachedOptions=[];
+        this.comboItems = util.getOriginalData(this._COMBO_DATAS.slice(start,end));
+      },
+
+      //获取下拉框选中值所在的位置
+      getValueIndexFromAll(){
+        if(this.value && this._COMBO_DATAS.length>0){
+          for(let i=0;i<this._COMBO_DATAS.length;i++){
+            if(this._COMBO_DATAS[i].c_code==this.value){
+              return i;
+            }
+          }
+        }
+        return -1;
+      },
+      filterAll(query){
+        this.isFilterLoad=true;
+        
+        if(query==''){
+          let start = (this.currentPage-1) * this.pageSize;
+          let end = this.currentPage * this.pageSize;
+          this.comboItems = util.getOriginalData(this._COMBO_DATAS.slice(start,end));
+        }else{
+          let arr=[]
+          for(let i=0;i<this._COMBO_DATAS.length && arr.length < this.pageSize;i++){
+            if(this._COMBO_DATAS[i].c_cname.indexOf(query)!=-1){
+              arr.push(this._COMBO_DATAS[i])
+            }
+          }
+          this.comboItems = util.getOriginalData(arr);
+        }
+        
+        this.isFilterLoad=false;
       }
     },
 
@@ -890,6 +991,7 @@
       this.$on('handleOptionClick', this.handleOptionSelect);
       this.$on('onOptionDestroy', this.onOptionDestroy);
       this.$on('setSelected', this.setSelected);
+
     },
 
     mounted() {
@@ -915,7 +1017,7 @@
       if(this.dictId){
         var data=this.$store.state.dictStore.dict[this.dictId];
         if(data && data.length>0){
-          this.comboItems=data;
+          this.fillComboDatas(data);
         }else{ //缓存中没有数据时
           if(this.value && this.value.length>0){ //有默认值时立即加载后台数据
             this.comboLoading=true;
