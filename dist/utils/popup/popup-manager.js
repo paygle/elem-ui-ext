@@ -1,20 +1,11 @@
-'use strict';
+import Vue from 'vue';
+import { addClass, removeClass } from 'element-ui/src/utils/dom';
 
-exports.__esModule = true;
+let hasModal = false;
 
-var _vue = require('vue');
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _dom = require('element-ui/lib/utils/dom');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var hasModal = false;
-
-var getModal = function getModal() {
-  if (_vue2.default.prototype.$isServer) return;
-  var modalDom = PopupManager.modalDom;
+const getModal = function() {
+  if (Vue.prototype.$isServer) return;
+  let modalDom = PopupManager.modalDom;
   if (modalDom) {
     hasModal = true;
   } else {
@@ -22,12 +13,12 @@ var getModal = function getModal() {
     modalDom = document.createElement('div');
     PopupManager.modalDom = modalDom;
 
-    modalDom.addEventListener('touchmove', function (event) {
+    modalDom.addEventListener('touchmove', function(event) {
       event.preventDefault();
       event.stopPropagation();
     });
 
-    modalDom.addEventListener('click', function () {
+    modalDom.addEventListener('click', function() {
       PopupManager.doOnModalClick && PopupManager.doOnModalClick();
     });
   }
@@ -35,74 +26,72 @@ var getModal = function getModal() {
   return modalDom;
 };
 
-var instances = {};
+const instances = {};
 
-var PopupManager = {
+const PopupManager = {
   zIndex: 2000,
 
   modalFade: true,
 
-  getInstance: function getInstance(id) {
+  getInstance: function(id) {
     return instances[id];
   },
 
-  register: function register(id, instance) {
+  register: function(id, instance) {
     if (id && instance) {
       instances[id] = instance;
     }
   },
 
-  deregister: function deregister(id) {
+  deregister: function(id) {
     if (id) {
       instances[id] = null;
       delete instances[id];
     }
   },
 
-  nextZIndex: function nextZIndex() {
+  nextZIndex: function() {
     return PopupManager.zIndex++;
   },
 
   modalStack: [],
 
-  doOnModalClick: function doOnModalClick() {
-    var topItem = PopupManager.modalStack[PopupManager.modalStack.length - 1];
+  doOnModalClick: function() {
+    const topItem = PopupManager.modalStack[PopupManager.modalStack.length - 1];
     if (!topItem) return;
 
-    var instance = PopupManager.getInstance(topItem.id);
+    const instance = PopupManager.getInstance(topItem.id);
     if (instance && instance.closeOnClickModal) {
       instance.close();
     }
   },
 
-  openModal: function openModal(id, zIndex, dom, modalClass, modalFade) {
-    if (_vue2.default.prototype.$isServer) return;
+  openModal: function(id, zIndex, dom, modalClass, modalFade) {
+    if (Vue.prototype.$isServer) return;
     if (!id || zIndex === undefined) return;
     this.modalFade = modalFade;
 
-    var modalStack = this.modalStack;
+    const modalStack = this.modalStack;
 
-    for (var i = 0, j = modalStack.length; i < j; i++) {
-      var item = modalStack[i];
+    for (let i = 0, j = modalStack.length; i < j; i++) {
+      const item = modalStack[i];
       if (item.id === id) {
         return;
       }
     }
 
-    var modalDom = getModal();
+    const modalDom = getModal();
 
-    (0, _dom.addClass)(modalDom, 'v-modal');
+    addClass(modalDom, 'v-modal');
     if (this.modalFade && !hasModal) {
-      (0, _dom.addClass)(modalDom, 'v-modal-enter');
+      addClass(modalDom, 'v-modal-enter');
     }
     if (modalClass) {
-      var classArr = modalClass.trim().split(/\s+/);
-      classArr.forEach(function (item) {
-        return (0, _dom.addClass)(modalDom, item);
-      });
+      let classArr = modalClass.trim().split(/\s+/);
+      classArr.forEach(item => addClass(modalDom, item));
     }
-    setTimeout(function () {
-      (0, _dom.removeClass)(modalDom, 'v-modal-enter');
+    setTimeout(() => {
+      removeClass(modalDom, 'v-modal-enter');
     }, 200);
 
     if (dom && dom.parentNode && dom.parentNode.nodeType !== 11) {
@@ -119,18 +108,16 @@ var PopupManager = {
     this.modalStack.push({ id: id, zIndex: zIndex, modalClass: modalClass });
   },
 
-  closeModal: function closeModal(id) {
-    var modalStack = this.modalStack;
-    var modalDom = getModal();
+  closeModal: function(id) {
+    const modalStack = this.modalStack;
+    const modalDom = getModal();
 
     if (modalStack.length > 0) {
-      var topItem = modalStack[modalStack.length - 1];
+      const topItem = modalStack[modalStack.length - 1];
       if (topItem.id === id) {
         if (topItem.modalClass) {
-          var classArr = topItem.modalClass.trim().split(/\s+/);
-          classArr.forEach(function (item) {
-            return (0, _dom.removeClass)(modalDom, item);
-          });
+          let classArr = topItem.modalClass.trim().split(/\s+/);
+          classArr.forEach(item => removeClass(modalDom, item));
         }
 
         modalStack.pop();
@@ -138,7 +125,7 @@ var PopupManager = {
           modalDom.style.zIndex = modalStack[modalStack.length - 1].zIndex;
         }
       } else {
-        for (var i = modalStack.length - 1; i >= 0; i--) {
+        for (let i = modalStack.length - 1; i >= 0; i--) {
           if (modalStack[i].id === id) {
             modalStack.splice(i, 1);
             break;
@@ -149,42 +136,44 @@ var PopupManager = {
 
     if (modalStack.length === 0) {
       if (this.modalFade) {
-        (0, _dom.addClass)(modalDom, 'v-modal-leave');
+        addClass(modalDom, 'v-modal-leave');
       }
-      setTimeout(function () {
+      setTimeout(() => {
         if (modalStack.length === 0) {
           if (modalDom.parentNode) modalDom.parentNode.removeChild(modalDom);
           modalDom.style.display = 'none';
           PopupManager.modalDom = undefined;
         }
-        (0, _dom.removeClass)(modalDom, 'v-modal-leave');
+        removeClass(modalDom, 'v-modal-leave');
       }, 200);
     }
   }
 };
 
-var getTopPopup = function getTopPopup() {
-  if (_vue2.default.prototype.$isServer) return;
+const getTopPopup = function() {
+  if (Vue.prototype.$isServer) return;
   if (PopupManager.modalStack.length > 0) {
-    var topPopup = PopupManager.modalStack[PopupManager.modalStack.length - 1];
+    const topPopup = PopupManager.modalStack[PopupManager.modalStack.length - 1];
     if (!topPopup) return;
-    var instance = PopupManager.getInstance(topPopup.id);
+    const instance = PopupManager.getInstance(topPopup.id);
 
     return instance;
   }
 };
 
-if (!_vue2.default.prototype.$isServer) {
+if (!Vue.prototype.$isServer) {
   // handle `esc` key when the popup is shown
-  window.addEventListener('keydown', function (event) {
+  window.addEventListener('keydown', function(event) {
     if (event.keyCode === 27) {
-      var topPopup = getTopPopup();
+      const topPopup = getTopPopup();
 
       if (topPopup && topPopup.closeOnPressEscape) {
-        topPopup.handleClose ? topPopup.handleClose() : topPopup.handleAction ? topPopup.handleAction('cancel') : topPopup.close();
+        topPopup.handleClose
+          ? topPopup.handleClose()
+          : (topPopup.handleAction ? topPopup.handleAction('cancel') : topPopup.close());
       }
     }
   });
 }
 
-exports.default = PopupManager;
+export default PopupManager;

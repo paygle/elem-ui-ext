@@ -1,17 +1,12 @@
-"use strict";
-
-exports.__esModule = true;
-exports.default = {
-  filters: {
+export default {
+   filters: {
     /**
      * 百分比过滤器
      */
-    percent: function percent(value) {
+    percent: function (value) {
       if (isNaN(value)) return value;
       function multi(arg1, arg2) {
-        var m = 0,
-            s1 = arg1.toString(),
-            s2 = arg2.toString();
+        var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
         try {
           m += s1.split(".")[1].length;
         } catch (e) {}

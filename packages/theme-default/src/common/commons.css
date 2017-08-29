@@ -922,21 +922,7 @@ div .el-input.is-disabled .el-input__inner {
   color: #5e6b77;
   cursor: auto;
 }
-
-body .el-table__body-wrapper {
-  overflow: visible;
-}
-
-.el-table th .cell,
-.el-table .el-table__header-wrapper {
-  overflow: initial;
-  padding-bottom: 4px;
-}
-
-body .el-table {
-  overflow: auto;
-}
-
+ 
 .op-box .el-button--info.is-plain {
   background-color: transparent;
   border: 0;
@@ -1360,10 +1346,6 @@ tbody tr:nth-child(odd) {
 body label {
   margin-bottom: 2px;
   font-weight: normal;
-}
-
-body .el-table th>.cell {
-  line-height: 28px;
 }
 
 .op-box .el-button {

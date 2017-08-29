@@ -181,7 +181,7 @@
       },
       //是否显示分页
       showPager(){
-        return this.total > this.pageSize
+        return this.total > this.pageSize;
       }
     },
 
@@ -958,10 +958,10 @@
           let end = this.currentPage * this.pageSize;
           this.comboItems = util.getOriginalData(this._COMBO_DATAS.slice(start,end));
         }else{
-          let arr=[]
+          let arr=[];
           for(let i=0;i<this._COMBO_DATAS.length && arr.length < this.pageSize;i++){
             if(this._COMBO_DATAS[i].c_cname.indexOf(query)!=-1){
-              arr.push(this._COMBO_DATAS[i])
+              arr.push(this._COMBO_DATAS[i]);
             }
           }
           this.comboItems = util.getOriginalData(arr);

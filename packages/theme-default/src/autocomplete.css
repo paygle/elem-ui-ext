@@ -34,7 +34,7 @@
       margin: 0;
       cursor: pointer;
       color: var(--color-extra-light-black);
-      font-size: 14px;
+      /* font-size: 14px; */
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

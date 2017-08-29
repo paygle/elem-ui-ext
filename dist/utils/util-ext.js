@@ -1,23 +1,11 @@
-'use strict';
-
-exports.__esModule = true;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var _cacheUtil = require('./cache-util');
-
-var cacheUtil = _interopRequireWildcard(_cacheUtil);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-// 缓存工具类，从 store 目录转移
-var $ = window.$ || window.jQuery || console && console.warn('Need jQuery lib pre.');
-var API_URL = window.API_URL || "";
+import * as cacheUtil from './cache-util';   // 缓存工具类，从 store 目录转移
+const $ = window.$ || window.jQuery || console && console.warn('Need jQuery lib pre.');
+const API_URL = window.API_URL || "";
 /**
  * Created by wangjingl@sunline.cn on 2016/12/1.
  */
 //框架通用工具类
-exports.default = {
+export default {
   consts: {
     STATUS_SUCCESS: "0",
     STATUS_ERROR: "error",
@@ -37,7 +25,7 @@ exports.default = {
    * @param y
    * @returns {boolean}
    */
-  isObjectValueEqual: function isObjectValueEqual(x, y) {
+  isObjectValueEqual: function (x, y) {
     // If both x and y are null or undefined and exactly the same
     if (x === y) {
       return true;
@@ -68,7 +56,7 @@ exports.default = {
         }
 
         // Numbers, Strings, Functions, Booleans must be strictly equal
-        if (_typeof(x[p]) !== "object") {
+        if (typeof (x[p]) !== "object") {
           return false;
         }
 
@@ -99,7 +87,7 @@ exports.default = {
      * @param textStatus "success", "notmodified", "error", "timeout", "abort", or "parsererror"
      * @param data 服务器返回数据 json对象
      */
-    var _onSuccess = function _onSuccess(options, jqXHR, textStatus, data) {
+    var _onSuccess = function (options, jqXHR, textStatus, data) {
       if ($.isFunction(options.onSuccess)) {
         // 回调自定义的成功处理方法
         options.onSuccess(jqXHR, textStatus, data);
@@ -113,9 +101,9 @@ exports.default = {
      * @param textStatus "success", "notmodified", "error", "timeout", "abort", or "parsererror"
      * @param data 服务器返回数据 json对象
      */
-    var _onError = function _onError(options, jqXHR, textStatus, data) {
+    var _onError = function (options, jqXHR, textStatus, data) {
       var errorMsg = data.message;
-      // errorMsgDtl = data.detail_message;
+        // errorMsgDtl = data.detail_message;
       if ($.isFunction(options.onError)) {
         options.onError(jqXHR, textStatus, data);
       } else {
@@ -144,7 +132,9 @@ exports.default = {
        * @param testStatus "success", "notmodified", "error", "timeout", "abort", or "parsererror"
        * @param data 服务器返回数据 json对象
        */
-      onSuccess: function onSuccess(jqXHR, textStatus, data) {},
+      onSuccess: function (jqXHR, textStatus, data) {
+
+      },
 
       /**
        * 请求失败回调方法
@@ -152,11 +142,14 @@ exports.default = {
        * @param testStatus "success", "notmodified", "error", "timeout", "abort", or "parsererror"
        * @param data 服务器返回数据 json对象
        */
-      onError: function onError(jqXHR, textStatus, data) {}
+      onError: function (jqXHR, textStatus, data) {
+
+      }
 
     }, options);
 
-    if (options.url && options.url.indexOf(API_URL) != 0 && options.url.indexOf('http://') != 0 && options.url.indexOf('https://') != 0) {
+    if (options.url && options.url.indexOf(API_URL) != 0 &&
+      options.url.indexOf('http://') != 0 && options.url.indexOf('https://') != 0) {
       // 不是以上下文路径为开头的，则补充上上下文路径
       options.url = API_URL + options.url;
     }
@@ -181,7 +174,7 @@ exports.default = {
         "X-Custom-Header": "Ajax"
       },
       data: JSON.stringify(_model),
-      success: function success(data, textStatus, jqXHR) {
+      success: function (data, textStatus, jqXHR) {
         var outputModel = null;
         try {
           outputModel = JSON.parse(jqXHR.responseText);
@@ -201,7 +194,7 @@ exports.default = {
           _onError(options, jqXHR, "error", outputModel);
         }
       },
-      error: function error(jqXHR, textStatus, errorThrown) {
+      error: function (jqXHR, textStatus, errorThrown) {
         // 回调错误处理方法
         _onError(options, jqXHR, textStatus, {
           message: errorThrown
@@ -212,22 +205,22 @@ exports.default = {
   /**
    * 判断一个变量是否是function类型
    */
-  isFunction: function isFunction(fun) {
+  isFunction: function (fun) {
     return Object.prototype.toString.call(fun) === '[object Function]';
   },
 
   /**
    * 返回一个深拷贝的数据对象,自动去掉对象中的函数
    */
-  getOriginalData: function getOriginalData(dataObj) {
+  getOriginalData: function (dataObj) {
     return JSON.parse(JSON.stringify(dataObj));
   },
 
   /**
    * 获取当前登陆用户对象
    */
-  getCurrentUser: function getCurrentUser() {
-    var oper = cacheUtil.getSessionOper();
+  getCurrentUser: function () {
+    let oper = cacheUtil.getSessionOper();
     if (!oper) {
       $.ajax({
         url: API_URL + 'core/loadsession',
@@ -240,14 +233,14 @@ exports.default = {
         headers: {
           "X-Custom-Header": "Ajax"
         },
-        success: function success(data, textStatus, jqXHR) {
+        success: function (data, textStatus, jqXHR) {
           if (data && data.status == 'sessionTimeout') {
             alert(data.message);
           } else {
             oper = data;
           }
         },
-        error: function error(jqXHR, textStatus, errorThrown) {
+        error: function (jqXHR, textStatus, errorThrown) {
           console.log(textStatus);
         }
       });
@@ -264,12 +257,12 @@ exports.default = {
    * 合并js对象
    * 例如 var obj1={a:1},obj2={b:2}  mixinx({},obj1,obj2)将obj1和obj2合并到一个新的对象
    */
-  mixins: function mixins(target) {
-    for (var i = 1, j = arguments.length; i < j; i++) {
-      var source = arguments[i] || {};
-      for (var prop in source) {
+  mixins: function (target) {
+    for (let i = 1, j = arguments.length; i < j; i++) {
+      let source = arguments[i] || {};
+      for (let prop in source) {
         if (source.hasOwnProperty(prop)) {
-          var value = source[prop];
+          let value = source[prop];
           if (value !== undefined) {
             target[prop] = value;
           }
@@ -278,7 +271,7 @@ exports.default = {
     }
     return target;
   },
-  changeDept: function changeDept(deptCode) {
+  changeDept: function (deptCode) {
     $.ajax({
       url: API_URL + 'core/changeDept',
       type: "GET",
@@ -292,13 +285,13 @@ exports.default = {
       data: {
         deptCode: deptCode
       },
-      success: function success(data, textStatus, jqXHR) {
+      success: function (data, textStatus, jqXHR) {
         if (data.status == 'F') {
           alert(data.message);
         }
         window.top.location.reload();
       },
-      error: function error(jqXHR, textStatus, errorThrown) {
+      error: function (jqXHR, textStatus, errorThrown) {
         window.top.location.reload();
       }
     });

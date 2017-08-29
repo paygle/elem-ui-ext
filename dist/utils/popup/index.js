@@ -1,36 +1,18 @@
-'use strict';
+import Vue from 'vue';
+import merge from 'element-ui/src/utils/merge';
+import PopupManager from 'element-ui/src/utils/popup/popup-manager';
+import getScrollBarWidth from '../scrollbar-width';
 
-exports.__esModule = true;
-exports.PopupManager = undefined;
+let idSeed = 1;
+const transitions = [];
 
-var _vue = require('vue');
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _merge = require('element-ui/lib/utils/merge');
-
-var _merge2 = _interopRequireDefault(_merge);
-
-var _popupManager = require('element-ui/lib/utils/popup/popup-manager');
-
-var _popupManager2 = _interopRequireDefault(_popupManager);
-
-var _scrollbarWidth = require('../scrollbar-width');
-
-var _scrollbarWidth2 = _interopRequireDefault(_scrollbarWidth);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var idSeed = 1;
-var transitions = [];
-
-var hookTransition = function hookTransition(transition) {
+const hookTransition = (transition) => {
   if (transitions.indexOf(transition) !== -1) return;
 
-  var getVueInstance = function getVueInstance(element) {
-    var instance = element.__vue__;
+  const getVueInstance = (element) => {
+    let instance = element.__vue__;
     if (!instance) {
-      var textNode = element.previousSibling;
+      const textNode = element.previousSibling;
       if (textNode.__vue__) {
         instance = textNode.__vue__;
       }
@@ -38,16 +20,16 @@ var hookTransition = function hookTransition(transition) {
     return instance;
   };
 
-  _vue2.default.transition(transition, {
-    afterEnter: function afterEnter(el) {
-      var instance = getVueInstance(el);
+  Vue.transition(transition, {
+    afterEnter(el) {
+      const instance = getVueInstance(el);
 
       if (instance) {
         instance.doAfterOpen && instance.doAfterOpen();
       }
     },
-    afterLeave: function afterLeave(el) {
-      var instance = getVueInstance(el);
+    afterLeave(el) {
+      const instance = getVueInstance(el);
 
       if (instance) {
         instance.doAfterClose && instance.doAfterClose();
@@ -56,9 +38,9 @@ var hookTransition = function hookTransition(transition) {
   });
 };
 
-var scrollBarWidth = void 0;
+let scrollBarWidth;
 
-var getDOM = function getDOM(dom) {
+const getDOM = function(dom) {
   if (dom.nodeType === 3) {
     dom = dom.nextElementSibling || dom.nextSibling;
     getDOM(dom);
@@ -66,7 +48,7 @@ var getDOM = function getDOM(dom) {
   return dom;
 };
 
-exports.default = {
+export default {
   model: {
     prop: 'visible',
     event: 'visible-change'
@@ -110,18 +92,20 @@ exports.default = {
     }
   },
 
-  created: function created() {
+  created() {
     if (this.transition) {
       hookTransition(this.transition);
     }
   },
-  beforeMount: function beforeMount() {
+
+  beforeMount() {
     this._popupId = 'popup-' + idSeed++;
-    _popupManager2.default.register(this._popupId, this);
+    PopupManager.register(this._popupId, this);
   },
-  beforeDestroy: function beforeDestroy() {
-    _popupManager2.default.deregister(this._popupId);
-    _popupManager2.default.closeModal(this._popupId);
+
+  beforeDestroy() {
+    PopupManager.deregister(this._popupId);
+    PopupManager.closeModal(this._popupId);
     if (this.modal && this.bodyOverflow !== null && this.bodyOverflow !== 'hidden') {
       document.body.style.overflow = this.bodyOverflow;
       document.body.style.paddingRight = this.bodyPaddingRight;
@@ -129,7 +113,8 @@ exports.default = {
     this.bodyOverflow = null;
     this.bodyPaddingRight = null;
   },
-  data: function data() {
+
+  data() {
     return {
       opened: false,
       bodyOverflow: null,
@@ -138,17 +123,14 @@ exports.default = {
     };
   },
 
-
   watch: {
-    visible: function visible(val) {
-      var _this = this;
-
+    visible(val) {
       if (val) {
         if (this._opening) return;
         if (!this.rendered) {
           this.rendered = true;
-          _vue2.default.nextTick(function () {
-            _this.open();
+          Vue.nextTick(() => {
+            this.open();
           });
         } else {
           this.open();
@@ -160,15 +142,13 @@ exports.default = {
   },
 
   methods: {
-    open: function open(options) {
-      var _this2 = this;
-
+    open(options) {
       if (!this.rendered) {
         this.rendered = true;
         this.$emit('visible-change', true);
       }
 
-      var props = (0, _merge2.default)({}, this.$props || this, options);
+      const props = merge({}, this.$props || this, options);
 
       if (this._closeTimer) {
         clearTimeout(this._closeTimer);
@@ -176,17 +156,18 @@ exports.default = {
       }
       clearTimeout(this._openTimer);
 
-      var openDelay = Number(props.openDelay);
+      const openDelay = Number(props.openDelay);
       if (openDelay > 0) {
-        this._openTimer = setTimeout(function () {
-          _this2._openTimer = null;
-          _this2.doOpen(props);
+        this._openTimer = setTimeout(() => {
+          this._openTimer = null;
+          this.doOpen(props);
         }, openDelay);
       } else {
         this.doOpen(props);
       }
     },
-    doOpen: function doOpen(props) {
+
+    doOpen(props) {
       if (this.$isServer) return;
       if (this.willOpen && !this.willOpen()) return;
       if (this.opened) return;
@@ -195,28 +176,28 @@ exports.default = {
 
       this.$emit('visible-change', true);
 
-      var dom = getDOM(this.$el);
+      const dom = getDOM(this.$el);
 
-      var modal = props.modal;
+      const modal = props.modal;
 
-      var zIndex = props.zIndex;
+      const zIndex = props.zIndex;
       if (zIndex) {
-        _popupManager2.default.zIndex = zIndex;
+        PopupManager.zIndex = zIndex;
       }
 
       if (modal) {
         if (this._closing) {
-          _popupManager2.default.closeModal(this._popupId);
+          PopupManager.closeModal(this._popupId);
           this._closing = false;
         }
-        _popupManager2.default.openModal(this._popupId, _popupManager2.default.nextZIndex(), this.modalAppendToBody ? undefined : dom, props.modalClass, props.modalFade);
+        PopupManager.openModal(this._popupId, PopupManager.nextZIndex(), this.modalAppendToBody ? undefined : dom, props.modalClass, props.modalFade);
         if (props.lockScroll) {
           if (!this.bodyOverflow) {
             this.bodyPaddingRight = document.body.style.paddingRight;
             this.bodyOverflow = document.body.style.overflow;
           }
-          scrollBarWidth = (0, _scrollbarWidth2.default)();
-          var bodyHasOverflow = document.documentElement.clientHeight < document.body.scrollHeight;
+          scrollBarWidth = getScrollBarWidth();
+          let bodyHasOverflow = document.documentElement.clientHeight < document.body.scrollHeight;
           if (scrollBarWidth > 0 && bodyHasOverflow) {
             document.body.style.paddingRight = scrollBarWidth + 'px';
           }
@@ -228,7 +209,7 @@ exports.default = {
         dom.style.position = 'absolute';
       }
 
-      dom.style.zIndex = _popupManager2.default.nextZIndex();
+      dom.style.zIndex = PopupManager.nextZIndex();
       this.opened = true;
 
       this.onOpen && this.onOpen();
@@ -237,12 +218,12 @@ exports.default = {
         this.doAfterOpen();
       }
     },
-    doAfterOpen: function doAfterOpen() {
+
+    doAfterOpen() {
       this._opening = false;
     },
-    close: function close() {
-      var _this3 = this;
 
+    close() {
       if (this.willClose && !this.willClose()) return;
 
       if (this._openTimer !== null) {
@@ -251,33 +232,32 @@ exports.default = {
       }
       clearTimeout(this._closeTimer);
 
-      var closeDelay = Number(this.closeDelay);
+      const closeDelay = Number(this.closeDelay);
 
       if (closeDelay > 0) {
-        this._closeTimer = setTimeout(function () {
-          _this3._closeTimer = null;
-          _this3.doClose();
+        this._closeTimer = setTimeout(() => {
+          this._closeTimer = null;
+          this.doClose();
         }, closeDelay);
       } else {
         this.doClose();
       }
     },
-    doClose: function doClose() {
-      var _this4 = this;
 
+    doClose() {
       this.$emit('visible-change', false);
       this._closing = true;
 
       this.onClose && this.onClose();
 
       if (this.lockScroll) {
-        setTimeout(function () {
-          if (_this4.modal && _this4.bodyOverflow !== 'hidden') {
-            document.body.style.overflow = _this4.bodyOverflow;
-            document.body.style.paddingRight = _this4.bodyPaddingRight;
+        setTimeout(() => {
+          if (this.modal && this.bodyOverflow !== 'hidden') {
+            document.body.style.overflow = this.bodyOverflow;
+            document.body.style.paddingRight = this.bodyPaddingRight;
           }
-          _this4.bodyOverflow = null;
-          _this4.bodyPaddingRight = null;
+          this.bodyOverflow = null;
+          this.bodyPaddingRight = null;
         }, 200);
       }
 
@@ -287,10 +267,14 @@ exports.default = {
         this.doAfterClose();
       }
     },
-    doAfterClose: function doAfterClose() {
-      _popupManager2.default.closeModal(this._popupId);
+
+    doAfterClose() {
+      PopupManager.closeModal(this._popupId);
       this._closing = false;
     }
   }
 };
-exports.PopupManager = _popupManager2.default;
+
+export {
+  PopupManager
+};

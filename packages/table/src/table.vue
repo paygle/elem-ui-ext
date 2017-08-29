@@ -204,7 +204,7 @@
 
       rowStyle: [Object, Function],
 
-      highlightCurrentRow: {    //ÉèÖÃÄ¬ÈÏµã»÷µ¥ĞĞÊ±Ñ¡¶¨ÏÔÊ¾
+      highlightCurrentRow: {    //è®¾ç½®é»˜è®¤ç‚¹å‡»å•è¡Œæ—¶é€‰å®šæ˜¾ç¤º
         type: Boolean,
         default: true
       },
@@ -217,12 +217,12 @@
 
       defaultExpandAll: Boolean,
 
-      expandOnlyOne: {    // Í¬Ê±½öÔÊĞí´ò¿ªÒ»ĞĞÊı¾İ
+      expandOnlyOne: {    // åŒæ—¶ä»…å…è®¸æ‰“å¼€ä¸€è¡Œæ•°æ®
         type: Boolean,
         default: false
       },
 
-      expandIconHidden:{    // ÊÇ·ñÒş²ØÕ¹¿ªÍ¼±ê
+      expandIconHidden:{    // æ˜¯å¦éšè—å±•å¼€å›¾æ ‡
         type: Boolean,
         default: false
       },
@@ -308,7 +308,7 @@
           } else if (this.shouldUpdateHeight) {
             this.layout.updateHeight();
           }
-          // if (this.$el) { //µ¼ÖÂÎŞ·¨Õ¹Ê¾
+          // if (this.$el) { //å¯¼è‡´æ— æ³•å±•ç¤º
           //   this.isHidden = this.$el.clientWidth === 0;
           // }
         });

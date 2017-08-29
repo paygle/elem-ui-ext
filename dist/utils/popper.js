@@ -1,7 +1,3 @@
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 /**
  * @fileOverview Kickass library to create and place poppers near their reference elements.
  * @version {{version}}
@@ -35,7 +31,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(factory);
-    } else if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && module.exports) {
+    } else if (typeof module === 'object' && module.exports) {
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like environments that support module.exports,
         // like Node.
@@ -44,7 +40,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // Browser globals (root is window)
         root.Popper = factory();
     }
-})(undefined, function () {
+}(this, function () {
 
     'use strict';
 
@@ -76,7 +72,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         arrowElement: '[x-arrow]',
 
         // list of functions used to modify the offsets before they are applied to the popper
-        modifiers: ['shift', 'offset', 'preventOverflow', 'keepTogether', 'arrow', 'flip', 'applyStyle'],
+        modifiers: [ 'shift', 'offset', 'preventOverflow', 'keepTogether', 'arrow', 'flip', 'applyStyle'],
 
         modifiersIgnored: [],
 
@@ -161,14 +157,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         // otherwise, use the given HTMLElement as popper
         else {
-                this._popper = popper.jquery ? popper[0] : popper;
-            }
+            this._popper = popper.jquery ? popper[0] : popper;
+        }
 
         // with {} we create a new object with the options inside it
         this._options = Object.assign({}, DEFAULTS, options);
 
         // refactoring modifiers' list
-        this._options.modifiers = this._options.modifiers.map(function (modifier) {
+        this._options.modifiers = this._options.modifiers.map(function(modifier){
             // remove ignored modifiers
             if (this._options.modifiersIgnored.indexOf(modifier) !== -1) return;
 
@@ -194,6 +190,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return this;
     }
 
+
     //
     // Methods
     //
@@ -202,7 +199,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @method
      * @memberof Popper
      */
-    Popper.prototype.destroy = function () {
+    Popper.prototype.destroy = function() {
         this._popper.removeAttribute('x-placement');
         this._popper.style.left = '';
         this._popper.style.position = '';
@@ -222,7 +219,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @method
      * @memberof Popper
      */
-    Popper.prototype.update = function () {
+    Popper.prototype.update = function() {
         var data = { instance: this, styles: {} };
 
         // store placement inside the data object, modifiers will be able to edit `placement` if needed
@@ -241,6 +238,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (typeof this.state.updateCallback === 'function') {
             this.state.updateCallback(data);
         }
+
     };
 
     /**
@@ -249,7 +247,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @memberof Popper
      * @param {Function} callback
      */
-    Popper.prototype.onCreate = function (callback) {
+    Popper.prototype.onCreate = function(callback) {
         // the createCallbacks return as first argument the popper instance
         callback(this);
         return this;
@@ -263,7 +261,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @memberof Popper
      * @param {Function} callback
      */
-    Popper.prototype.onUpdate = function (callback) {
+    Popper.prototype.onUpdate = function(callback) {
         this.state.updateCallback = callback;
         return this;
     };
@@ -275,17 +273,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param config {Object} configuration
      * @returns {HTMLElement} popper
      */
-    Popper.prototype.parse = function (config) {
+    Popper.prototype.parse = function(config) {
         var defaultConfig = {
             tagName: 'div',
-            classNames: ['popper'],
+            classNames: [ 'popper' ],
             attributes: [],
             parent: root.document.body,
             content: '',
             contentType: 'text',
             arrowTagName: 'div',
-            arrowClassNames: ['popper__arrow'],
-            arrowAttributes: ['x-arrow']
+            arrowClassNames: [ 'popper__arrow' ],
+            arrowAttributes: [ 'x-arrow']
         };
         config = Object.assign({}, defaultConfig, config);
 
@@ -296,7 +294,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         addAttributes(popper, config.attributes);
         if (config.contentType === 'node') {
             popper.appendChild(config.content.jquery ? config.content[0] : config.content);
-        } else if (config.contentType === 'html') {
+        }else if (config.contentType === 'html') {
             popper.innerHTML = config.content;
         } else {
             popper.textContent = config.content;
@@ -344,7 +342,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * @param {Array} classes
          */
         function addClassNames(element, classNames) {
-            classNames.forEach(function (className) {
+            classNames.forEach(function(className) {
                 element.classList.add(className);
             });
         }
@@ -359,10 +357,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * addAttributes(element, [ 'data-info:foobar' ]);
          */
         function addAttributes(element, attributes) {
-            attributes.forEach(function (attribute) {
+            attributes.forEach(function(attribute) {
                 element.setAttribute(attribute.split(':')[0], attribute.split(':')[1] || '');
             });
         }
+
     };
 
     /**
@@ -373,7 +372,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param reference {HTMLElement} reference element
      * @returns {String} position
      */
-    Popper.prototype._getPosition = function (popper, reference) {
+    Popper.prototype._getPosition = function(popper, reference) {
         var container = getOffsetParent(reference);
 
         if (this._options.forceAbsolute) {
@@ -395,7 +394,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param {Element} reference - the reference element (the popper will be relative to this)
      * @returns {Object} An object containing the offsets which will be applied to the popper
      */
-    Popper.prototype._getOffsets = function (popper, reference, placement) {
+    Popper.prototype._getOffsets = function(popper, reference, placement) {
         placement = placement.split('-')[0];
         var popperOffsets = {};
 
@@ -434,8 +433,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         // Add width and height to our offsets object
-        popperOffsets.width = popperRect.width;
-        popperOffsets.height = popperRect.height;
+        popperOffsets.width   = popperRect.width;
+        popperOffsets.height  = popperRect.height;
+
 
         return {
             popper: popperOffsets,
@@ -443,13 +443,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     };
 
+
     /**
      * Setup needed event listeners used to update the popper position
      * @method
      * @memberof Popper
      * @access private
      */
-    Popper.prototype._setupEventListeners = function () {
+    Popper.prototype._setupEventListeners = function() {
         // NOTE: 1 DOM access here
         this.state.updateBound = this.update.bind(this);
         root.addEventListener('resize', this.state.updateBound);
@@ -470,7 +471,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @memberof Popper
      * @access private
      */
-    Popper.prototype._removeEventListeners = function () {
+    Popper.prototype._removeEventListeners = function() {
         // NOTE: 1 DOM access here
         root.removeEventListener('resize', this.state.updateBound);
         if (this._options.boundariesElement !== 'window') {
@@ -494,7 +495,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param {Element} boundariesElement - Element used to define the boundaries
      * @returns {Object} Coordinates of the boundaries
      */
-    Popper.prototype._getBoundaries = function (data, padding, boundariesElement) {
+    Popper.prototype._getBoundaries = function(data, padding, boundariesElement) {
         // NOTE: 1 DOM access here
         var boundaries = {};
         var width, height;
@@ -502,8 +503,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var body = root.document.body,
                 html = root.document.documentElement;
 
-            height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-            width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+            height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+            width = Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth );
 
             boundaries = {
                 top: 0,
@@ -516,13 +517,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var scrollParent = getScrollParent(this._popper);
             var offsetParentRect = getOffsetRect(offsetParent);
 
-            // Thanks the fucking native API, `document.body.scrollTop` & `document.documentElement.scrollTop`
-            var getScrollTopValue = function getScrollTopValue(element) {
-                return element == document.body ? Math.max(document.documentElement.scrollTop, document.body.scrollTop) : element.scrollTop;
-            };
-            var getScrollLeftValue = function getScrollLeftValue(element) {
-                return element == document.body ? Math.max(document.documentElement.scrollLeft, document.body.scrollLeft) : element.scrollLeft;
-            };
+			// Thanks the fucking native API, `document.body.scrollTop` & `document.documentElement.scrollTop`
+			var getScrollTopValue = function (element) {
+				return element == document.body ? Math.max(document.documentElement.scrollTop, document.body.scrollTop) : element.scrollTop;
+			}
+			var getScrollLeftValue = function (element) {
+				return element == document.body ? Math.max(document.documentElement.scrollLeft, document.body.scrollLeft) : element.scrollLeft;
+			}
 
             // if the popper is fixed we don't have to substract scrolling from the boundaries
             var scrollTop = data.offsets.popper.position === 'fixed' ? 0 : getScrollTopValue(scrollParent);
@@ -553,6 +554,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return boundaries;
     };
 
+
     /**
      * Loop trough the list of modifiers and run them in order, each of them will then edit the data object
      * @method
@@ -562,13 +564,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param {Array} modifiers
      * @param {Function} ends
      */
-    Popper.prototype.runModifiers = function (data, modifiers, ends) {
+    Popper.prototype.runModifiers = function(data, modifiers, ends) {
         var modifiersToRun = modifiers.slice();
         if (ends !== undefined) {
             modifiersToRun = this._options.modifiers.slice(0, getArrayKeyIndex(this._options.modifiers, ends));
         }
 
-        modifiersToRun.forEach(function (modifier) {
+        modifiersToRun.forEach(function(modifier) {
             if (isFunction(modifier)) {
                 data = modifier.call(this, data);
             }
@@ -585,9 +587,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param {String} requested - name of requested modifier
      * @returns {Boolean}
      */
-    Popper.prototype.isModifierRequired = function (requesting, requested) {
+    Popper.prototype.isModifierRequired = function(requesting, requested) {
         var index = getArrayKeyIndex(this._options.modifiers, requesting);
-        return !!this._options.modifiers.slice(0, index).filter(function (modifier) {
+        return !!this._options.modifiers.slice(0, index).filter(function(modifier) {
             return modifier === requested;
         }).length;
     };
@@ -611,7 +613,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by `update` method
      * @returns {Object} The same data object
      */
-    Popper.prototype.modifiers.applyStyle = function (data) {
+    Popper.prototype.modifiers.applyStyle = function(data) {
         // apply the final offsets to the popper
         // NOTE: 1 DOM access here
         var styles = {
@@ -632,9 +634,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         // othwerise, we use the standard `left` and `top` properties
         else {
-                styles.left = left;
-                styles.top = top;
-            }
+            styles.left =left;
+            styles.top = top;
+        }
 
         // any property present in `data.styles` will be applied to the popper,
         // in this way we can make the 3rd party modifiers add custom styles to it
@@ -663,7 +665,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by `update` method
      * @returns {Object} The data object, properly modified
      */
-    Popper.prototype.modifiers.shift = function (data) {
+    Popper.prototype.modifiers.shift = function(data) {
         var placement = data.placement;
         var basePlacement = placement.split('-')[0];
         var shiftVariation = placement.split('-')[1];
@@ -675,12 +677,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             var shiftOffsets = {
                 y: {
-                    start: { top: reference.top },
-                    end: { top: reference.top + reference.height - popper.height }
+                    start:  { top: reference.top },
+                    end:    { top: reference.top + reference.height - popper.height }
                 },
                 x: {
-                    start: { left: reference.left },
-                    end: { left: reference.left + reference.width - popper.width }
+                    start:  { left: reference.left },
+                    end:    { left: reference.left + reference.width - popper.width }
                 }
             };
 
@@ -692,6 +694,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return data;
     };
 
+
     /**
      * Modifier used to make sure the popper does not overflows from it's boundaries
      * @method
@@ -699,33 +702,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by `update` method
      * @returns {Object} The data object, properly modified
      */
-    Popper.prototype.modifiers.preventOverflow = function (data) {
+    Popper.prototype.modifiers.preventOverflow = function(data) {
         var order = this._options.preventOverflowOrder;
         var popper = getPopperClientRect(data.offsets.popper);
 
         var check = {
-            left: function left() {
+            left: function() {
                 var left = popper.left;
                 if (popper.left < data.boundaries.left) {
                     left = Math.max(popper.left, data.boundaries.left);
                 }
                 return { left: left };
             },
-            right: function right() {
+            right: function() {
                 var left = popper.left;
                 if (popper.right > data.boundaries.right) {
                     left = Math.min(popper.left, data.boundaries.right - popper.width);
                 }
                 return { left: left };
             },
-            top: function top() {
+            top: function() {
                 var top = popper.top;
                 if (popper.top < data.boundaries.top) {
                     top = Math.max(popper.top, data.boundaries.top);
                 }
                 return { top: top };
             },
-            bottom: function bottom() {
+            bottom: function() {
                 var top = popper.top;
                 if (popper.bottom > data.boundaries.bottom) {
                     top = Math.min(popper.top, data.boundaries.bottom - popper.height);
@@ -734,7 +737,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         };
 
-        order.forEach(function (direction) {
+        order.forEach(function(direction) {
             data.offsets.popper = Object.assign(popper, check[direction]());
         });
 
@@ -748,8 +751,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by _update method
      * @returns {Object} The data object, properly modified
      */
-    Popper.prototype.modifiers.keepTogether = function (data) {
-        var popper = getPopperClientRect(data.offsets.popper);
+    Popper.prototype.modifiers.keepTogether = function(data) {
+        var popper  = getPopperClientRect(data.offsets.popper);
         var reference = data.offsets.reference;
         var f = Math.floor;
 
@@ -778,7 +781,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by _update method
      * @returns {Object} The data object, properly modified
      */
-    Popper.prototype.modifiers.flip = function (data) {
+    Popper.prototype.modifiers.flip = function(data) {
         // check if preventOverflow is in the list of modifiers before the flip modifier.
         // otherwise flip would not work as expected.
         if (!this.isModifierRequired(this.modifiers.flip, this.modifiers.preventOverflow)) {
@@ -796,13 +799,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var variation = data.placement.split('-')[1] || '';
 
         var flipOrder = [];
-        if (this._options.flipBehavior === 'flip') {
-            flipOrder = [placement, placementOpposite];
+        if(this._options.flipBehavior === 'flip') {
+            flipOrder = [
+                placement,
+                placementOpposite
+            ];
         } else {
             flipOrder = this._options.flipBehavior;
         }
 
-        flipOrder.forEach(function (step, index) {
+        flipOrder.forEach(function(step, index) {
             if (placement !== step || flipOrder.length === index + 1) {
                 return;
             }
@@ -817,7 +823,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var a = ['right', 'bottom'].indexOf(placement) !== -1;
 
             // using Math.floor because the reference offsets may contain decimals we are not going to consider here
-            if (a && Math.floor(data.offsets.reference[placement]) > Math.floor(popperOffsets[placementOpposite]) || !a && Math.floor(data.offsets.reference[placement]) < Math.floor(popperOffsets[placementOpposite])) {
+            if (
+                a && Math.floor(data.offsets.reference[placement]) > Math.floor(popperOffsets[placementOpposite]) ||
+                !a && Math.floor(data.offsets.reference[placement]) < Math.floor(popperOffsets[placementOpposite])
+            ) {
                 // we'll use this boolean to detect any flip loop
                 data.flipped = true;
                 data.placement = flipOrder[index + 1];
@@ -840,17 +849,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by _update method
      * @returns {Object} The data object, properly modified
      */
-    Popper.prototype.modifiers.offset = function (data) {
+    Popper.prototype.modifiers.offset = function(data) {
         var offset = this._options.offset;
-        var popper = data.offsets.popper;
+        var popper  = data.offsets.popper;
 
         if (data.placement.indexOf('left') !== -1) {
             popper.top -= offset;
-        } else if (data.placement.indexOf('right') !== -1) {
+        }
+        else if (data.placement.indexOf('right') !== -1) {
             popper.top += offset;
-        } else if (data.placement.indexOf('top') !== -1) {
+        }
+        else if (data.placement.indexOf('top') !== -1) {
             popper.left -= offset;
-        } else if (data.placement.indexOf('bottom') !== -1) {
+        }
+        else if (data.placement.indexOf('bottom') !== -1) {
             popper.left += offset;
         }
         return data;
@@ -864,8 +876,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @argument {Object} data - The data object generated by _update method
      * @returns {Object} The data object, properly modified
      */
-    Popper.prototype.modifiers.arrow = function (data) {
-        var arrow = this._options.arrowElement;
+    Popper.prototype.modifiers.arrow = function(data) {
+        var arrow  = this._options.arrowElement;
 
         // if the arrowElement is a string, suppose it's a CSS selector
         if (typeof arrow === 'string') {
@@ -889,17 +901,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return data;
         }
 
-        var arrowStyle = {};
-        var placement = data.placement.split('-')[0];
-        var popper = getPopperClientRect(data.offsets.popper);
-        var reference = data.offsets.reference;
-        var isVertical = ['left', 'right'].indexOf(placement) !== -1;
+        var arrowStyle  = {};
+        var placement   = data.placement.split('-')[0];
+        var popper      = getPopperClientRect(data.offsets.popper);
+        var reference   = data.offsets.reference;
+        var isVertical  = ['left', 'right'].indexOf(placement) !== -1;
 
-        var len = isVertical ? 'height' : 'width';
-        var side = isVertical ? 'top' : 'left';
-        var altSide = isVertical ? 'left' : 'top';
-        var opSide = isVertical ? 'bottom' : 'right';
-        var arrowSize = getOuterSizes(arrow)[len];
+        var len         = isVertical ? 'height' : 'width';
+        var side        = isVertical ? 'top' : 'left';
+        var altSide     = isVertical ? 'left' : 'top';
+        var opSide      = isVertical ? 'bottom' : 'right';
+        var arrowSize   = getOuterSizes(arrow)[len];
 
         //
         // extends keepTogether behavior making sure the popper and its reference have enough pixels in conjuction
@@ -911,11 +923,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         // bottom/right side
         if (reference[side] + arrowSize > popper[opSide]) {
-            data.offsets.popper[side] += reference[side] + arrowSize - popper[opSide];
+            data.offsets.popper[side] += (reference[side] + arrowSize) - popper[opSide];
         }
 
         // compute center of the popper
-        var center = reference[side] + reference[len] / 2 - arrowSize / 2;
+        var center = reference[side] + (reference[len] / 2) - (arrowSize / 2);
 
         var sideValue = center - popper[side];
 
@@ -930,6 +942,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return data;
     };
 
+
     //
     // Helpers
     //
@@ -943,9 +956,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     function getOuterSizes(element) {
         // NOTE: 1 DOM access here
-        var _display = element.style.display,
-            _visibility = element.style.visibility;
-        element.style.display = 'block';element.style.visibility = 'hidden';
+        var _display = element.style.display, _visibility = element.style.visibility;
+        element.style.display = 'block'; element.style.visibility = 'hidden';
         var calcWidthToForceRepaint = element.offsetWidth;
 
         // original method
@@ -955,7 +967,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var result = { width: element.offsetWidth + y, height: element.offsetHeight + x };
 
         // reset element styles
-        element.style.display = _display;element.style.visibility = _visibility;
+        element.style.display = _display; element.style.visibility = _visibility;
         return result;
     }
 
@@ -967,8 +979,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @returns {String} flipped placement
      */
     function getOppositePlacement(placement) {
-        var hash = { left: 'right', right: 'left', bottom: 'top', top: 'bottom' };
-        return placement.replace(/left|right|bottom|top/g, function (matched) {
+        var hash = {left: 'right', right: 'left', bottom: 'top', top: 'bottom' };
+        return placement.replace(/left|right|bottom|top/g, function(matched){
             return hash[matched];
         });
     }
@@ -996,8 +1008,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @returns index or null
      */
     function getArrayKeyIndex(arr, keyToFind) {
-        var i = 0,
-            key;
+        var i = 0, key;
         for (key in arr) {
             if (arr[key] === keyToFind) {
                 return i;
@@ -1058,7 +1069,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         // Firefox want us to check `-x` and `-y` variations as well
-        if (['scroll', 'auto'].indexOf(getStyleComputedProperty(parent, 'overflow')) !== -1 || ['scroll', 'auto'].indexOf(getStyleComputedProperty(parent, 'overflow-x')) !== -1 || ['scroll', 'auto'].indexOf(getStyleComputedProperty(parent, 'overflow-y')) !== -1) {
+        if (
+            ['scroll', 'auto'].indexOf(getStyleComputedProperty(parent, 'overflow')) !== -1 ||
+            ['scroll', 'auto'].indexOf(getStyleComputedProperty(parent, 'overflow-x')) !== -1 ||
+            ['scroll', 'auto'].indexOf(getStyleComputedProperty(parent, 'overflow-y')) !== -1
+        ) {
             // If the detected scrollParent is body, we perform an additional check on its parentNode
             // in this way we'll get body if the browser is Chrome-ish, or documentElement otherwise
             // fixes issue #65
@@ -1094,9 +1109,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     function setStyle(element, styles) {
         function is_numeric(n) {
-            return n !== '' && !isNaN(parseFloat(n)) && isFinite(n);
+            return (n !== '' && !isNaN(parseFloat(n)) && isFinite(n));
         }
-        Object.keys(styles).forEach(function (prop) {
+        Object.keys(styles).forEach(function(prop) {
             var unit = '';
             // add unit if the value is numeric and is one of the following
             if (['width', 'height', 'top', 'right', 'bottom', 'left'].indexOf(prop) !== -1 && is_numeric(styles[prop])) {
@@ -1154,7 +1169,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var isIE = navigator.userAgent.indexOf("MSIE") != -1;
 
         // fix ie document bounding top always 0 bug
-        var rectTop = isIE && element.tagName === 'HTML' ? -element.scrollTop : rect.top;
+        var rectTop = isIE && element.tagName === 'HTML'
+            ? -element.scrollTop
+            : rect.top;
 
         return {
             left: rect.left,
@@ -1187,10 +1204,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         var rect = {
-            top: elementRect.top - parentRect.top,
-            left: elementRect.left - parentRect.left,
-            bottom: elementRect.top - parentRect.top + elementRect.height,
-            right: elementRect.left - parentRect.left + elementRect.width,
+            top: elementRect.top - parentRect.top ,
+            left: elementRect.left - parentRect.left ,
+            bottom: (elementRect.top - parentRect.top) + elementRect.height,
+            right: (elementRect.left - parentRect.left) + elementRect.width,
             width: elementRect.width,
             height: elementRect.height
         };
@@ -1229,7 +1246,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             enumerable: false,
             configurable: true,
             writable: true,
-            value: function value(target) {
+            value: function(target) {
                 if (target === undefined || target === null) {
                     throw new TypeError('Cannot convert first argument to object');
                 }
@@ -1257,4 +1274,4 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 
     return Popper;
-});
+}));

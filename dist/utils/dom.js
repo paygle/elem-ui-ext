@@ -1,74 +1,60 @@
-'use strict';
+/* istanbul ignore next */
 
-exports.__esModule = true;
-exports.getStyle = exports.once = exports.off = exports.on = undefined;
+import Vue from 'vue';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /* istanbul ignore next */
-
-exports.hasClass = hasClass;
-exports.addClass = addClass;
-exports.removeClass = removeClass;
-exports.setStyle = setStyle;
-
-var _vue = require('vue');
-
-var _vue2 = _interopRequireDefault(_vue);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var isServer = _vue2.default.prototype.$isServer;
-var SPECIAL_CHARS_REGEXP = /([\:\-\_]+(.))/g;
-var MOZ_HACK_REGEXP = /^moz([A-Z])/;
-var ieVersion = isServer ? 0 : Number(document.documentMode);
+const isServer = Vue.prototype.$isServer;
+const SPECIAL_CHARS_REGEXP = /([\:\-\_]+(.))/g;
+const MOZ_HACK_REGEXP = /^moz([A-Z])/;
+const ieVersion = isServer ? 0 : Number(document.documentMode);
 
 /* istanbul ignore next */
-var trim = function trim(string) {
+const trim = function(string) {
   return (string || '').replace(/^[\s\uFEFF]+|[\s\uFEFF]+$/g, '');
 };
 /* istanbul ignore next */
-var camelCase = function camelCase(name) {
-  return name.replace(SPECIAL_CHARS_REGEXP, function (_, separator, letter, offset) {
+const camelCase = function(name) {
+  return name.replace(SPECIAL_CHARS_REGEXP, function(_, separator, letter, offset) {
     return offset ? letter.toUpperCase() : letter;
   }).replace(MOZ_HACK_REGEXP, 'Moz$1');
 };
 
 /* istanbul ignore next */
-var on = exports.on = function () {
+export const on = (function() {
   if (!isServer && document.addEventListener) {
-    return function (element, event, handler) {
+    return function(element, event, handler) {
       if (element && event && handler) {
         element.addEventListener(event, handler, false);
       }
     };
   } else {
-    return function (element, event, handler) {
+    return function(element, event, handler) {
       if (element && event && handler) {
         element.attachEvent('on' + event, handler);
       }
     };
   }
-}();
+})();
 
 /* istanbul ignore next */
-var off = exports.off = function () {
+export const off = (function() {
   if (!isServer && document.removeEventListener) {
-    return function (element, event, handler) {
+    return function(element, event, handler) {
       if (element && event) {
         element.removeEventListener(event, handler, false);
       }
     };
   } else {
-    return function (element, event, handler) {
+    return function(element, event, handler) {
       if (element && event) {
         element.detachEvent('on' + event, handler);
       }
     };
   }
-}();
+})();
 
 /* istanbul ignore next */
-var once = exports.once = function once(el, event, fn) {
-  var listener = function listener() {
+export const once = function(el, event, fn) {
+  var listener = function() {
     if (fn) {
       fn.apply(this, arguments);
     }
@@ -78,7 +64,7 @@ var once = exports.once = function once(el, event, fn) {
 };
 
 /* istanbul ignore next */
-function hasClass(el, cls) {
+export function hasClass(el, cls) {
   if (!el || !cls) return false;
   if (cls.indexOf(' ') !== -1) throw new Error('className should not contain space.');
   if (el.classList) {
@@ -89,7 +75,7 @@ function hasClass(el, cls) {
 };
 
 /* istanbul ignore next */
-function addClass(el, cls) {
+export function addClass(el, cls) {
   if (!el) return;
   var curClass = el.className;
   var classes = (cls || '').split(' ');
@@ -112,7 +98,7 @@ function addClass(el, cls) {
 };
 
 /* istanbul ignore next */
-function removeClass(el, cls) {
+export function removeClass(el, cls) {
   if (!el || !cls) return;
   var classes = cls.split(' ');
   var curClass = ' ' + el.className + ' ';
@@ -135,7 +121,7 @@ function removeClass(el, cls) {
 };
 
 /* istanbul ignore next */
-var getStyle = exports.getStyle = ieVersion < 9 ? function (element, styleName) {
+export const getStyle = ieVersion < 9 ? function(element, styleName) {
   if (isServer) return;
   if (!element || !styleName) return null;
   styleName = camelCase(styleName);
@@ -151,12 +137,12 @@ var getStyle = exports.getStyle = ieVersion < 9 ? function (element, styleName) 
           return 1.0;
         }
       default:
-        return element.style[styleName] || element.currentStyle ? element.currentStyle[styleName] : null;
+        return (element.style[styleName] || element.currentStyle ? element.currentStyle[styleName] : null);
     }
   } catch (e) {
     return element.style[styleName];
   }
-} : function (element, styleName) {
+} : function(element, styleName) {
   if (isServer) return;
   if (!element || !styleName) return null;
   styleName = camelCase(styleName);
@@ -172,10 +158,10 @@ var getStyle = exports.getStyle = ieVersion < 9 ? function (element, styleName) 
 };
 
 /* istanbul ignore next */
-function setStyle(element, styleName, value) {
+export function setStyle(element, styleName, value) {
   if (!element || !styleName) return;
 
-  if ((typeof styleName === 'undefined' ? 'undefined' : _typeof(styleName)) === 'object') {
+  if (typeof styleName === 'object') {
     for (var prop in styleName) {
       if (styleName.hasOwnProperty(prop)) {
         setStyle(element, prop, styleName[prop]);

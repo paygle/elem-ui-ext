@@ -1,19 +1,10 @@
-'use strict';
+import Vue from 'vue';
+import {
+  PopupManager
+} from 'element-ui/src/utils/popup';
 
-exports.__esModule = true;
-
-var _vue = require('vue');
-
-var _vue2 = _interopRequireDefault(_vue);
-
-var _popup = require('element-ui/lib/utils/popup');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var PopperJS = _vue2.default.prototype.$isServer ? function () {} : require('./popper');
-var stop = function stop(e) {
-  return e.stopPropagation();
-};
+const PopperJS = Vue.prototype.$isServer ? function() {} : require('./popper');
+const stop = e => e.stopPropagation();
 
 /**
  * @param {HTMLElement} [reference=$refs.reference] - The reference element used to position the popper.
@@ -23,7 +14,7 @@ var stop = function stop(e) {
  * @param {Boolean} [visible=false] Visibility of the popup element.
  * @param {Boolean} [visible-arrow=false] Visibility of the arrow, no style.
  */
-exports.default = {
+export default {
   props: {
     placement: {
       type: String,
@@ -47,7 +38,7 @@ exports.default = {
     },
     popperOptions: {
       type: Object,
-      default: function _default() {
+      default() {
         return {
           gpuAcceleration: false
         };
@@ -55,44 +46,43 @@ exports.default = {
     }
   },
 
-  data: function data() {
+  data() {
     return {
       showPopper: false,
       currentPlacement: ''
     };
   },
 
-
   watch: {
     value: {
       immediate: true,
-      handler: function handler(val) {
+      handler(val) {
         this.showPopper = val;
         this.$emit('input', val);
       }
     },
 
-    showPopper: function showPopper(val) {
+    showPopper(val) {
       val ? this.updatePopper() : this.destroyPopper();
       this.$emit('input', val);
     }
   },
 
   methods: {
-    createPopper: function createPopper() {
-      var _this = this;
-
+    createPopper() {
       if (this.$isServer) return;
       this.currentPlacement = this.currentPlacement || this.placement;
       if (!/^(top|bottom|left|right)(-start|-end)?$/g.test(this.currentPlacement)) {
         return;
       }
 
-      var options = this.popperOptions;
-      var popper = this.popperElm = this.popperElm || this.popper || this.$refs.popper;
-      var reference = this.referenceElm = this.referenceElm || this.reference || this.$refs.reference;
+      const options = this.popperOptions;
+      const popper = this.popperElm = this.popperElm || this.popper || this.$refs.popper;
+      let reference = this.referenceElm = this.referenceElm || this.reference || this.$refs.reference;
 
-      if (!reference && this.$slots.reference && this.$slots.reference[0]) {
+      if (!reference &&
+        this.$slots.reference &&
+        this.$slots.reference[0]) {
         reference = this.referenceElm = this.$slots.reference[0].elm;
       }
 
@@ -106,58 +96,63 @@ exports.default = {
       options.placement = this.currentPlacement;
       options.offset = this.offset;
       this.popperJS = new PopperJS(reference, popper, options);
-      this.popperJS.onCreate(function (_) {
-        _this.$emit('created', _this);
-        _this.resetTransformOrigin();
-        _this.$nextTick(_this.updatePopper);
+      this.popperJS.onCreate(_ => {
+        this.$emit('created', this);
+        this.resetTransformOrigin();
+        this.$nextTick(this.updatePopper);
       });
       if (typeof options.onUpdate === 'function') {
         this.popperJS.onUpdate(options.onUpdate);
       }
-      this.popperJS._popper.style.zIndex = _popup.PopupManager.nextZIndex();
+      this.popperJS._popper.style.zIndex = PopupManager.nextZIndex();
       this.popperElm.addEventListener('click', stop);
     },
-    updatePopper: function updatePopper() {
+
+    updatePopper() {
       this.popperJS ? this.popperJS.update() : this.createPopper();
     },
-    doDestroy: function doDestroy() {
+
+    doDestroy() {
       /* istanbul ignore if */
       if (this.showPopper || !this.popperJS) return;
       this.popperJS.destroy();
       this.popperJS = null;
     },
-    destroyPopper: function destroyPopper() {
+
+    destroyPopper() {
       if (this.popperJS) {
         this.resetTransformOrigin();
       }
     },
-    resetTransformOrigin: function resetTransformOrigin() {
-      var placementMap = {
+
+    resetTransformOrigin() {
+      let placementMap = {
         top: 'bottom',
         bottom: 'top',
         left: 'right',
         right: 'left'
       };
-      var placement = this.popperJS._popper.getAttribute('x-placement').split('-')[0];
-      var origin = placementMap[placement];
-      this.popperJS._popper.style.transformOrigin = ['top', 'bottom'].indexOf(placement) > -1 ? 'center ' + origin : origin + ' center';
+      let placement = this.popperJS._popper.getAttribute('x-placement').split('-')[0];
+      let origin = placementMap[placement];
+      this.popperJS._popper.style.transformOrigin = ['top', 'bottom'].indexOf(placement) > -1 ? `center ${ origin }` : `${ origin } center`;
     },
-    appendArrow: function appendArrow(element) {
-      var hash = void 0;
+
+    appendArrow(element) {
+      let hash;
       if (this.appended) {
         return;
       }
 
       this.appended = true;
 
-      for (var item in element.attributes) {
+      for (let item in element.attributes) {
         if (/^_v-/.test(element.attributes[item].name)) {
           hash = element.attributes[item].name;
           break;
         }
       }
 
-      var arrow = document.createElement('div');
+      const arrow = document.createElement('div');
 
       if (hash) {
         arrow.setAttribute(hash, '');
@@ -168,7 +163,7 @@ exports.default = {
     }
   },
 
-  beforeDestroy: function beforeDestroy() {
+  beforeDestroy() {
     this.doDestroy();
     if (this.popperElm && this.popperElm.parentNode === document.body) {
       this.popperElm.removeEventListener('click', stop);
@@ -176,9 +171,8 @@ exports.default = {
     }
   },
 
-
   // call destroy in keep-alive mode
-  deactivated: function deactivated() {
+  deactivated() {
     this.$options.beforeDestroy[0].call(this);
   }
 };

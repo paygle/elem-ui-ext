@@ -1,7 +1,3 @@
-'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 /*
  * WebStorageCache - 0.0.3
  * https://github.com/WQTeam/web-storage-cache
@@ -14,12 +10,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(factory);
-  } else if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object') {
+  } else if (typeof exports === 'object') {
     module.exports = factory();
   } else {
     root.WebStorageCache = factory();
   }
-})(undefined, function () {
+}(this, function () {
   "use strict";
 
   var _maxExpireDate = new Date('Fri, 31 Dec 9999 23:59:59 UTC');
@@ -27,20 +23,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   // https://github.com/jeromegn/Backbone.localStorage/blob/master/backbone.localStorage.js#L63
   var defaultSerializer = {
-    serialize: function serialize(item) {
+    serialize: function (item) {
       return JSON.stringify(item);
     },
     // fix for "illegal access" error on Android when JSON.parse is
     // passed null
-    deserialize: function deserialize(data) {
+    deserialize: function (data) {
       return data && JSON.parse(data);
     }
   };
 
   function _extend(obj, props) {
-    for (var key in props) {
-      obj[key] = props[key];
-    }return obj;
+    for (var key in props) obj[key] = props[key];
+    return obj;
   }
 
   /**
@@ -68,7 +63,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   // get storage instance
   function _getStorageInstance(storage) {
-    var type = typeof storage === 'undefined' ? 'undefined' : _typeof(storage);
+    var type = typeof storage;
     if (type === 'string' && window[storage] instanceof Storage) {
       return window[storage];
     }
@@ -83,7 +78,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     now = now || new Date();
 
     if (typeof expires === 'number') {
-      expires = expires === Infinity ? _maxExpireDate : new Date(now.getTime() + expires * 1000);
+      expires = expires === Infinity ?
+        _maxExpireDate : new Date(now.getTime() + expires * 1000);
     } else if (typeof expires === 'string') {
       expires = new Date(expires);
     }
@@ -122,7 +118,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   // cache item constructor
   function CacheItemConstructor(value, exp) {
     // createTime
-    this.c = new Date().getTime();
+    this.c = (new Date()).getTime();
     exp = exp || _defaultExpire;
     var expires = _getExpiresDate(exp);
     // expiresTime
@@ -131,7 +127,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }
 
   function _isCacheItem(item) {
-    if ((typeof item === 'undefined' ? 'undefined' : _typeof(item)) !== 'object') {
+    if (typeof item !== 'object') {
       return false;
     }
     if (item) {
@@ -144,7 +140,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   // check cacheItem If effective
   function _checkCacheItemIfEffective(cacheItem) {
-    var timeNow = new Date().getTime();
+    var timeNow = (new Date()).getTime();
     return timeNow < cacheItem.e;
   }
 
@@ -159,27 +155,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   // cache api
   var CacheAPI = {
 
-    set: function set(key, value, options) {},
+    set: function (key, value, options) {},
 
-    get: function get(key) {},
+    get: function (key) {},
 
-    delete: function _delete(key) {},
+    delete: function (key) {},
     // Try the best to clean All expires CacheItem.
-    deleteAllExpires: function deleteAllExpires() {},
+    deleteAllExpires: function () {},
     // Clear all keys
-    clear: function clear() {},
+    clear: function () {},
     // Add key-value item to memcached, success only when the key is not exists in memcached.
-    add: function add(key, options) {},
+    add: function (key, options) {},
     // Replace the key's data item in cache, success only when the key's data item is exists in cache.
-    replace: function replace(key, value, options) {},
+    replace: function (key, value, options) {},
     // Set a new options for an existing key.
-    touch: function touch(key, exp) {}
+    touch: function (key, exp) {}
   };
 
   // cache api
   var CacheAPIImpl = {
 
-    set: function set(key, val, options) {
+    set: function (key, val, options) {
 
       key = _checkAndWrapKeyAsString(key);
 
@@ -197,8 +193,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       try {
         this.storage.setItem(key, defaultSerializer.serialize(cacheItem));
       } catch (e) {
-        if (_isQuotaExceeded(e)) {
-          //data wasn't successfully saved due to quota exceed so throw an error
+        if (_isQuotaExceeded(e)) { //data wasn't successfully saved due to quota exceed so throw an error
           this.quotaExceedHandler(key, value, options, e);
         } else {
           console.error(e);
@@ -207,7 +202,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       return val;
     },
-    get: function get(key) {
+    get: function (key) {
       key = _checkAndWrapKeyAsString(key);
       var cacheItem = null;
       try {
@@ -226,13 +221,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return null;
     },
 
-    delete: function _delete(key) {
+    delete: function (key) {
       key = _checkAndWrapKeyAsString(key);
       this.storage.removeItem(key);
       return key;
     },
 
-    deleteAllExpires: function deleteAllExpires() {
+    deleteAllExpires: function () {
       var length = this.storage.length;
       var deleteKeys = [];
       var _this = this;
@@ -244,7 +239,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } catch (e) {}
 
         if (cacheItem !== null && cacheItem.e !== undefined) {
-          var timeNow = new Date().getTime();
+          var timeNow = (new Date()).getTime();
           if (timeNow >= cacheItem.e) {
             deleteKeys.push(key);
           }
@@ -256,11 +251,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return deleteKeys;
     },
 
-    clear: function clear() {
+    clear: function () {
       this.storage.clear();
     },
 
-    add: function add(key, value, options) {
+    add: function (key, value, options) {
       key = _checkAndWrapKeyAsString(key);
       options = _extend({
         force: true
@@ -278,7 +273,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return false;
     },
 
-    replace: function replace(key, value, options) {
+    replace: function (key, value, options) {
       key = _checkAndWrapKeyAsString(key);
       var cacheItem = null;
       try {
@@ -297,7 +292,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return false;
     },
 
-    touch: function touch(key, exp) {
+    touch: function (key, exp) {
       key = _checkAndWrapKeyAsString(key);
       var cacheItem = null;
       try {
@@ -365,12 +360,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       };
-    } else {
-      // if not support, rewrite all functions without doing anything
+
+    } else { // if not support, rewrite all functions without doing anything
       _extend(this, CacheAPI);
     }
+
   }
 
   CacheConstructor.prototype = CacheAPIImpl;
   return CacheConstructor;
-});
+}));
