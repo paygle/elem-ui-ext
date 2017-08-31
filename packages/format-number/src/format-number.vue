@@ -110,7 +110,7 @@ export default {
       return this.$refs.inputel.$el.querySelector('input');
     },
     formatRegx() {
-      return '^[\\d\\' + this.splitMark + ']*(\\.?\\d*)$';
+      return '^\\-?[\\d\\' + this.splitMark + ']*(\\.?\\d*)$';
     }
   },
 
@@ -133,7 +133,7 @@ export default {
           for (let i = 0; i < short.length; i++) {
             if (i < short.length - 1 && short[i].length !== this.split) {
               return false;
-            } else if (short[i].length > this.split) {
+            } else if (short[i].length > this.split && (String(short[i]).replace(/^\-/g, '')).length !== this.split) {
               return false;
             }
           }
@@ -157,9 +157,15 @@ export default {
         : String(value).replace(new RegExp(this.splitMark, 'g'), '');
 
       if (!isNaN(value) && value !== '' && !/e/g.test(value)) {
-        let integer, decimal;
-        let integerArray = [];
-        let splitVal = String(this.setPrecision(value)).split('.');
+        let integer, decimal, minus = '';
+        let splitVal, integerArray = [];
+
+        if(/^\-/g.test(value)){
+          value = value.replace(/^\-/g, '');
+          minus = '-';
+        }
+        
+        splitVal = String(this.setPrecision(value)).split('.');
 
         if (splitVal.length >= 2) {
           integer = splitVal[0] || 0;
@@ -185,9 +191,9 @@ export default {
           }
         }
         if (decimal && decimal.length) {
-          return integerArray.reverse().join(this.splitMark) + '.' + decimal;
+          return minus + integerArray.reverse().join(this.splitMark) + '.' + decimal;
         }
-        return integerArray.reverse().join(this.splitMark);
+        return minus + integerArray.reverse().join(this.splitMark);
       }
       return value;
     },
