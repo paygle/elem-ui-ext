@@ -137,7 +137,7 @@ export default {
   render(h){
     let directives = [ { name: 'popover', arg:'lanePopv' } ];
 
-    function getIcons(self, status) {
+    function getStatusIcons(self, status) {
       let icons = 'icon ', 
           icon_cls = self.setIcons(self, status);
       if(self.lane.nextLevel == 1){
@@ -171,9 +171,16 @@ export default {
           { 
             (this.lane.nextLevel == 1 || this.lane.status)
             ? <i 
-              class={ getIcons(this, this.lane.status) }
+              class={ getStatusIcons(this, this.lane.status) }
               on-click={ ($event)=> this.laneIconClick(this.node, $event) }>
             </i> : ''
+          }
+          { 
+            (typeof this.lane.sendBack !== 'undefined' && this.lane.sendBack > 0)
+            ? <span class="send-back el-icon-send-back"
+              style={ document.documentMode ? {top: '-35px', right: 0} : {}}>
+              { this.store.CaseTrack.getSendBackWords(this.lane.sendBack) }
+            </span> : ''
           }
         </div>
         <div class="lane-label">{ this.lane.label }</div>

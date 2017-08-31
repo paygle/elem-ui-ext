@@ -22,6 +22,16 @@ export default {
     },
     mapData: Array,         // 图形数据
     statusIcons: Object,    // 状态图标
+    sendBackWords: {        // 退回图标文字
+      type:Array, 
+      default() {
+        return ['',
+          '理',
+          '正',
+          '重'
+        ]
+      }
+    },  
     itemWidth: Number,
     rightPanelWidth:{       // 右侧固定面板宽度
       type: Number,
@@ -103,6 +113,12 @@ export default {
     
   },
   methods:{
+    getSendBackWords(val) {
+      if(this.sendBackWords[val]) {
+        return this.sendBackWords[val];
+      }
+      return '';
+    },
     hasLanes(data, index){
       if(data && data[index]){
         return typeof data[index].lanes === 'object';

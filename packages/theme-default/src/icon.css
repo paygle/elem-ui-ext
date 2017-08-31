@@ -396,6 +396,8 @@
 
 .el-icon-msgbell:before { content: "\E6DA"; }
 
+.el-icon-send-back:before { content: "\E6DB"; }
+
 .el-icon-loading {
   animation: rotating 1s linear infinite;
 }

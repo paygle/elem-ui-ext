@@ -226,7 +226,7 @@ export default {
   render(h){
     let directives = [ { name: 'popover', arg:'itemPopv' } ];
     
-    function getIcons(self, status) {
+    function getStatusIcons(self, status) {
       let icons = 'icon ', 
           icon_cls = self.setIcons(self, status);
       if(self.node.nextLevel == 1){
@@ -279,9 +279,15 @@ export default {
               {
                 (this.node.nextLevel == 1 || this.node.status) && !this.node.shapeIcon 
                   ? <i 
-                    class={ getIcons(this, this.node.status) } 
+                    class={ getStatusIcons(this, this.node.status) } 
                     on-click={ ($event)=> this.iconClick(this.node, $event) }>
                   </i> : ''
+              }
+              { 
+                (typeof this.node.sendBack !== 'undefined' && this.node.sendBack > 0 && !this.node.shapeIcon)
+                ? <span class="send-back el-icon-send-back">
+                  { this.store.CaseTrack.getSendBackWords(this.node.sendBack) }
+                </span> : ''
               }
             </div>
           </div>

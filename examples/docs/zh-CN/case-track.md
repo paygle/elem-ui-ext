@@ -113,7 +113,8 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
-|  status-icons |  状态图标指定对象                  |   Object   |   ——       |  —— 
+| send-back-words |  退回类型文字数组                |   Array    |   ——  | ['', '理', '正', '重' ]|
+|  status-icons |  状态图标指定对象                  |   Object   |   ——       |  —— |
 |  relative-dom |  图形宽度自动调整关联节点           |   String   |   ——       |  body|
 |  components   |  需要使用到的弹窗模板组件            |   Object   |    ——      |  ——  |
 |  get-componet-name |  获取弹出窗口当前的模板名称    |  Function  |   ——       |  必需返回 String| 
@@ -143,6 +144,7 @@
 | 参数          | 类型            |  说明                 | 
 |-------------  |---------------- |---------------------- |
 | shapeIcon| [String] | 节点转化的图标表示字符串|
+|sendBack | [Number] |退回类型文字选择值即数组下标值。 可选值 ['', '理', '正', '重' ]|
 | args| [任意值] | 结点弹出模板参数对象|
 | title| [String] |节点中文名称： 可以在文字中添加 <br> 标签表示换行|
 |status| [String] |结点状态:  已处理 complete  处理中 processing  未接收 unreceived  已终止 terminated  未触发 untriggered|

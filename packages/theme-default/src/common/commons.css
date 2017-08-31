@@ -356,6 +356,38 @@ div .el-collapse-item__content {
   cursor: default;
 }
 
+.lane-title .send-back:before,
+.title-box .send-back:before{
+  font-size: 22px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.lane-title:hover .send-back,
+.title-box:hover .send-back{
+  color: rgba(255, 255, 255, 0.75);
+  background-color: transparent;
+}
+.lane-title .send-back,
+.title-box .send-back{
+  position: absolute;
+  -ms-writing-mode: lr-tb;
+  writing-mode: horizontal-tb;
+  text-indent: 0;
+  letter-spacing: normal;
+  right: 10px;
+  top: 0px;
+  color: #adadad;
+  font-size: 12px;
+  height: 22px;
+  width: 22px;
+  border-radius: 12px;
+  line-height: 24px;
+  text-align: center;
+  background-color: #ffffff;
+  transform: translateY(-50%) translateX(100%);
+}
+
 .lane-title:hover,
 .title-box:hover {
   color: var(--white-color);;
@@ -926,6 +958,10 @@ div .el-input.is-disabled .el-input__inner {
 .op-box .el-button--info.is-plain {
   background-color: transparent;
   border: 0;
+}
+
+body .el-table__expand-icon{
+  height: auto;
 }
 
 .el-table tr .cell,
