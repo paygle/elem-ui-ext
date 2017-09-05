@@ -29,7 +29,7 @@ export default {
           '理',
           '正',
           '重'
-        ]
+        ];
       }
     },  
     itemWidth: Number,

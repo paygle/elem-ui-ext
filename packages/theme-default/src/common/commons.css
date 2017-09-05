@@ -961,7 +961,7 @@ div .el-input.is-disabled .el-input__inner {
 }
 
 body .el-table__expand-icon{
-  height: auto;
+  height: 30px;
 }
 
 .el-table tr .cell,

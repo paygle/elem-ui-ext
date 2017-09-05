@@ -106,6 +106,7 @@ exports.install = Vue => {
           el.mask.parentNode.removeChild(el.mask);
         }
       }
+      el.instance.$off('after-leave'); //ÒÆ³ıafter-leave¼àÌı£¬±ÜÃâÄÚ´æĞ¹Â©
     }
   });
 };
