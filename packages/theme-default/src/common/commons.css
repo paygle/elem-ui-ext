@@ -41,6 +41,7 @@ section>div[class*="col-"] {
 }
 
 /**禁止按钮outline边框*/
+
 button:focus {
   outline: none !important;
 }
@@ -198,7 +199,6 @@ div .el-collapse-item__content {
   padding: 0px 15px;
 }
 
-
 /* case-track 样式*/
 
 .case-track {
@@ -247,9 +247,8 @@ div .el-collapse-item__content {
   word-wrap: normal;
 }
 
-.case-track-group>svg {
+.case-track-group>canvas {
   position: absolute;
-  height: calc( 100% + 40px);
   left: 0;
   top: 0;
 }
@@ -296,7 +295,7 @@ div .el-collapse-item__content {
   margin-top: 40px;
 }
 
-.case-track-item svg {
+.case-track-item canvas {
   position: absolute;
   left: calc(50% - 8px);
   bottom: -100%;
@@ -530,7 +529,6 @@ div .el-collapse-item__content {
     transform: translate3d(0, 100%, 0);
   }
 }
-
 
 /* freeze component */
 

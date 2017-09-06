@@ -115,6 +115,13 @@ export default {
 
     startLoading(v){
       this.dataLoading = v;
+    },
+
+    hasLanes(data, index){
+      if(data && data[index]){
+        return typeof data[index].lanes === 'object';
+      }
+      return false;
     }
   },
 
@@ -188,16 +195,23 @@ export default {
           this._l(this.lane.nodes, (node, $index)=>[
             <case-track-item
               has-more-icon={ this.hasMoreIcon }
+              lane-pop-disabled={ this.lanePopDisabled }
               item-pop-disabled={ this.itemPopDisabled }
               get-componet-name={ this.getComponetName }
               get-componet-data={ this.getComponetData }
               item-components={ this.laneComponents }
+              pre-node={ this.lane.nodes[$index - 1] }
+              next-node={ this.lane.nodes[$index + 1] }
+              is-group-start={ this.hasLanes(this.lane.nodes, $index + 1) }
+              is-group-end={ this.hasLanes(this.lane.nodes, $index - 1) }
+              is-last-node={ (this.lane.nodes.length-1) === $index }
               status-icons={ this.statusIcons }
               placement={ this.placement }
-              svg-color={ this.lineColor }
+              line-color={ this.lineColor }
               width={ this.itemWidth }
               store={ this.store } 
               index={ $index } 
+              nodes={ this.lane.nodes }  
               node={ node } >
             </case-track-item>
           ])

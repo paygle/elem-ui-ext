@@ -157,14 +157,15 @@ export default {
           (this.$refs.trackMap.getBoundingClientRect().height + 50 ) + 'px'
         );
       });
+    },
+    groupUpdated(flag) {
+      this.broadcast('CaseTrackGroup', 'update-gpdraw', flag);
     }
   },
   mounted(){
     if(this.itemWidth) this.store.states.itemWidth = this.itemWidth;
-    if(!window.Snap){
-      console && console.warn('CaseTrack component need snap.js library!');
-    }
     this.$on('load-node-data', this.loadNodeData);
+    this.$on('group-updated', this.groupUpdated);
     this.initLayout();
   },
   beforeDestroy(){
@@ -204,13 +205,15 @@ export default {
                   get-componet-name={ this.getComponetName }
                   get-componet-data={ this.getComponetData }
                   item-components={ this.components }
+                  pre-node={ this.caseMapData[$index - 1] }
                   next-node={ this.caseMapData[$index + 1] }
                   is-group-start={ this.hasLanes(this.caseMapData, $index + 1) }
                   is-group-end={ this.hasLanes(this.caseMapData, $index - 1) }
                   is-last-node={ (this.caseMapData.length-1) === $index }
+                  is-last-end={ (this.caseMapData.length-1) === $index }
                   status-icons={ this.statusIcons }
                   placement={ this.placement }
-                  svg-color={ this.lineColor }
+                  line-color={ this.lineColor }
                   width={ this.innerItemWidth }
                   store={ this.store } 
                   index={ $index } 
