@@ -824,6 +824,7 @@ div .el-collapse-item__content {
   background-color: var(--primary-color);
   width: 140px;
   line-height: 16px;
+  font-weight: normal;
   color: white;
   padding: 8px 0 0 0;
   box-sizing: border-box;
