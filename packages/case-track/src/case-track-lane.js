@@ -154,7 +154,7 @@ export default {
       }
       return icons;
     }
-
+ 
     return (
        <div class="lane" style={ this.laneHeight ? this.laneHeight : {} }>
         <el-popover 
@@ -172,24 +172,31 @@ export default {
             : <span class="el-icon-loading"></span>
           } 
         </el-popover>
-        <div { ...{ directives } } class={ "lane-title " + this.lane.status }
-          on-click={ ($event)=> this.laneItemClick(this.lane, $event) }>
-          { this.lane.title }
-          { 
-            (this.lane.nextLevel == 1 || this.lane.status)
-            ? <i 
-              class={ getStatusIcons(this, this.lane.status) }
-              on-click={ ($event)=> this.laneIconClick(this.node, $event) }>
-            </i> : ''
-          }
-          { 
-            (typeof this.lane.sendBack !== 'undefined' && this.lane.sendBack > 0)
-            ? <span class="send-back el-icon-send-back"
-              style={ document.documentMode ? {top: '-35px', right: 0} : {}}>
-              { this.store.CaseTrack.getSendBackWords(this.lane.sendBack) }
-            </span> : ''
-          }
-        </div>
+        {
+          this.lane.title ? <div { ...{ directives } }
+            class={ "lane-title " + this.lane.status }
+            on-click={ ($event)=> this.laneItemClick(this.lane, $event) }>
+            { 
+              (typeof this.lane.badge !== 'undefined' && this.lane.badge > 0 )
+              ? <i class="info-badge"></i> : ''
+            }
+            { this.lane.title }
+            { 
+              (this.lane.nextLevel == 1 || this.lane.status)
+              ? <i 
+                class={ getStatusIcons(this, this.lane.status) }
+                on-click={ ($event)=> this.laneIconClick(this.node, $event) }>
+              </i> : ''
+            }
+            { 
+              (typeof this.lane.sendBack !== 'undefined' && this.lane.sendBack > 0)
+              ? <span class="send-back el-icon-send-back"
+                style={ document.documentMode ? {top: '-35px', right: 0} : {}}>
+                { this.store.CaseTrack.getSendBackWords(this.lane.sendBack) }
+              </span> : ''
+            }
+          </div>: ''
+        }
         <div class="lane-label">{ this.lane.label }</div>
         {
           this._l(this.lane.nodes, (node, $index)=>[

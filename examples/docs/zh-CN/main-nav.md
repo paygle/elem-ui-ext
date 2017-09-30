@@ -4,7 +4,8 @@
       return {
         menusDatas:[    
           { "label" : "案例效果",
-            "url" : "index.html",    
+            "url" : "index.html",
+            "query": '{"id":"3254"}',
             "icon" : "",
             "subMenu" : [
               {
@@ -43,7 +44,8 @@
       return {
         menusDatas:[    
           { "label" : "案例效果",
-            "url" : "index.html",    
+            "url" : "index.html",
+            "query": '{"id":"3254"}',  
             "icon" : "",
             "subMenu" : [
               {

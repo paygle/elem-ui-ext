@@ -14,6 +14,7 @@
         <li v-if="parent.loading"><i class="el-icon-loading"></i></li>
         <template v-for="(item, index) in suggestions" v-else>
           <li
+            :key="index"
             v-if="!parent.customItem"
             :class="{'highlighted': parent.highlightedIndex === index}"
             @click="select(item)"
@@ -22,6 +23,7 @@
           </li>
           <component
             v-else
+            :key="index"
             :class="{'highlighted': parent.highlightedIndex === index}"
             @click="select(item)"
             :is="parent.customItem"
@@ -57,7 +59,6 @@
       options: {
         default() {
           return {
-            forceAbsolute: true,
             gpuAcceleration: false
           };
         }

@@ -2,7 +2,7 @@
   <el-input 
     v-model="modelValue"
     @blur="blurChange"
-    :type="type"
+    type="text"
     :name="name"
     :placeholder="placeholder"
     :validate-event="false"
@@ -29,17 +29,17 @@ export default{
   },
   mixins: [emitter],
   props:{
-    value: [String, Number],
+    value: {
+      type: [String, Number],
+      default: 0
+    },
+    isEmpty: Boolean,    // 默认是否可以为空
     placeholder: String,
     size: String,
     readonly: Boolean,
     autofocus: Boolean,
     icon: String,
     disabled: Boolean,
-    type: {
-      type: String,
-      default: 'text'
-    },
     name: String,
     autosize: {
       type: [Boolean, Object],
@@ -77,7 +77,12 @@ export default{
   },
   watch:{
     value(val, old){
-      this.setCurrentValue(val);
+      // 是否允许为空
+      if (this.hasEmpty(val)) {
+        this.$emit('input', 0);
+      } else {
+        this.setCurrentValue(val);
+      }
     },
     currentValue(n, o){
 
@@ -112,15 +117,15 @@ export default{
         }
 
         this.modelValue = n;
-        pv = this.setPrecision(pv, 6);
+        pv = this.setPrecision(pv);
         this.$emit('input', pv);
         this.$emit('change', pv);
       }
     }
   },
   methods:{
-    setPrecision(value, bit){
-      let numStr, num = null, mbit = bit || 4;
+    setPrecision(value){
+      let numStr, num = null, mbit = 8;
       numStr = String(value).split(".");
       if(numStr.length===2 && String(numStr[1]).length > mbit){
         numStr[1] = String(numStr[1]).substr(0, mbit);
@@ -134,20 +139,17 @@ export default{
       }else if(this.getRate() === 'percent'){ 
         return math.div(this.setPrecision(val), 100);
       }else{
-        return math.div(this.setPrecision(val, 3), 1000);
+        return math.div(this.setPrecision(val), 1000);
       }
     },
     blurChange(e){
-      if(this.getRate() === 'percent'){
-        e.target.value = this.setPrecision(e.target.value);
-      }else{
-        e.target.value = this.setPrecision(e.target.value, 3); 
-      }
-      let realVal =this.setPrecision(this.getSizeNumber(e.target.value), 6);
+      e.target.value = this.setPrecision(e.target.value);
+      let realVal =this.setPrecision(this.getSizeNumber(e.target.value));
       this.setCurrentValue(realVal);
       this.$emit('input', realVal);
       this.$emit('change', realVal);
 
+      if (realVal == 0) this.modelValue = 0;
       this.$nextTick(function() {
         if (this.validateEvent) {
           // 验证 valid-item 组件
@@ -157,7 +159,6 @@ export default{
       });
     },
     setCurrentValue(value) {
-
       if(!isNaN(value) && value !== ""){
       
         value = Number(value);
@@ -173,6 +174,7 @@ export default{
       }else{
         this.currentValue = value;
       }
+      this.modelValue = this.currentValue;
     },
     getRateValue(value) {
       return this.getRate() === 'percent'
@@ -182,13 +184,23 @@ export default{
       let _rate = 'percent';
       if(this.rate === 'permillage'){ _rate = 'permillage'; }
       return _rate;
+    },
+    hasEmpty(val) {
+      if (!this.isEmpty &&
+        (typeof val === 'undefined' || val ==='' || /^\s+$/g.test(val))) {
+        return true;
+      }
+      return false;
     }
   },
   mounted() {
-    if(this.getRate() === 'permillage'){
-      this.rateIcon = 'el-icon-permillage';
+    let val = this.value;
+    if (this.hasEmpty(val)) {
+      this.$emit('input', 0);
+    } else {
+      this.rateIcon = (this.getRate() === 'permillage') ? 'el-icon-permillage': this.rateIcon;
+      this.currentValue = this.getRateValue(val);
     }
-    this.currentValue = this.getRateValue(this.value);
   }
 };
 </script>

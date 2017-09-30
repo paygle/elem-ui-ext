@@ -55,7 +55,8 @@ export default {
       status: '',
       dataLoading: false,  
       componentName: null,
-      componentData: null
+      componentData: null,
+      msgTimes: 0
     };
   },
   computed:{
@@ -134,13 +135,12 @@ export default {
       ctx.save(); 
       ctx.beginPath(); 
 
-      // arrowX = fromX - topX, 
+      // arrowX = fromX - topX;
       // arrowY = fromY - topY; 
       // ctx.moveTo(arrowX, arrowY); 
       // ctx.lineTo(fromX, fromY); 
       arrowX = fromX - botX; 
       arrowY = fromY - botY; 
-      
       ctx.lineTo(arrowX, arrowY); 
       ctx.moveTo(fromX, fromY);
       ctx.lineTo(toX, toY); // other side 
@@ -192,7 +192,11 @@ export default {
             if(!this.isLastEnd) {
               this.drawArrow(this.$refs.canvasArrow, 8, 0, 8, 18);
             }
-          this.dispatch('CaseTrack', 'load-node-data', true);
+          if (this.msgTimes < 5) {
+            ++this.msgTimes;
+            this.dispatch('CaseTrack', 'load-node-data', true);
+            this.dispatch('CaseTrackGroup', 'load-node-data', true);
+          }
         }
       });
     },
@@ -226,7 +230,11 @@ export default {
       this.dataLoading = v;
       if(this.isLastNode){
         this.$nextTick(function(){
-          this.dispatch('CaseTrack', 'group-updated', true);
+          if (this.msgTimes < 5) {
+            ++this.msgTimes;
+            this.dispatch('CaseTrack', 'group-updated', true);
+            this.dispatch('CaseTrackGroup', 'group-updated', true);
+          }
         });
       }
     },
@@ -290,7 +298,7 @@ export default {
           return self.topSvgHeight;
         }
       }
-  
+
       return (
         <div class="case-track-item">
           <el-popover 
@@ -328,6 +336,10 @@ export default {
               class={ "title-box " + this.node.status }
               style={ this.node.shapeIcon ? { border:0, backgroundColor:'transparent'} : {}}
               on-click={ ($event)=> this.itemClick(this.node, $event) }>
+              { 
+                (typeof this.node.badge !== 'undefined' && this.node.badge > 0 && !this.node.shapeIcon)
+                ? <i class="info-badge"></i> : ''
+              }
               { !this.node.shapeIcon ? this.getFormatTitle(h, this.node.title) : '' }
               { this.node.shapeIcon ? <span class={ "shape " + this.node.shapeIcon }></span> : '' }
               {
@@ -351,6 +363,7 @@ export default {
   },
   
   render(h){
+    this.initComponentName(this.node.args);
     return (this.node.lanes && this.node.lanes.length) ? this.renderGroup(h): this.renderItem(h);
   },
 
@@ -368,6 +381,5 @@ export default {
   mounted(){
     this.arrowDraw();
     this.$on('start-loading', this.startLoading);
-    this.$nextTick(function(){ this.initComponentName(this.node.args); });
   }
 };

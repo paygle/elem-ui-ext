@@ -11,7 +11,6 @@
 </script>
 <style>
   .demo-icon .source > i {
-    font-size: 24px;
     color: #8492a6;
     margin: 0 20px;
     font-size: 1.5em;

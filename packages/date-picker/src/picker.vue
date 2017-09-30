@@ -263,7 +263,11 @@ export default {
       immediate: true,
       handler(val) {
         // 自定义转换日期格式为 YYYY/MM/DD/ HH:MM:SS 兼容格式
-        this.currentValue = isDate(val) ? new Date(compatDateStr(val)) : val;
+        if (Array.isArray(val)) { // 初始化空数组
+          this.currentValue = val.length === 2 ? val : '';
+        } else {
+          this.currentValue = isDate(val) ? new Date(compatDateStr(val)) : val;
+        }
       }
     },
     displayValue(val) {

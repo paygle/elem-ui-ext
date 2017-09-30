@@ -36,6 +36,7 @@
         @mouseover="inputMSEnter"
         @mouseout="inputMSOut"
         @keydown="fixIeReadonly"
+        @keyup.enter="keyEnter"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -110,10 +111,7 @@
         type: String,
         default: 'string'
       },
-      fastDo: {                  // 值变化快速响应
-       type: Boolean,
-        default: true
-      },
+      delayed: Boolean,          // 值变化延时响应
       tipDisabled: {             // 默认不禁用显示tooltip
        type: Boolean,
         default: false
@@ -195,6 +193,9 @@
     },
 
     methods: {
+      keyEnter(e) {
+        this.$emit('key-enter', e);
+      },
       inputMSEnter(e) {
         let pos, gapw, style, color = "", that = this;
         let inputEl = this.$el.querySelector('input');
@@ -278,7 +279,7 @@
       getTypeVal(value){
         if(this.histype !== 'string' && value !== "" && value !== "-") {
           // 数值转化
-          if(this.precision > 0){
+          if(this.precision > -1){
             value = isNaN(value) ? 0 : getFloatNumber(this.precision, value, this.roundoff);
           }
           value = isNaN(value) ? value : Number(value);
@@ -324,7 +325,7 @@
         this.$emit('focus', event);
       },
       handleInput(event) {
-        if(this.fastDo) {
+        if(!this.delayed) {
           let value = event.target.value;
           value = this.getTypeVal(value);
           value = getMaxMinVal(value, this.max, this.min, this.histype);

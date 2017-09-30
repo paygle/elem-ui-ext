@@ -270,8 +270,8 @@
         }
       },
 
-      handleClick() {
-        console.log('click');
+      handleClick(row) {
+        console.log(row);
       },
 
       handleEdit(index, row) {

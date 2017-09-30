@@ -86,7 +86,7 @@
           <div v-if="dictId">
             <combo-option 
               v-for="(item, index) in comboItems" 
-              v-if="!!item" 
+              v-if="typeof item === 'object'" 
               :key="item.c_cod"
               :label="item.c_cname" 
               :value="item.c_code">
@@ -295,6 +295,7 @@
         comboItems:[], //下拉框数据
         comboLoading:false, //是否加载后台数据
         realParams:{}, //下拉框参数,
+        paramChg: false, // 参数是否改变来确定是否选择第一个
         currentPage:1,
         total:0,
         _COMBO_DATAS:[]
@@ -329,6 +330,7 @@
       },
 
       query(val) {
+        if (val === null || val === undefined) return;
         this.$nextTick(() => {
           if (this.visible) this.broadcast('ElSelectDropdown', 'updatePopper');
         });
@@ -472,24 +474,10 @@
         if(!util.isObjectValueEqual(this.realParams,oldParams)){
           this.reloadData();
         }
+        this.paramChg = true;
       },
       dictId(){
-        this.comboLoading = true; //comboLoading变为ture时，自动远程加载数据
-      },
-
-      comboItems(){
-        //没有值时根据autoSelectFirst决定是否选中第一个选项
-        if(this.comboItems.length==0 || !this.autoSelectFirst || this.value){
-          return ;
-        }
-        this.$nextTick(function(){
-          let val=this.comboItems[0].c_code;
-          let option = this.getOption(val);
-          this.selectedLabel = option.currentLabel;
-			    this.selected = option;
-          this.$emit('input', val);
-          this.$emit('change', val);
-        });
+        this.comboLoading = true; //comboLoading变为true时，自动远程加载数据
       }
     },
 
@@ -547,6 +535,20 @@
             break;
           }
         }
+        // 修复有数据无法赋值的问题
+        if (!option) {
+          for (let i = this.options.length - 1; i >= 0; i--) {
+            const item = this.options[i];
+            const isEqual = isObject
+              ? getValueByPath(item.value, this.valueKey) == getValueByPath(value, this.valueKey)
+              : item.value == value;
+            if (isEqual) {
+              option = item;
+              break;
+            }
+          }
+        }
+
         if (option) return option;
         let label = !isObject
           ? value : '';
@@ -835,8 +837,7 @@
       },
 
       getValueKey(item) {
-        const type = typeof item.value;
-        if (type === 'number' || type === 'string') {
+        if (Object.prototype.toString.call(item.value).toLowerCase() !== '[object object]') {
           return item.value;
         } else {
           return getValueByPath(item.value, this.valueKey);
@@ -873,9 +874,9 @@
         var callback=function(){
             let comboValue=oldvalue;
             //回调，当下拉框有值时，先判断新加载的数据是否在下拉选项中存在，存在则赋值，不存在则清空值
-            if(comboValue){
+            if(comboValue && comboValue.length>0){
               var clearOldValue=true;
-              for(var i=0;i<self.comboItems.length;i++){
+              for(var i=0; i<self.comboItems.length && !self.multiple ; i++){
                 if(comboValue==self.comboItems[i].c_code){
                   clearOldValue=false;
                   break;
@@ -885,8 +886,9 @@
                 //清除选中的值
                 self.selected = {};
                 self.selectedLabel = '';
-                self.$emit('input', '');
-                self.$emit('change', '');
+                let empty= self.multiple ? [] : '';
+                self.$emit('input', empty);
+                self.$emit('change', empty);
                 self.visible = false;
               }
             }
@@ -968,6 +970,20 @@
         }
         
         this.isFilterLoad=false;
+      },
+      optionIndexChg(idx) {
+        //没有值时根据autoSelectFirst决定是否选中第一个选项
+        if ((this.comboItems.length -1) === idx && this.autoSelectFirst && this.paramChg && !this.value) {
+          this.$nextTick(function(){
+            let val=this.comboItems[0].c_code;
+            let option = this.getOption(val);
+            this.selectedLabel = option.currentLabel;
+            this.selected = option;
+            this.paramChg = false;
+            this.$emit('input', val);
+            this.$emit('change', val);
+          });
+        }
       }
     },
 
@@ -980,7 +996,7 @@
       if (!this.multiple && Array.isArray(this.value)) {
         this.$emit('input', '');
       }
-      this.setSelected();
+
       if (this.remote) {
         this.voidRemoteQuery = true;
       }
@@ -991,7 +1007,7 @@
       this.$on('handleOptionClick', this.handleOptionSelect);
       this.$on('onOptionDestroy', this.onOptionDestroy);
       this.$on('setSelected', this.setSelected);
-
+      this.$on('optionIndexChg', this.optionIndexChg);
     },
 
     mounted() {
@@ -1030,6 +1046,7 @@
           }
         }
       }
+      this.setSelected();
     },
 
     beforeDestroy() {

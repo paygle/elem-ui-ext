@@ -39,4 +39,5 @@
 |    split        |  分隔位数           |   Number     |      ——       |    3 |
 |    splitMark    |  分隔符号           |   String     |      ——       |    , |
 |    precision    |   精度              |   Number     |      ——       |    2 |
+|    is-empty     | 是否接收空值，清除为0 |   Boolean    |      ——       |  false|
  

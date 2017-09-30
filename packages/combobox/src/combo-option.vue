@@ -166,6 +166,7 @@
       this.$on('queryChange', this.queryChange);
       this.$on('handleGroupDisabled', this.handleGroupDisabled);
       this.$on('resetIndex', this.resetIndex);
+      this.dispatch('Combobox', 'optionIndexChg', this.index);
     },
 
     beforeDestroy() {

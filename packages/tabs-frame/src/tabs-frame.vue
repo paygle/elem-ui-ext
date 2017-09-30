@@ -6,14 +6,15 @@
     @tab-click="tabClick"
     @tab-remove="removeTab">
     <el-tab-pane 
-      v-for="item in _tabsData" 
+      v-for="item in inTabsData" 
       :key="item.name"
       :name="item.name"
       :label="item.label" 
       :disabled="item.disabled"
+      :ref="'pane'+item.name"
       :closable="item.closable">
       <span v-if="item.icon" slot="label"><i :class="item.icon"></i> {{item.label}}</span>
-      <iframe :src="item.href" :ref="item.name" width="100%" scrolling="no" frameborder="0"></iframe>
+      <iframe :ref="item.name" :src="item.href" width="100%" scrolling="no" frameborder="0"></iframe>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -33,7 +34,6 @@ import { JsonToObject } from 'element-ui/src/utils/funcs';
     }
   ]
 */
- 
 export default {
   name: 'TabsFrame',
   components:{
@@ -50,6 +50,7 @@ export default {
     },
     type: String,
     activeName: String,
+    closeCall: Function,    // 关闭 tab 时的回调函数
     closable: {
       type: Boolean,
       default: false
@@ -58,12 +59,12 @@ export default {
   data(){
     return {
       activeTab: this.activeName,
-      _tabsData: []
+      inTabsData: []
     };
   },
   watch:{
     tabsData(val){
-      this._tabsData = val;
+      this.inTabsData = val;
       this.goLastActive();
     },
     activeName(val){
@@ -85,9 +86,24 @@ export default {
       this.$emit('tab-click', panel, e);
       this.broadcast('Architecture', 'draw-update');
     },
+    delTarget(targetName) {
+      // 删除目标对象
+      if(this.$refs[targetName]) {
+        if(this.$refs[targetName][0] && this.$refs[targetName][0].$destroy) {
+          this.$refs[targetName][0].$destroy() ;
+          this.$refs[targetName][0] = null;
+        } 
+        if(this.$refs['pane'+targetName][0]){
+          this.$refs['pane'+targetName][0].$destroy();
+          this.$refs['pane'+targetName] = null;
+        } 
+      }
+    },
     removeTab(targetName) {
-      let tabs = this._tabsData;
+      let tabs = this.inTabsData;
       let activeName = this.activeName;
+      let filterData = JsonToObject(tabs.filter(tab => tab.name !== targetName));
+  
       if (activeName === targetName) {
         tabs.forEach((tab, index) => {
           if (tab.name === targetName) {
@@ -99,8 +115,13 @@ export default {
         });
       }
       this.activeTab = activeName;
-      this._tabsData = tabs.filter(tab => tab.name !== targetName);
-      this.$emit('tab-remove', JsonToObject(this._tabsData), targetName);
+      // 删除处理
+      if(typeof this.closeCall === 'function') {
+        this.closeCall.call(null, this.delTarget, targetName, filterData);
+      } else {
+        this.delTarget(targetName);
+        this.$emit('tab-remove', filterData, targetName);
+      }
     },
     goLastActive() {
 
@@ -108,7 +129,7 @@ export default {
 
         let last, hasTab = false, that = this;
         let disCloseTabs = [], closableTabs = [];
-        let tabs = this._tabsData || [];
+        let tabs = this.inTabsData || [];
  
         if(tabs.length){
           
@@ -132,7 +153,6 @@ export default {
               if(last.name) this.activeTab = last.name;
             }
           }
-
         }
       });
     }
@@ -144,7 +164,7 @@ export default {
 
   created(){
     let that = this;
-    this._tabsData = this.tabsData;
+    this.inTabsData = this.tabsData;
     window.tabsFrameUpdateCall = function() { that.updateFrames(); };
   }
 };

@@ -39,7 +39,12 @@
         ></i>
       </template>
     </el-input>
-    <span class="el-cascader__label" v-show="inputValue === ''">
+    <span 
+      ref="textbox"
+      class="el-cascader__label" 
+      @mouseover="tipMSEnter"
+      @mouseout="tipMSOut"
+      v-show="inputValue === ''">
       <template v-if="showAllLevels">
         <template v-for="(label, index) in currentLabels">
           {{ label }}
@@ -63,6 +68,7 @@ import emitter from 'element-ui/src/mixins/emitter';
 import Locale from 'element-ui/src/mixins/locale';
 import { t } from 'element-ui/src/locale';
 import debounce from 'throttle-debounce/debounce';
+import { createDomElement } from 'element-ui/src/utils/funcs';
 
 const popperMixin = {
   props: {
@@ -143,6 +149,10 @@ export default {
     beforeFilter: {
       type: Function,
       default: () => (() => {})
+    },
+    tipDisabled: {             // 默认不禁用显示tooltip
+      type: Boolean,
+      default: false
     }
   },
 
@@ -154,7 +164,15 @@ export default {
       menuVisible: false,
       inputHover: false,
       inputValue: '',
-      flatOptions: null
+      flatOptions: null,
+      parentTipText: '',         // 父类组件提示内容
+      tipContent: '',            // tooltip内容
+      notifyStyl: {},
+      notifyWidth: 0,
+      isNoticeShow: false,
+      tipTimeHander: null,
+      noticeDom: null,
+      innerTipShow: false   // 默认禁用 tooltip功能
     };
   },
 
@@ -201,10 +219,96 @@ export default {
         this.flatOptions = this.flattenOptions(this.options);
         this.menu.options = value;
       }
+    },
+    currentLabels(val){   //自动设置是否显示hover提示
+      this.setTipContent(val);
+    },
+    parentTipText(val) {  //　父类组件提示内容更新
+      if(typeof val === 'string' && val !== ''){
+        if(this.noticeDom) {
+          this.noticeDom.innerHTML = val;
+        }
+        this.tipContent = val;
+      }
     }
   },
 
   methods: {
+    tipMSEnter(e) {
+      let pos, gapw, style, color = "", that = this;
+      let textbox = this.$refs.textbox;
+      let boxWidth = this.getPlaceWidth(textbox);
+      let isParentText = typeof that.parentTipText === 'string' &&  that.parentTipText !== '';
+      that.notifyWidth = this.getTipContentWidth(textbox, this.tipContent);
+
+      if(that.innerTipShow || isParentText){
+        that.tipTimeHander = setTimeout(()=>{
+          pos = textbox.getBoundingClientRect();
+          gapw = that.notifyWidth > 0 ? (that.notifyWidth - boxWidth)/2 : 0;
+          
+          if(isParentText) color = 'red';
+          style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
+
+          if(/[\w\W]{3,}/ig.test(that.tipContent)){
+            that.noticeDom = createDomElement('div', {class:"itxt-notify-popw", style: style});
+            that.noticeDom.innerHTML = that.tipContent;
+            document.body.appendChild(that.noticeDom);
+          }
+        }, 300);
+      }
+    },
+    tipMSOut(e){
+      clearTimeout(this.tipTimeHander);
+      let delDoms = document.querySelectorAll('.itxt-notify-popw');
+      if(delDoms.length && this.noticeDom) {
+        for(let i=0; i<delDoms.length; i++){
+          document.body.removeChild(delDoms[i]);
+        }
+        this.noticeDom = null;
+      }
+    },
+    setTipContent(value){
+      this.$nextTick(function(){
+        if(!this.tipDisabled){
+          this.tipContent = Array.isArray(value) ? value.join('/') : String(value); 
+          this.innerTipShow = this.getTipStatus(this.$refs.textbox);
+        }
+      });
+    },
+    getPlaceWidth(el){  // 计算组件除padding的宽度
+      let elStyl, paddingLeft, paddingRight;
+      if(el) {
+        elStyl = getComputedStyle(el);
+        paddingLeft =  parseInt(elStyl.paddingLeft.replace('px',''), 10);
+        paddingRight =  parseInt(elStyl.paddingRight.replace('px',''), 10);
+        return el.getBoundingClientRect().width - paddingLeft - paddingRight;
+      }else{
+        return 0;
+      }
+    },
+    getTipContentWidth(el, text){ // 计算文本宽度
+      let elStyl, fontSize,  zhword, zhWidth;
+      text = text || '';
+      elStyl = getComputedStyle(el);
+      fontSize = parseInt(elStyl.fontSize.replace('px',''), 10);
+      zhword = String(text).replace(/[0-9A-Za-z\-\:]/ig, '');
+      zhWidth = zhword.length * fontSize;
+      return (String(text).length - zhword.length) * fontSize * 0.5 + zhWidth;
+    },
+    getTipStatus(el){  // 获取tip动态配置
+      let width, contentWidth;
+      if(el){
+        width = this.getPlaceWidth(el);
+        contentWidth = this.getTipContentWidth(el, this.tipContent);
+        if(contentWidth > width){
+          return true;
+        }else{
+          return false;
+        }
+      }else{
+        return false;
+      }
+    },
     initMenu() {
       this.menu = new Vue(ElCascaderMenu).$mount();
       this.menu.options = this.options;

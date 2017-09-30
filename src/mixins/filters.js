@@ -4,6 +4,7 @@ export default {
      * 百分比过滤器
      */
     percent: function (value) {
+
       if (isNaN(value)) return value;
       function multi(arg1, arg2) {
         var m = 0, s1 = arg1.toString(), s2 = arg2.toString();

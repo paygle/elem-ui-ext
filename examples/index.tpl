@@ -11,8 +11,8 @@
   </head>
   <body>
     <div id="app"></div><% if (process.env.NODE_ENV === 'production') { %>
-    <script src="//cdn.bootcss.com/vue/2.4.2/vue.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/vue-router@2.1.1/dist/vue-router.min.js"></script><% } %>
+    <script src="//cdn.bootcss.com/vue/2.4.4/vue.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vue-router/2.7.0/vue-router.min.js"></script><% } %>
   </body>
   <% if (process.env.NODE_ENV === 'production') { %><script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

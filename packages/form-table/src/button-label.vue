@@ -6,6 +6,7 @@
       <dict-label 
         v-else
         v-model="currentValue" 
+        :width="width"
         :dict-id="dictId"
         :dict-params="dictParams"
         :dict-filter="dictFilter"
@@ -58,6 +59,7 @@ export default {
       type: Boolean,
       default: false
     },
+    width: String,
     formatter: Function,
     index: [String, Number],
     store: Object,

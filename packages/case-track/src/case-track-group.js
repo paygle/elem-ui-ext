@@ -44,7 +44,8 @@ export default {
       groupWidth: {},
       gpcanvas: null,
       canvasWidth: 0,
-      canvasHeight: 0
+      canvasHeight: 0,
+      msgTimes: 0
     };
   },
 
@@ -186,7 +187,11 @@ export default {
       }
        
       if(this.isLastNode){
-        this.dispatch('CaseTrack', 'load-node-data', true);
+        if (this.msgTimes < 5) {
+          ++this.msgTimes;
+          this.dispatch('CaseTrack', 'load-node-data', true);
+          this.dispatch('CaseTrackGroup', 'load-node-data', true);
+        }
       }
     },
 
@@ -225,6 +230,20 @@ export default {
         }
         setTimeout(()=>{ this.drawUpdate(); }, 300); 
       });
+    },
+
+    loadNodeData(v){
+      if (this.msgTimes < 5) {
+        ++this.msgTimes;
+        this.broadcast('CaseTrackLane', 'start-loading', v);
+        this.broadcast('CaseTrackItem', 'start-loading', v);
+      }
+    },
+    groupUpdated(flag) {
+      if (this.msgTimes < 5) {
+        ++this.msgTimes;
+        this.broadcast('CaseTrackGroup', 'update-gpdraw', flag);
+      }
     }
   },
 
@@ -235,6 +254,8 @@ export default {
   mounted(){
     let that = this;
     this.$on('update-gpdraw', function(f) { this.draw(f); });
+    this.$on('load-node-data', this.loadNodeData);
+    this.$on('group-updated', this.groupUpdated);
     window.onresize = function(e){ that.draw(); };
     this.initGroupRect();
   },

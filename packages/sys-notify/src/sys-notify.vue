@@ -22,9 +22,10 @@
           <span class="btn el-icon-delete" @click="delMsg(item)"></span>
         </div>
        </li>
-       <li class="list-bottom" v-if="unreadTotal>0">
-         <a @click="moreClick">未显示&nbsp;
-           <span class="total" v-text="unreadTotal"></span> &nbsp;条，查看更多
+       <li class="list-bottom" v-if="unShowTotal>0">
+         <a @click="moreClick">未读数&nbsp;
+           <span class="total" v-text="unreadTotal"></span> &nbsp条，&nbsp;未显示&nbsp;
+           <span class="total" v-text="unShowTotal"></span> &nbsp;条，查看更多
            <i class="el-icon-d-arrow-right"></i>
           </a>
        </li>
@@ -32,7 +33,7 @@
     </el-popover>
     <div class="notify-box" :style="tipbellStyl">
       <div :class="['notify', icon]" v-popover:notifyPoper>
-        <span v-show="shwCount" class="count" v-text="msgTotal"></span>
+        <span v-if="unreadTotal>0" v-show="shwCount" class="count" v-text="msgTotal"></span>
       </div>
       <div 
         class="scroll-box"
@@ -74,6 +75,10 @@ export default {
       type: Number,
       default: 0
     },
+    msgExist: {        // 消息总数
+      type: Number,
+      default: 0
+    },
     more: String,      // 点击更多链接
     icon: {            // 提示图标
       type: String,
@@ -81,7 +86,7 @@ export default {
     },
     step: {            // 每步跨度
       type: Number,
-      default: 2
+      default: 6
     },
     time: {            // 滚动反应时间
       type: Number,
@@ -143,7 +148,10 @@ export default {
   },
   computed: {
     unreadTotal(){
-      return this.msgTotal - this.msgList.length; 
+      return this.msgTotal; 
+    },
+    unShowTotal(){
+      return this.msgExist - this.msgList.length; 
     },
     innerBoxStyl(){
       return {left: this.msgWidth + 'px', height: this.msgHeight + 'px'};

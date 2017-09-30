@@ -3,8 +3,8 @@
     <el-input 
       v-model="formatValue"
       ref="inputel"
+      type="text"
       @blur="blurChange"
-      :type="type"
       :name="name"
       :placeholder="placeholder"
       :validate-event="false"
@@ -14,7 +14,7 @@
       :minlength="minlength"
       :auto-complete="autoComplete"
       :autofocus="autofocus"
-      :form="form">
+      :form="form" delayed>
     </el-input>
   </div>
 </template>
@@ -32,16 +32,13 @@ export default {
   props: {
     value: { // 格式转换数字最大位数不能超过16位
       type: [String, Number],
-      default: ''
+      default: '0'
     },
+    isEmpty: Boolean,    // 默认是否可以为空
     placeholder: String,
     readonly: Boolean,
     autofocus: Boolean,
     disabled: Boolean,
-    type: {
-      type: String,
-      default: 'text'
-    },
     name: String,
     autoComplete: {
       type: String,
@@ -77,38 +74,27 @@ export default {
   watch: {
 
     value(val, old) {
-      if (val !== old) {
-        this.formatValue = this.getFormatVal(val);
-      }
-      this.$nextTick(function () {
-        if (!isNaN(this.max) && typeof this.max !== 'undefined' && this.value > this.max) {
-          this.emitValue(this.max);
+      // 是否允许为空
+      if (this.hasEmpty(val)) {
+        this.$emit('input', 0);
+      } else {
+        if (val !== old) {
+          this.formatValue = this.getFormatVal(val);
         }
+        this.$nextTick(function () {
+          if (!isNaN(this.max) && typeof this.max !== 'undefined' && this.value > this.max) {
+            this.emitValue(this.max);
+          }
 
-        if (!isNaN(this.min) && typeof this.min !== 'undefined' && this.value < this.min) {
-          this.emitValue(this.min);
-        }
-      });
-    },
-
-    formatValue(n, o) {
-      if (n !== o) {
-        if (!new RegExp(this.formatRegx, 'g').test(n)) {
-          this.formatValue = o;
-          this.inputEl.value = o;
-        } else if (!this.validFormat(n)) {
-          this.formatValue = this.getFormatVal(n);
-          this.inputEl.value = this.formatValue;
-        }
+          if (!isNaN(this.min) && typeof this.min !== 'undefined' && this.value < this.min) {
+            this.emitValue(this.min);
+          }
+        });
       }
     }
-
   },
 
   computed: {
-    inputEl() {
-      return this.$refs.inputel.$el.querySelector('input');
-    },
     formatRegx() {
       return '^\\-?[\\d\\' + this.splitMark + ']*(\\.?\\d*)$';
     }
@@ -152,7 +138,6 @@ export default {
 
     // 从 12345678.12 -> 12,345,678.12
     getFormatVal(value) {
-
       value = typeof value === 'undefined' ? String(this.value)
         : String(value).replace(new RegExp(this.splitMark, 'g'), '');
 
@@ -194,6 +179,8 @@ export default {
           return minus + integerArray.reverse().join(this.splitMark) + '.' + decimal;
         }
         return minus + integerArray.reverse().join(this.splitMark);
+      } else if (this.hasEmpty(value)) {
+        this.$emit('input', 0);
       }
       return value;
     },
@@ -215,7 +202,13 @@ export default {
         value = String(value).replace(new RegExp(this.splitMark, 'g'), '');
         return this.setPrecision(value);
       }
-      return value;
+
+      // 是否允许为空
+      if (this.hasEmpty(value)) {
+        return 0;
+      } else {
+        return value;
+      }
     },
 
     emitValue(value) {
@@ -233,9 +226,17 @@ export default {
         let value = String(this.getValue());
         value = (!isNaN(value) && value !== '') ? Number(value) : '';
         this.emitValue(value);
+        if (value == 0) this.formatValue = 0;
       });
-    }
+    },
 
+    hasEmpty(val) {
+      if (!this.isEmpty &&
+        (typeof val === 'undefined' || val ==='' || /^\s+$/g.test(val))) {
+        return true;
+      }
+      return false;
+    }
   },
 
   mounted() {

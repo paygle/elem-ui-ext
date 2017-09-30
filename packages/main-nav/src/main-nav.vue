@@ -10,7 +10,8 @@
 			<span class="tap" 
 				@click="routeGo" 
 				:class="{tapnomore:!om.subMenu}" 
-				:url="om.url" 
+				:url="om.url"
+				:query="om.query"
 				v-text="om.label">
 			</span>
 
@@ -24,7 +25,8 @@
 							class="sub-tap" 
 							:class="sub.icon" 
 							@click="routeGo" 
-							:url="sub.url" 
+							:url="sub.url"
+							:query="sub.query"
 							v-show="sub.label" 
 							v-text="sub.label">
 						</h3>
@@ -38,7 +40,8 @@
 										class="sub-tap" 
 										:class="sub2.icon"
 										@click="routeGo" 
-										:url="sub2.url" 
+										:url="sub2.url"
+										:query="sub2.query"
 										v-text="sub2.label">
 									</h3>
 								<ul class="list-box-l3" v-if="!!sub2.subMenu.length">
@@ -49,8 +52,9 @@
 										<span 
 											class="sub-tap" 
 											:class="sub3.icon" 
-											@click="routeGo" 
-											:url="sub3.url" 
+											@click="routeGo"
+											:url="sub3.url"
+											:query="sub3.query" 
 											v-text="sub3.label">
 										</span>
 									</li>
@@ -147,17 +151,28 @@ export default {
 		// 路由处理
 		routeGo(e) {
 			let regx = /(\w+\-?\w+)+\.html/i;
-			let _Path = e.target.attributes['url'], $this = this;
+			let attrs = e.target.attributes;
+			let _Path = attrs['url'], $this = this;
+			let query = typeof attrs['query'] !== 'undefined' ? attrs['query'].value : '';
 
 			if (_Path) {
+				let cpath = location.pathname.match(regx) ? location.pathname.match(regx)[0] : '';
 				let path = _Path.value.match(regx) ? _Path.value.match(regx)[0] : '';
+				let value =  _Path.value.replace(regx, '');
 				/** 支持 ~/ 跳转到根目录导航 */
 				if(/^~\//g.test(_Path.value)){
 					location.href = '//' + location.host + _Path.value.replace(/^~\//g, '/');
 				}else{
-					location.href = '//' + location.host +
-					location.pathname.replace(regx, '') + path + '#' +
-					_Path.value.replace(regx, '');
+					if (this.$router && cpath === path) {
+						let param = {path: value === '' ? '/' : value};
+						if (typeof query === 'string' && query !== '') {
+							param['query'] = JSON.parse(query) ;
+						}
+						this.$router.push(param);
+					} else {
+						location.href = '//' + location.host +
+						location.pathname.replace(regx, '') + path + '#' + value;
+					}
 				}
 				
 				this.toggleHide = true;

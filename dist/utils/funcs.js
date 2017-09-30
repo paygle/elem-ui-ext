@@ -92,7 +92,7 @@ export const cssUnitsCalc = (operator, unitA, unitB) => {
   if (operator && typeof unitA !== 'undefined' && typeof unitB !== 'undefined') {
 
     let regxNum = /^\-?\d+/g;
-    let regxUnit = /[A-Za-z\-]+$/gi;
+    let regxUnit = /[A-Za-z\-%]+$/gi;
     let a_num = String(unitA).replace(regxUnit, '');
     let a_unit = String(unitA).replace(regxNum, '');
     let b_num = String(unitB).replace(regxUnit, '');

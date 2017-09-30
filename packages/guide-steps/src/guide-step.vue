@@ -136,6 +136,7 @@ export default {
       // if (isCenter && this.isLast) {
       //   return {};
       // }
+      
       function getSpace(islast, len) {
         let perc = 100 / len;
         if(islast){
