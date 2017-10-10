@@ -1,10 +1,13 @@
 <template>
   <div class="address-chooser" :style="{ minWidth: minWidth }">
-    <ul class="address-tabs">
-      <li :class="['tab', 'el-icon-arrow-down',{active:isActiveProvince}]" @click.stop="tabProvince" v-text="provinceWord" v-show="isShowProvince"></li>
-      <li :class="['tab', 'el-icon-arrow-down',{active:isActiveCity}]" @click.stop="tabCity" v-text="cityWord" v-show="isShowCity"></li>
-      <li :class="['tab', 'el-icon-arrow-down',{active:isActiveArea}]" @click.stop="tabArea" v-text="areaWord" v-show="isShowArea"></li>
-    </ul>
+    <div class="address-tabs">
+      <div class="bt-line"></div>
+      <span style="margin-left: 10px;" 
+        :class="['tab', 'el-icon-arrow-down',{active:isActiveProvince}]" 
+        @click.stop="tabProvince" v-text="provinceWord" v-show="isShowProvince"></span>
+      <span :class="['tab', 'el-icon-arrow-down',{active:isActiveCity}]" @click.stop="tabCity" v-text="cityWord" v-show="isShowCity"></span>
+      <span :class="['tab', 'el-icon-arrow-down',{active:isActiveArea}]" @click.stop="tabArea" v-text="areaWord" v-show="isShowArea"></span>
+    </div>
     <div class="address-contents">
       <ul class="address-province" v-show="isActiveProvince">
         <li v-for="(item, index) in provinceData" 
