@@ -222,6 +222,9 @@
           this.month = 11;
           this.year--;
         }
+        this.date.setFullYear(this.year);
+        this.date.setMonth(this.month);
+        this.resetDate();
       },
 
       nextMonth() {
@@ -230,6 +233,9 @@
           this.month = 0;
           this.year++;
         }
+        this.date.setFullYear(this.year);
+        this.date.setMonth(this.month);
+        this.resetDate();
       },
 
       nextYear() {

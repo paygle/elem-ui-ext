@@ -174,7 +174,7 @@
       },
       validate(trigger, callback = noop) {
         var rules = this.getFilteredRule(trigger);
-        if (!rules || rules.length === 0) {
+        if ((!rules || rules.length === 0) && !this._props.hasOwnProperty('required')) {
           callback();
           return true;
         }
@@ -226,10 +226,11 @@
       getRules() {
         var formRules = this.form.rules;
         var selfRules = this.rules;
+        var requiredRule = this._props.hasOwnProperty('required') ? { required: !!this.required } : [];
 
         formRules = formRules ? formRules[this.prop] : [];
 
-        return [].concat(selfRules || formRules || []);
+        return [].concat(selfRules || formRules || []).concat(requiredRule);
       },
       getFilteredRule(trigger) {
         var rules = this.getRules();
@@ -264,7 +265,7 @@
 
         let rules = this.getRules();
 
-        if (rules.length) {
+        if (rules.length || this._props.hasOwnProperty('required')) {
           this.$on('el.form.blur', this.onFieldBlur);
           this.$on('el.form.change', this.onFieldChange);
         }
