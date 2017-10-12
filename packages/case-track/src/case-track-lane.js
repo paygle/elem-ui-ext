@@ -60,6 +60,16 @@ export default {
         return this.svgHeight / 2;
       }
       return this.svgHeight;
+    },
+    ie9styl() { // 修复IE9样式
+      if(navigator.appName == "Microsoft Internet Explorer" && 
+        navigator.appVersion.split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
+        return {top: '-10px', right: '-10px'};
+      } if (document.documentMode) {
+        return {top: '-35px', right: 0};
+      } else {
+        return {};
+      }
     }
   },
   methods:{
@@ -190,8 +200,7 @@ export default {
             }
             { 
               (typeof this.lane.sendBack !== 'undefined' && this.lane.sendBack > 0)
-              ? <span class="send-back el-icon-send-back"
-                style={ document.documentMode ? {top: '-35px', right: 0} : {}}>
+              ? <span class="send-back el-icon-send-back" style={ this.ie9styl }>
                 { this.store.CaseTrack.getSendBackWords(this.lane.sendBack) }
               </span> : ''
             }

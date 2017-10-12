@@ -166,6 +166,11 @@ const TableStore = function(table, initialState = {}) {
     editable: null, // 是否可以编辑
     errCount: {}, // 错误总数统计 {row0col:true}
     operindex: 0, // 当前操作行
+    disableField: {  //是否使用禁用字段
+      field: 'disabled',  // 禁用字段名称
+      trueVal: '1', 
+      falseVal: '0'
+    },
     currentRow: null,
     hoverRow: null,
     filters: {},

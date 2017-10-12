@@ -7,7 +7,7 @@
         'is-focus': focus
       }"
     >
-      <span class="el-radio__inner"></span>
+      <span class="el-radio__inner" :class="ie9styl"></span>
       <input
         class="el-radio__original"
         :value="label"
@@ -48,6 +48,15 @@
     },
 
     computed: {
+
+      ie9styl() { // ÐÞ¸´IE9ÑùÊ½
+        if(navigator.appName == "Microsoft Internet Explorer" && 
+          navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
+          return 'fix-ie9';
+        }
+        return '';
+      },
+
       isGroup() {
         let parent = this.$parent;
         while (parent) {

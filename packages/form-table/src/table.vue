@@ -25,7 +25,7 @@
     <div
       class="el-table__body-wrapper"
       ref="bodyWrapper"
-      :style="[bodyHeight]">
+      :style="[bodyHeight, ieMaxHeight]">
       <table-body
         :expand-only-one="expandOnlyOne"
         :context="context"
@@ -222,6 +222,8 @@
 
       defaultExpandAll: Boolean,
 
+      disableField: [String, Object] ,   //是否使用禁用字段
+
       expandOnlyOne: {    // 同时仅允许打开一行数据
         type: Boolean,
         default: false
@@ -415,6 +417,16 @@
         return this.store.states.rightFixedColumns;
       },
 
+      ieMaxHeight() { // 修复IE9表格引起的页面抖动
+        let len = Array.isArray(this.data) ? this.data.length : 0;
+        if(typeof this.height === 'undefined' && len > 0 && 
+          navigator.appName == "Microsoft Internet Explorer" && 
+          navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
+          return {maxHeight: (30 * len + 10) + 'px', overflow: 'hidden'};
+        }
+        return {};
+      },
+
       bodyHeight() {
         let style = {};
 
@@ -429,7 +441,6 @@
               : this.maxHeight - this.layout.footerHeight) + 'px'
           };
         }
-
         return style;
       },
 
@@ -540,6 +551,20 @@
 
       this.$ready = true;
       this.$on('err-change', this.errChange);
+
+      // 初始化禁用字段参数
+      if (typeof this.disableField === 'string') {
+        this.store.states.disableField['field'] = this.disableField;
+
+      } else if (this.disableField !== null && typeof this.disableField === 'object') {
+
+        for (let i in this.store.states.disableField) {
+          if (typeof this.disableField[i] !== 'undefined') {
+            this.store.states.disableField[i] = this.disableField[i];
+          }
+        }
+      }
+  
     },
 
     data() {

@@ -23,7 +23,7 @@
     <div
       class="el-table__body-wrapper"
       ref="bodyWrapper"
-      :style="[bodyHeight]">
+      :style="[bodyHeight,ieMaxHeight]">
       <table-body
         :expand-only-one="expandOnlyOne"
         :context="context"
@@ -351,6 +351,16 @@
 
       rightFixedColumns() {
         return this.store.states.rightFixedColumns;
+      },
+
+      ieMaxHeight() { // 修复IE9表格引起的页面抖动
+        let len = Array.isArray(this.data) ? this.data.length : 0;
+        if(typeof this.height === 'undefined' && len > 0 && 
+          navigator.appName == "Microsoft Internet Explorer" && 
+          navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
+          return {maxHeight: (30 * len + 10) + 'px', overflow: 'hidden'};
+        }
+        return {};
       },
 
       bodyHeight() {

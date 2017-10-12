@@ -10,6 +10,11 @@
   margin-right: 3px;
 }
 
+.el-radio .el-radio__inner.fix-ie9::after {
+  left: 5px;
+  top: 5px;
+}
+
 /* sys-notify */
 .sys-notify{
   display: inline-block;
@@ -831,6 +836,9 @@ body .el-select{
 body .el-tooltip__popper.is-light{
   border: 1px solid var(--pmy-light2-color);
   box-shadow: 1px 1px 1px rgba(130, 130, 130, 0.3);
+}
+body .el-cascader__label{
+  line-height: 26px;
 }
 
 .el-dialog{

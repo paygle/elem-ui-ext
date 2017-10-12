@@ -35,6 +35,8 @@
 --msg-error-color: #ff4949;
 --eee-color: #eee;
 --headbg-image: url("../assets/bg/date_head_bg.png");   /* 请更换日期对应主题的图片 */
+--colhead-angle: url("../assets/angle.png");
+--colheadbt-angle: url("../assets/bgangle.png");
 
   /* Transition
   -------------------------- */

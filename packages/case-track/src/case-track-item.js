@@ -90,6 +90,13 @@ export default {
         return true;
       }
       return false;
+    },
+    ie9styl() { // 修复IE9样式
+      if(navigator.appName == "Microsoft Internet Explorer" && 
+        navigator.appVersion.split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
+        return {top: '-10px', right: '-10px'};
+      }
+      return {};
     }
   },
   methods:{
@@ -351,7 +358,7 @@ export default {
               }
               { 
                 (typeof this.node.sendBack !== 'undefined' && this.node.sendBack > 0 && !this.node.shapeIcon)
-                ? <span class="send-back el-icon-send-back">
+                ? <span class="send-back el-icon-send-back" style={ this.ie9styl }>
                   { this.store.CaseTrack.getSendBackWords(this.node.sendBack) }
                 </span> : ''
               }

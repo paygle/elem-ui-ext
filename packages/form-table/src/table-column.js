@@ -38,6 +38,26 @@ const setOptionData = function(callOption, row, column, $index, option){
   return option || {};
 };
 
+// 获取禁用值
+const getDisabledVal = function(row, column, store, $index, type) {
+  let disableField = store.states.disableField;
+  let isDisField = Boolean(store.table.disableField) && Boolean(store.table.disableField);
+  let trueVal = disableField.trueVal;
+
+  function getCallOp() {
+    return  column.selectable ? !column.selectable.call(null, row, $index) : false;
+  }
+  function getCallEdit() {
+    return column.editable ? !column.editable.call(null, row, $index) : false;
+  }
+
+  if (isDisField) {
+    if (row[disableField.field] === trueVal) return true;
+    return type === 'op' ? getCallOp() : getCallEdit();
+  } 
+  return type === 'op' ? getCallOp() : getCallEdit();
+};
+
 const forced = {
   selection: {
     renderHeader: function(h) {
@@ -110,6 +130,7 @@ const forced = {
     renderCell: function(h, { row, column, store, $index}) { 
       let rowIndex = store.states.data.indexOf(row);
       let tableData = store.states.data;
+
       return (
         <op-box
         deleteVisit = { column.deleteVisiable? !!column.deleteVisiable.call(null, tableData, row, rowIndex) : false  }
@@ -122,7 +143,7 @@ const forced = {
         column ={ column }
         store  ={ store }
         index  ={ $index }
-        disabled={ column.selectable ? !column.selectable.call(null, row, $index) : false } />
+        disabled={ getDisabledVal(row, column, store, $index, 'op') } />
       );
     },
     sortable: false
@@ -146,7 +167,7 @@ const forced = {
           min= { option.min }
           max= { option.max }
           form= { option.form }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colInputChanged', row, column, val, that); }} />
       );
     },
@@ -170,7 +191,7 @@ const forced = {
           min= { option.min }
           max= { option.max }
           form= { option.form }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colInputChanged', row, column, val, that); }} />
       );
     },
@@ -196,7 +217,7 @@ const forced = {
           min= { option.min }
           max= { option.max }
           form= { option.form }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colInputChanged', row, column, val, that); }} />
       );
     },
@@ -220,7 +241,7 @@ const forced = {
           width = { option.width }
           btnIcon = { option.btnIcon }
           btnClicked = { column.labelBtnClicked }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colInputChanged', row, column, val, that); }} />
       );
     },
@@ -250,7 +271,7 @@ const forced = {
           index  ={ $index }
           btnIcon = { option.btnIcon }
           btnClick = { column.inputBtnClick }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colInputChanged', row, column, val, that); }} />
       );
     },
@@ -280,7 +301,7 @@ const forced = {
             name = { option.name }
             trueLabel = { option.trueLabel }
             falseLabel = { option.falseLabel }
-            disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+            disabled={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colCheckboxChanged', row, column, val); }}
             onChange ={ (e) => { store.commit('checkAllboxChanged', column); }}>
               { option.marked || row[column.property] }
@@ -291,7 +312,7 @@ const forced = {
             name = { option.name }
             trueLabel = { option.trueLabel }
             falseLabel = { option.falseLabel }
-            disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+            disabled={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colCheckboxChanged', row, column, val); }}
             onChange ={ (e) => { store.commit('checkAllboxChanged', column); }}>
           </el-checkbox>;
@@ -314,7 +335,7 @@ const forced = {
             offColor = { option.offColor }
             oValue = { option.onValue } 
             offValue = { option.offValue }
-            disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+            disabled={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colSwitchChanged', row, column, val); } }>
           </custom-switch>
         );
@@ -339,7 +360,7 @@ const forced = {
           filterMethod = { option.filterMethod }
           multiple = { option.multiple }
           placeholder = { option.placeholder }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colSelectChanged', row, column, val); } }>
           { this$1._l(column.optionsData, (item)=> <el-option value={item.value} label={item.label} />)}
         </el-select>
@@ -364,7 +385,7 @@ const forced = {
           clearable = { option.clearable }
           align = { option.align }
           pickerOptions = { column.pickerOptions }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colDatePickerChanged', row, column, val); } }>
         </el-date-picker>
       );
@@ -381,7 +402,7 @@ const forced = {
           resdata = { column.addressData }
           dataUrl = { option.dataUrl }
           placeholder = { option.placeholder }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colAddressChanged', row, column, val); } }>
         </address-box>
       );
@@ -410,7 +431,7 @@ const forced = {
           filterMethod = { option.filterMethod }
           multiple = { option.multiple }
           placeholder = { option.placeholder }
-          disabled={column.editable ? !column.editable.call(null, row, $index) : false }
+          disabled={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colSelectChanged', row, column, val); } }>          
         </combobox>
       );
