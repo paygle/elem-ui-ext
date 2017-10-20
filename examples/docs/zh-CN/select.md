@@ -3,6 +3,7 @@
     data() {
       return {
         list: null,
+        disabled: false,
         options: [{
           value: '选项1',
           label: '黄金糕'
@@ -111,6 +112,10 @@
     },
 
     methods: {
+      changeDisabled(v) {
+        this.disabled = true;
+        console.log('禁用:', this.disabled);
+      },
       remoteMethod(query) {
         if (query !== '') {
           this.loading = true;
@@ -142,7 +147,7 @@
 :::demo `v-model`的值为当前被选中的`el-option`的 value 属性值
 ```html
 <template>
-  <el-select v-model="value" placeholder="请选择">
+  <el-select v-model="value" placeholder="请选择" @change="changeDisabled" :disabled="disabled">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -156,8 +161,9 @@
   export default {
     data() {
       return {
+        disabled: false,
         options: [{
-          value: '选项1',
+          value: '选项11',
           label: '黄金糕'
         }, {
           value: '选项2',

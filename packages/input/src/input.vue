@@ -295,6 +295,7 @@
         let value = event.target.value;
         value = this.getTypeVal(value);
         if(value === "-") value = 0;
+        if(value === 0) event.target.value = 0;
         // 失去焦点后才改变值
         this.$emit('input', value);
         this.setCurrentValue(value);
@@ -314,7 +315,13 @@
       resizeTextarea() {
         if (this.$isServer) return;
         var { autosize, type } = this;
-        if (!autosize || type !== 'textarea') return;
+        if (type !== 'textarea') return;
+        if (!autosize) {
+          this.textareaCalcStyle = {
+            minHeight: calcTextareaHeight(this.$refs.textarea).minHeight
+          };
+          return;
+        }
         const minRows = autosize.minRows;
         const maxRows = autosize.maxRows;
 

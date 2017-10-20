@@ -239,6 +239,10 @@
         }
       },
       defaultFirstOption: Boolean,
+      valueKey: {
+        type: String,
+        default: 'value'
+      },
       //扩展参数，字典ID
       dictId : String,
       //扩展参数，下拉框参数
@@ -303,6 +307,12 @@
     },
 
     watch: {
+      disabled() {
+        this.$nextTick(() => {
+          this.resetInputHeight();
+        });
+      },
+
       placeholder(val) {
         this.cachedPlaceHolder = this.currentPlaceholder = val;
       },
@@ -658,7 +668,9 @@
           if (!this.$refs.reference) return;
           let inputChildNodes = this.$refs.reference.$el.childNodes;
           let input = [].filter.call(inputChildNodes, item => item.tagName === 'INPUT')[0];
-          input.style.height = Math.max(this.$refs.tags.clientHeight + 6, sizeMap[this.size] || 36) + 'px';
+          if (this.$refs.tags) {
+            input.style.height = Math.max(this.$refs.tags.clientHeight + 6, sizeMap[this.size] || 36) + 'px';
+          }
           if (this.visible && this.emptyText !== false) {
             this.broadcast('ElSelectDropdown', 'updatePopper');
           }

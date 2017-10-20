@@ -204,10 +204,10 @@
         if (!notified) {
           const h = this.$createElement;
           const title = this.lang === 'zh-CN'
-            ? '2.0.0-alpha.1'
-            : '2.0.0-alpha.1 released';
+            ? '2.0.0 Alpha 发布'
+            : '2.0.0 Alpha released';
           const messages = this.lang === 'zh-CN'
-            ? ['点击', '这里', '学习']
+            ? ['点击', '这里', '查看详情']
             : ['Click ', 'here', ' to learn more'];
           this.$notify.success({
             title,
