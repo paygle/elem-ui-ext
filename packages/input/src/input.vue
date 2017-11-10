@@ -33,6 +33,7 @@
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
+        :style="customCrtStyl"
         @mouseover="inputMSEnter"
         @mouseout="inputMSOut"
         @keydown="fixIeReadonly"
@@ -54,7 +55,7 @@
       @input="handleInput"
       ref="textarea"
       v-bind="$props"
-      :style="textareaStyle"
+      :style="[textareaStyle, customCrtStyl]"
       @focus="handleFocus"
       @blur="handleBlur">
     </textarea>
@@ -64,7 +65,7 @@
   import emitter from 'element-ui/src/mixins/emitter';
   import calcTextareaHeight from './calcTextareaHeight';
   import merge from 'element-ui/src/utils/merge';
-  import { getFloatNumber, createDomElement } from 'element-ui/src/utils/funcs';
+  import { getFloatNumber, createDomElement, isOwnEmpty } from 'element-ui/src/utils/funcs';
 
   const getMaxMinVal = function(value, max, min, type){
     if(type !== "string" && value !== "" && value !== "-"){
@@ -88,7 +89,7 @@
 
     data() {
       return {
-        currentValue: "",
+        currentValue: '',
         textareaCalcStyle: {},
         isSetNumber: true,         // 是否允许获取精度数
         parentTipText: '',         // 父类组件提示内容
@@ -98,7 +99,9 @@
         isNoticeShow: false,
         tipTimeHander: null,
         noticeDom: null,
-        innerTipShow: false   // 默认禁用 tooltip功能
+        innerTipShow: false,   // 默认禁用 tooltip功能
+        customSfStyl: '',
+        customStyl: ''         // 自定义样式
       };
     },
 
@@ -124,6 +127,8 @@
         type: [Number, String],
         default: -1
       },
+      parentValue: null,   // 父组件值
+      getFillStyl: Function,         // 获取自定义组件配色
       value: [String, Number],
       placeholder: String,
       size: String,
@@ -168,6 +173,17 @@
       },
       textareaStyle() {
         return merge({}, this.textareaCalcStyle, { resize: this.resize });
+      },
+      customCrtStyl() {
+        if (typeof this.customStyl === 'object' && !isOwnEmpty(this.customStyl)) {
+          return this.customStyl;
+        } else if (typeof this.customSfStyl === 'object' && !isOwnEmpty(this.customSfStyl)) {
+          return this.customSfStyl;
+        }
+        return {};
+      },
+      isEmptyPrtValue() {
+        return this.parentValue === null || typeof this.parentValue === 'undefined';
       }
     },
 
@@ -177,6 +193,7 @@
         handler(value){
           value = typeof value === 'undefined' ? '' : value;
           this.setCurrentValue(value);
+          this.customfillStyl(value);
         }
       },
       currentValue(val){   //自动设置是否显示hover提示
@@ -193,6 +210,17 @@
     },
 
     methods: {
+      // 独立样式设置
+      customfillStyl(value) {
+        if (typeof this.getFillStyl === 'function') {
+          let val = !this.isEmptyPrtValue ? this.parentValue : value;
+          this.customSfStyl = this.getFillStyl.call(null, val);
+        }
+      },
+      // 设置错误样式
+      setCustomStyle(styl) {
+        this.customStyl = styl;
+      },
       keyEnter(e) {
         this.$emit('key-enter', e);
       },
@@ -301,12 +329,13 @@
         this.setCurrentValue(value);
         this.$emit('change', value);
         this.$emit('any-change', value);    // 任何修改都调用  
-
         this.$emit('blur', event);
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.blur', [this.currentValue]);
           // 验证 valid-item 组件
           this.dispatch(this.validItemName, 'valid.item.blur', [this.currentValue]);
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
         }
       },
       inputSelect() {
@@ -362,7 +391,7 @@
         }
 
         if (value === this.currentValue) return;
-        this.$emit('any-change', value);   // 任何修改都调用 
+        this.$emit('any-change', value);   // 任何修改都调用
         this.$nextTick(_ => {
           this.resizeTextarea();
         });
@@ -371,18 +400,27 @@
           this.dispatch('ElFormItem', 'el.form.change', [value]);
           // 验证 valid-item 组件
           this.dispatch(this.validItemName, 'valid.item.change', [value]);
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
         }
       }
     },
 
     created() {
       this.$on('inputSelect', this.inputSelect);
+      this.$on('custom-style', this.setCustomStyle);
     },
 
     mounted() {
       this.$on('parent-tip-text', (val)=>{ this.parentTipText = val; });
       this.resizeTextarea();
       this.setTipContent();
+      this.$nextTick(() => {
+        if (this.isEmptyPrtValue) {
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
+        }
+      });
     }
   };
 </script>

@@ -163,7 +163,7 @@
       return {
         disabled: false,
         options: [{
-          value: '选项11',
+          value: '选项1',
           label: '黄金糕'
         }, {
           value: '选项2',
@@ -664,6 +664,12 @@
 | no-data-text | 选项为空时显示的文字 | string | — | 无数据 |
 | popper-class | Select 下拉框的类名 | string | — | — |
 | default-first-option | 在输入框按下回车，选择第一个匹配项。需配合 `filterable` 或 `remote` 使用 | boolean | - | false |
+| readonly       | 	是否只读             |  Boolean     |   ——    |  false |
+| validItem-name  | valid-item组件域名         |  String     |   ——    |  ValidItem |
+| tip-disabled    | 是否禁用提示      |  Boolean     |   ——    |  false |
+| get-fill-styl   | 获取自定义组件配色  |  Function     |   ——    |   —— |
+| options-data   | Option初始化数据         |  Array     |   ——    |  —— |
+| translated     | 是否变成翻译组件      |  Boolean     |   ——    |  false |
 
 ### Select Events
 | 事件名称 | 说明 | 回调参数 |

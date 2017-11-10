@@ -38,6 +38,10 @@
     componentName: 'RichRadio',
 
     props: {
+      validItemName: {     // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
       value: {},
       label: {},
       icon: String,
@@ -93,6 +97,8 @@
             this.dispatch('RichRadioGroup', 'input', [nwVal]);
           } else {
             this.$emit('input', nwVal);
+            this.dispatch('ElForm', 'compare-change', this);
+            this.dispatch(this.validItemName, 'compare-change', this);
           }
         }
       },
@@ -101,6 +107,14 @@
         return this.isGroup
           ? this._radioGroup.disabled || this.disabled
           : this.disabled;
+      }
+    },
+    mounted() {
+      if (!this.isGroup) {
+        this.$nextTick(() => { 
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this); 
+        });
       }
     }
   };

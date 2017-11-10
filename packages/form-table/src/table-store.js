@@ -41,8 +41,71 @@ const toggleRowSelection = function(states, row, selected) {
       changed = true;
     }
   }
-
   return changed;
+};
+
+/* 比值样式计算
+[
+ {
+   style: {                 // 自定义样式
+     color: '#fff',
+     background: 'green'
+   },
+   fields: ['name', 'desc'], // 需要比较触发计算的字段
+   stylefields: ['desc'], // 需要设置样式的字段（省略时，同fields)
+   compare:function(data) {
+     return data.name > data.desc;    // 返回为真时设置给定样式
+   }
+ }
+]
+*/
+const compareChgStyl = function(table, states) {
+
+ if (!Array.isArray(table.compareStyl) || !Array.isArray(table.data)) return;
+ let data = table.data;  // 表数据
+ let compareMap = states.compareMap;
+
+ function setCustomStyle(row, rowIndex, cp, styl) {
+   let fields = cp.stylefields || cp.fields;
+
+   fields.forEach((f) => {
+     for (let prop in row) {
+       if (row.hasOwnProperty(prop) && prop === f) {
+          compareMap['row' + rowIndex + f] = styl;
+       }
+     }
+   });
+ }
+
+  // 设定表格样式
+  table.compareStyl.forEach((cp)=>{
+
+    for (let i=0; i < data.length; i++) {
+
+      if (cp.compare.call(null, data[i], cp.fields, i)) {
+        setCustomStyle(data[i], i, cp, cp.style);
+      } else {
+        let empty = {};
+        for (let p in cp.style) {
+          if (cp.style.hasOwnProperty(p)) empty[p] = '';
+        }
+        setCustomStyle(data[i], i, cp, empty);
+      }
+    }
+
+  });
+
+  // 渲染样式
+  let dom, compSty;
+  for (let key in states.compareMap) {
+    dom = table.$el.querySelector('.' + key);
+    if (states.compareMap.hasOwnProperty(key) && dom) {
+      compSty = states.compareMap[key];
+      for (let p in compSty) {
+        if (compSty.hasOwnProperty(p)) dom.parentNode.style[p] = compSty[p];
+      }
+    }
+  }
 };
 
 // input change 事件处理
@@ -175,7 +238,11 @@ const TableStore = function(table, initialState = {}) {
     hoverRow: null,
     filters: {},
     expandRows: [],
-    defaultExpandAll: false
+    defaultExpandAll: false,
+    delRowCount: 0,     // 删除行数
+    _initialData: [],   // 初始化数据
+    modifiedMap: {},    // 数据修改比对映射，数据格式：{ row: {background: 'green' },  col: {background: 'red' } }
+    compareMap: {}      // 比较值样式映射
   };
 
   for (let prop in initialState) {
@@ -186,13 +253,172 @@ const TableStore = function(table, initialState = {}) {
 };
 
 TableStore.prototype.mutations = {
+  // 更新比较样式
+  updateCompare(states) {
+    if (Array.isArray(this.table.compareStyl)) {
+      compareChgStyl.call(this, this.table, states);
+    }
+  },
+  // 数据比较映射删除处理
+  compareDel(states, rowIndex) {
+
+    if (!isNaN(rowIndex)) {
+      if (rowIndex < states._initialData.length) {
+        let k, x, n, key1, key2, item, modifiedMap = {}, compareMap = {};
+        let reg = new RegExp(`row${rowIndex}[a-z]+[a-z0-9]*$`, 'ig');
+        for (k in states.modifiedMap) {
+          reg.lastIndex = 0;
+          if (states.modifiedMap.hasOwnProperty(k) && reg.test(k)) {
+            delete states.modifiedMap[k];
+          }
+        }
+
+        for (x in states.compareMap) {
+          reg.lastIndex = 0;
+          if (states.compareMap.hasOwnProperty(x) && reg.test(x)) {
+            delete states.compareMap[x];
+          }
+        }
+
+        for (n = 0; n < states._initialData.length; n++) {
+          item = states._initialData[n];
+          // 处理删除元素前部分
+          if (n < rowIndex && typeof item === 'object') {
+            for (key1 in item) {
+              if (item.hasOwnProperty(key1)) {
+                compareMap[`row${n}${key1}`] = states.compareMap[`row${n}${key1}`];
+                modifiedMap[`row${n}${key1}`] = states.modifiedMap[`row${n}${key1}`];
+              }
+            }
+          // 处理删除元素后部分
+          } else if (n > rowIndex && typeof item === 'object') {
+
+            for (key2 in item) {
+              if (item.hasOwnProperty(key2)) {
+                compareMap[`row${n - 1}${key2}`] = states.compareMap[`row${n}${key2}`];
+                modifiedMap[`row${n - 1}${key2}`] = states.modifiedMap[`row${n}${key2}`];
+              }
+            }
+          }
+        }
+        states.compareMap = compareMap;
+        states.modifiedMap = modifiedMap;
+        states._initialData.splice(rowIndex, 1);
+        states.delRowCount++;
+      }
+    }
+  },
+  // 数据修改比较
+  modifiedCompare(states) {
+    let row,itemStyl,table = this.table;
+    // 比较对象是否相等
+    function isEqualObj(item$1, item$2) {
+
+      function equalObj(item1, item2) {
+        for (let p in item1) {
+          if (item1.hasOwnProperty(p) && item1[p] !== item2[p]) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      if (Array.isArray(item$1) === Array.isArray(item$2)) {
+        if (item$1.length === item$2.length) {
+          for (let k = 0; k < item$1.length; k++) {
+            if (item$1[k] !== item$2[k]) return false;
+          }
+          return true; // 相等
+        }
+        return false;
+      } else if (typeof item$1 === 'object' && typeof item$2 === 'object') {
+        if (equalObj(item$1, item$2) && equalObj(item$2, item$1)) {
+          return true;
+        }
+        return false;
+      }
+      return false;
+    }
+
+    // 合并样式
+    function mergeStyl(origin, cover) {
+      if (typeof origin['col'] === 'object' && typeof cover === 'object') {
+        for (let k in cover) {
+          if (cover.hasOwnProperty(k)) {
+            if (origin['col'].hasOwnProperty(k)) {
+              if (origin['col'][k] === '') origin['col'][k] = cover[k];
+            } else {
+              origin['col'][k] = cover[k];
+            }
+          }
+        }
+      }
+      return origin;
+    }
+
+    // 数据修改比较处理
+    if (Array.isArray(states.data) && Array.isArray(states._initialData) && typeof table.modifiedStyl === 'function') {
+      for (let rowindex = 0; rowindex < states._initialData.length; rowindex++) {
+        row = states._initialData[rowindex];
+        for (let prop in row) {
+          if (row.hasOwnProperty(prop)) {
+            if (typeof row[prop] !== 'object') {
+              itemStyl = table.modifiedStyl.call(null, row[prop] !== states.data[rowindex][prop], row, prop, rowindex, states.delRowCount);
+              states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
+            } else if (typeof row[prop] === 'object') {
+              itemStyl = table.modifiedStyl.call(null, !isEqualObj(states.data[rowindex][prop], row[prop]), row, prop, rowindex, states.delRowCount);
+              states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
+            }
+          }
+        }
+      }
+
+      // 渲染样式
+      let dom, rowStyl, colStyl, rowSet = {}, rowIdx;
+      for (let key in states.modifiedMap) {
+        dom = table.$el.querySelector('.' + key);
+
+        if (states.modifiedMap.hasOwnProperty(key) && dom) {
+
+          rowStyl = states.modifiedMap[key]['row'] || {};
+          colStyl = states.modifiedMap[key]['col'] || {};
+          for (let p in colStyl) {
+            if (colStyl.hasOwnProperty(p)) {
+              dom.parentNode.style[p] = colStyl[p];
+            }
+          }
+
+          rowIdx = key.replace('row', '').replace(/[a-z]+[a-z0-9]*$/ig, '');
+          if (!rowSet[rowIdx] && states.modifiedMap[key]['todo'] === 'set') {
+            table.setRowStyle(rowIdx, rowStyl);
+            rowSet[rowIdx] = true;
+          } else if (!rowSet[rowIdx]) {
+            table.setRowStyle(rowIdx, rowStyl);
+            rowSet[rowIdx] = false;
+          }
+
+        }
+      }
+    }
+
+  },
+
+  //锁定初始数据用于判定是否为修改
+  lockData(states) {
+    states.modifiedMap = {};
+    if (states.data) {
+      states._initialData = JSON.parse(JSON.stringify(states.data));
+    }
+  },
 
   deleteSelection(states) {
+    let store = this.table.store;
     let index, data = states.data || [];
     (states.selection || []).forEach(function (row) {
       index = data.indexOf(row);
       if (index !== -1) {
         data.splice(index, 1);
+        store.commit('compareDel', index);
       }
     });
   },
@@ -200,9 +426,11 @@ TableStore.prototype.mutations = {
 
   },
   deleteRow(states, row) {
+    let store = this.table.store;
     let index = states.data.indexOf(row);
     if (index !== -1) {
       states.data.splice(index, 1);
+      store.commit('compareDel', index);
     }
   },
   addNewRow(states, row) {
@@ -222,15 +450,6 @@ TableStore.prototype.mutations = {
     const dataInstanceChanged = states._data !== data;
     states._data = data;
     states.data = sortData((data || []), states);
-
-    // states.data.forEach((item) => {
-    //   if (!item.$extra) {
-    //     Object.defineProperty(item, '$extra', {
-    //       value: {},
-    //       enumerable: false
-    //     });
-    //   }
-    // });
 
     this.updateCurrentRow();
 

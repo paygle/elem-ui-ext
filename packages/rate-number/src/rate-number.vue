@@ -12,6 +12,8 @@
     :minlength="minlength"
     :auto-complete="autoComplete"
     :autofocus="autofocus"
+    :parent-value="value"
+    :get-fill-styl="getFillStyl"
     :form="form">
     <i slot="append" :class="[rateIcon]"></i>
   </el-input>
@@ -32,6 +34,11 @@ export default{
     value: {
       type: [String, Number],
       default: 0
+    },
+    getFillStyl: Function,     // 获取自定义组件配色
+    validItemName: {     // 使用 valid-item组件时的组件名称
+      type: String,
+      default: 'ValidItem'
     },
     isEmpty: Boolean,    // 默认是否可以为空
     placeholder: String,
@@ -120,6 +127,10 @@ export default{
         pv = this.setPrecision(pv);
         this.$emit('input', pv);
         this.$emit('change', pv);
+        this.$nextTick(()=>{
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
+        });
       }
     }
   },
@@ -155,6 +166,8 @@ export default{
           // 验证 valid-item 组件
           this.dispatch(this.validItemName, 'valid.item.blur', [realVal]);
           this.dispatch('ElFormItem', 'el.form.blur', [realVal]);
+          this.dispatch('ElForm', 'compare-change', [this]);
+          this.dispatch(this.validItemName, 'compare-change', [this]);
         }
       });
     },
@@ -201,6 +214,10 @@ export default{
       this.rateIcon = (this.getRate() === 'permillage') ? 'el-icon-permillage': this.rateIcon;
       this.currentValue = this.getRateValue(val);
     }
+    this.$nextTick(()=>{
+      this.dispatch('ElForm', 'compare-change', this);
+      this.dispatch(this.validItemName, 'compare-change', this);
+    });
   }
 };
 </script>

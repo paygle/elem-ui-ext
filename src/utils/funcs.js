@@ -3,6 +3,64 @@
 import dateUtil from './date';
 
 /**
+ * @param { Object, String } el   对象选择符或结点对象
+ */
+export const focusInput = (el) => {
+
+  function focus(elm) {
+    let inputEl = null;
+    if (elm.tagName === 'INPUT') {
+      inputEl = elm;
+    } else if (elm.querySelector) {
+      inputEl = elm.querySelector('input');
+      if (!inputEl) inputEl = elm.querySelector('textarea');
+    }
+    if (inputEl) {
+      inputEl.focus();
+    }
+  }
+
+  if (typeof el === 'string') {
+    let dom = document.body.querySelector(el);
+    if (dom !== null && typeof dom === 'object') focus(dom);
+  } else if (typeof el === 'object' && el !== null) {
+    focus(el);
+  }
+};
+
+/**
+ * 判断对象是否为空对象
+ */
+export const isOwnEmpty = (obj) => {
+  for(var name in obj) { if(obj.hasOwnProperty(name)) return false; }
+  return true;
+};
+
+ // 自定义转换日期格式为斜杠 YYYY/MM/DD/ HH:MM:SS 兼容格式
+ export const compatDateStr = function(date){
+  function getZerov(v) { return v < 10 ? '0' + parseInt(v, 10) : v; }
+  if (typeof date === 'string') {
+    let t = date.split(':');
+    let dt = new Date(), Y = dt.getFullYear(), M = dt.getMonth() + 1, D = dt.getDate();
+    if (/^\d{1,2}(:\d{1,2}){0,2}$/.test(date)) {
+      if (t.length === 1) {
+        return Y + '/' + M + '/' + D + ' ' + getZerov(t[0]) + ':00:00';
+      } else if (t.length === 2) {
+        return Y + '/' + M + '/' + D + ' ' + getZerov(t[0]) + ':' + getZerov(t[1]) + ':00';
+      } else if (t.length === 3) {
+        return Y + '/' + M + '/' + D + ' ' + getZerov(t[0])  + ':' +  getZerov(t[1]) + ':' + getZerov(t[2]);
+      } else {
+        return dt;
+      }
+    } else {
+      return String(date).replace(/\-/g, '/');
+    }
+  } else {
+    return date;
+  }
+};
+
+/**
  * 
  * @param tag 标签名
  * @param attrs 属性对象

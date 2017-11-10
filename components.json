@@ -91,6 +91,7 @@
   "side-guide": "./packages/side-guide/index.js",
   "table-total": "./packages/table-total/index.js",
   "tabs-frame": "./packages/tabs-frame/index.js",
+  "valid-form": "./packages/valid-form/index.js",
   "valid-item": "./packages/valid-item/index.js",
   "water-fall": "./packages/water-fall/index.js",
   "custom-switch": "./packages/custom-switch/index.js",

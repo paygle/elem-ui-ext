@@ -38,9 +38,16 @@
 </template>
 
 <script>
+  import Emitter from 'element-ui/src/mixins/emitter';
+
   export default {
     name: 'ElSwitch',
+    mixins: [Emitter],
     props: {
+      validItemName: {     // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
       value: {
         type: [Boolean, String, Number],
         default: false
@@ -132,6 +139,8 @@
           // set input's checked property
           // in case parent refuses to change component's value
           this.$refs.input.checked = this.checked;
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
         });
       },
       setBackgroundColor() {
@@ -165,6 +174,10 @@
         this.setBackgroundColor();
       }
       this.$refs.input.checked = this.checked;
+      this.$nextTick(() => {
+        this.dispatch('ElForm', 'compare-change', this);
+        this.dispatch(this.validItemName, 'compare-change', this);
+      });
     }
   };
 </script>

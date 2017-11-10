@@ -34,6 +34,15 @@
 | dict-row-cascade |  在行编辑中时参数是否级联本行的数据  | Boolean  | —— |  false |
 | dict-row-cascade-map |  行编辑级联时的参数映射关系    |   Object      |    —— |  null |
 | auto-select-first |  是否默认选中第一项    |   Boolean      |    —— |      false |
+| readonly       | 	是否只读             |  Boolean     |   ——    |  false |
+| validItem-name  | valid-item组件域名         |  String     |   ——    |  ValidItem |
+| tip-disabled    | 是否禁用提示      |  Boolean     |   ——    |  false |
+| get-fill-styl   | 获取自定义组件配色  |  Function     |   ——    |   —— |
+| options-data   | Option初始化数据         |  Array     |   ——    |  —— |
+| translated     | 是否变成翻译组件      |  Boolean     |   ——    |  false |
+| page-size     | 分页每页显示数量  |  Number     |   ——    |   30 |
+
+
 
 其他参数参见el-select
 

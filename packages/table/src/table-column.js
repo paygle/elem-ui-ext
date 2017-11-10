@@ -249,13 +249,13 @@ export default {
     this.columnConfig = column;
 
     let renderCell = column.renderCell;
-    let _self = this, hiddenExpandIcon = "";
+    let _self = this, hiddenExpandIcon = '';
 
     if (type === 'expand') {
        // 自定义隐藏展开式编辑
       if(this.owner.store.table.expandIconHidden){
         column.realWidth = 1;
-        hiddenExpandIcon = "hidden-expand-icon";
+        hiddenExpandIcon = 'hidden-expand-icon';
       }
       owner.renderExpanded = function(h, data) {
         return _self.$scopedSlots.default
@@ -296,8 +296,10 @@ export default {
       }
 
       return _self.showOverflowTooltip || _self.showTooltipWhenOverflow
-        ? <div class="cell el-tooltip" style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data) }</div>
-        : <div class="cell">{ renderCell(h, data) }</div>;
+        ? <div class="cell el-tooltip"
+          class={ 'row' + data.$index + data.column.property }
+          style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data) }</div>
+        : <div class="cell" class={ 'row' + data.$index + data.column.property }>{ renderCell(h, data) }</div>;
     };
   },
 

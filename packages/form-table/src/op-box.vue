@@ -6,7 +6,8 @@
         :plain="true"
         type="info" 
         icon="delete2" 
-        size="mini" 
+        size="mini"
+        :disabled="disabled"
         @click="deleteHandle">
       </el-button>
       <el-button 
@@ -14,7 +15,8 @@
         :plain="true"
         type="info" 
         size="mini" 
-        icon="pencil" 
+        icon="pencil"
+        :disabled="disabled"
         @click="editHandle">
       </el-button>
       <el-button 
@@ -23,7 +25,8 @@
         :plain="true"
         type="info"
         size="mini" 
-        icon="document" 
+        icon="document"
+        :disabled="disabled"
         @click="addPreLoad">
       </el-button>
       <el-button 
@@ -31,7 +34,8 @@
         :plain="true"
         type="info"
         size="mini" 
-        icon="save" 
+        icon="save"
+        :disabled="disabled"
         @click="saveHandle">
       </el-button>
     </el-button-group>

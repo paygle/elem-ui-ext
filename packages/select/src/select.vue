@@ -12,7 +12,7 @@
         <el-tag v-if="!translated"
           v-for="item in selected"
           :key="getValueKey(item)"
-          :closable="!disabled"
+          :closable="!disabled || !readonly"
           :hit="item.hitState"
           type="primary"
           @close="deleteTag($event, item)"
@@ -31,6 +31,7 @@
         :class="`is-${ size }`"
         @focus="visible = true"
         :disabled="disabled"
+        :readonly="readonly"
         @keyup="managePlaceholder"
         @keydown="resetInputState"
         @keydown.down.prevent="navigateOptions('next')"
@@ -49,12 +50,15 @@
       ref="reference"
       v-model="selectedLabel"
       type="text"
+      :parent-value="value"
+      :get-fill-styl="getFillStyl"
       :tip-disabled="tipDisabled"
       :placeholder="currentPlaceholder"
       :name="name"
       :size="size"
+      :id="id"
       :disabled="disabled"
-      :readonly="!filterable || multiple"
+      :readonly="!filterable || multiple || readonly"
       :validate-event="false"
       @focus="handleFocus"
       @click="handleIconClick"
@@ -76,7 +80,7 @@
       @after-leave="doDestroy">
       <el-select-menu
         ref="popper"
-        v-show="visible && !translated && emptyText !== false">
+        v-show="visible && !translated && !emptyText && !readonly">
         <el-scrollbar
           tag="ul"
           wrap-class="el-select-dropdown__wrap"
@@ -129,6 +133,7 @@
       iconClass() {
         let criteria = this.clearable &&
           !this.disabled &&
+          !this.readonly &&
           this.inputHovering &&
           !this.multiple &&
           this.value !== undefined &&
@@ -183,6 +188,11 @@
           return false;
         }
       },
+      validItemName: {                 // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
+      getFillStyl: Function,           // 获取自定义组件配色
       optionsData: [Array, Object],    // Option初始化数据
       translated: {                    // 是否翻译代码为中文
         type: [Boolean, String], 
@@ -190,7 +200,9 @@
           return false;
         }
       },
+      id: String,
       size: String,
+      readonly: Boolean,
       disabled: Boolean,
       clearable: Boolean,
       filterable: Boolean,
@@ -273,6 +285,9 @@
         }
         this.$emit('change', val);
         this.dispatch('ElFormItem', 'el.form.change', val);
+        this.dispatch('ElForm', 'compare-change', this);
+        this.dispatch(this.validItemName, 'valid.item.change', val);
+        this.dispatch(this.validItemName, 'compare-change', this);
       },
 
       query(val) {
@@ -395,7 +410,7 @@
     },
 
     methods: {
-      
+
       initSelected(cacheData){ // 重新初始化赋值
         let this$0 = this;
         if(cacheData.length>0) {
@@ -409,6 +424,7 @@
       },
 
       handleIconHide() {
+        if (this.readonly) return;
         let icon = this.$el.querySelector('.el-input__icon');
         if (icon) {
           removeClass(icon, 'is-reverse');
@@ -416,6 +432,7 @@
       },
 
       handleIconShow() {
+        if (this.readonly) return;
         let icon = this.$el.querySelector('.el-input__icon');
         if (icon && !hasClass(icon, 'el-icon-circ-cross')) {
           addClass(icon, 'is-reverse');
@@ -473,6 +490,8 @@
           this.selectedLabel = option.currentLabel;
           this.selected = option;
           if (this.filterable) this.query = this.selectedLabel;
+           this.dispatch('ElForm', 'compare-change', this);
+           this.dispatch(this.validItemName, 'compare-change', this);
           return;
         }
         let result = [];
@@ -484,6 +503,8 @@
         this.selected = result;
         this.$nextTick(() => {
           this.resetInputHeight();
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
         });
       },
 
@@ -533,7 +554,7 @@
 
       deletePrevTag(e) {
         if (e.target.value.length <= 0 && !this.toggleLastOptionHitState()) {
-          this.filterValue = "";  // 自定义过滤暂存值清除
+          this.filterValue = '';  // 自定义过滤暂存值清除
           const value = this.value.slice();
           value.pop();
           this.$emit('input', value);
@@ -557,9 +578,10 @@
           if (!this.$refs.reference) return;
           let inputChildNodes = this.$refs.reference.$el.childNodes;
           let input = [].filter.call(inputChildNodes, item => item.tagName === 'INPUT')[0];
-          if (this.$refs.tags) {
-            input.style.height = Math.max(this.$refs.tags.clientHeight + 6, sizeMap[this.size] || 36) + 'px';
-          }
+          const tags = this.$refs.tags;
+          input.style.height = this.selected.length === 0
+            ? sizeMap[this.size] + 'px'
+            : Math.max(tags ? (tags.clientHeight + 6) : 0, sizeMap[this.size] || 36) + 'px';
           if (this.visible && this.emptyText !== false) {
             this.broadcast('ElSelectDropdown', 'updatePopper');
           }
@@ -624,7 +646,7 @@
         if (this.filterable && this.query === '' && this.visible) {
           return;
         }
-        if (!this.disabled) {
+        if (!this.disabled && !this.readonly) {
           this.visible = !this.visible;
         }
       },
@@ -678,7 +700,7 @@
 
       deleteTag(event, tag) {
         let index = this.selected.indexOf(tag);
-        if (index > -1 && !this.disabled) {
+        if (index > -1 && !this.disabled && !this.readonly) {
           const value = this.value.slice();
           value.splice(index, 1);
           this.$emit('input', value);

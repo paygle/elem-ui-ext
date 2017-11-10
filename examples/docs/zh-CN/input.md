@@ -791,6 +791,7 @@ export default {
 |  roundoff   | 是否四舍五入取值   |   Boolean    |         ——        |   false |
 | tip-disabled | 是否禁用tootip   |   Boolean    |         ——        |   false |
 | valid-item-name | 单组件验证组件名称   |   String   |         ——     |   ValidItem |
+| get-fill-styl   | 获取自定义组件配色  |  Function     |   ——    |   ——   |
 
 ### Input Events
 | 事件名称 | 说明 | 回调参数 |

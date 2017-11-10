@@ -40,4 +40,5 @@
 |    splitMark    |  分隔符号           |   String     |      ——       |    , |
 |    precision    |   精度              |   Number     |      ——       |    2 |
 |    is-empty     | 是否接收空值，清除为0 |   Boolean    |      ——       |  false|
- 
+| valid-item-name  | valid-item组件域名  |  String     |   ——    |  ValidItem  |
+| get-fill-styl   | 获取自定义组件配色  |  Function     |   ——    |   ——   |

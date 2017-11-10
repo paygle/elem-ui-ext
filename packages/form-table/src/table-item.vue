@@ -11,41 +11,9 @@
 <script>
   import AsyncValidator from 'async-validator';
   import emitter from 'element-ui/src/mixins/emitter';
-  import { TypeOf } from 'element-ui/src/utils/funcs';
+  import { TypeOf, compatDateStr } from 'element-ui/src/utils/funcs';
 
   function noop() {}
-
-  const getTypeOfVal = function(value, type){
-  
-    let ret = undefined;
-    if(typeof value === 'undefined') return ret;
-    switch (type) {
-
-      case 'string':
-      case 'email':
-      case 'url':
-        ret = String(value);
-        break;
-
-      case 'number':
-      case 'integer':
-        ret = isNaN(value) ? value : Number(value);
-        break;
-
-      case 'float':
-        ret = isNaN(value) ? value : parseFloat(value);
-        break;
-
-      case 'boolean':
-        ret = Boolean(value);
-        break;
-
-      default:
-        ret = undefined;
-    }
-
-    return ret;
-  };
 
   export default {
     name: 'FormTableItem',
@@ -56,6 +24,7 @@
 
     props: {
       prop: Object,
+      property: String,
       value: [String, Number, Boolean, Array],
       required: Boolean,
       rules: [Object, Array],
@@ -87,30 +56,83 @@
       mouseHandler(e) { // 自定义事件通知
         this.broadcast('ElInput', 'parent-tip-text', this.validateMessage);
       },
+
+      getTypeOfVal(value, rules){
+
+        let typevalue = "", type, cdate;
+
+        if(TypeOf(rules) === 'Array'){
+          for(let i=0; i<rules.length; i++){
+            type = rules[i].type ? rules[i].type : 'string';
+            if(TypeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && TypeOf(value) === "String"){
+              cdate = new Date(compatDateStr(value));
+            }
+          }
+        }else if(TypeOf(rules) === 'Object' && rules.type === 'date' && TypeOf(value) === "String"){
+          type = rules.type ? rules.type : 'string';
+          cdate = new Date(compatDateStr(value));
+        }
+
+        if(TypeOf(value) === 'Date'){
+          typevalue = value;
+        }else if(TypeOf(cdate) === 'Date' && !isNaN(cdate.getTime())){
+          typevalue = cdate;
+        }else{
+          typevalue = value;
+        }
+
+        // 类型分配
+        switch (type) {
+
+          case 'string':
+          case 'email':
+          case 'url':
+            typevalue = String(value);
+            break;
+
+          case 'number':
+          case 'integer':
+            typevalue = isNaN(value) ? value : Number(value);
+            break;
+
+          case 'float':
+            typevalue = isNaN(value) ? value : parseFloat(value);
+            break;
+
+          case 'boolean':
+            typevalue = Boolean(value);
+            break;
+        }
+
+        return typevalue;
+      },
+
       validate(trigger, callback = noop) {
+
+        // 验证样式设置
+        this.$nextTick(()=> {
+          let rowIdx, store = this.prop.store;
+          // 触发外部校验
+          if (typeof store.table.validTrigger === 'function') {
+            rowIdx = this.property.replace('row', '').replace(/[a-z]+[a-z0-9]*$/ig, '');
+            store.table.validTrigger.call(null, store.states.data[rowIdx], this.property.replace(`row${rowIdx}`, ''));
+          }
+        });
 
         if(TypeOf(this.value) === 'Array')  return; //类型为数据时不校验
         // const regxNumber = /^\d*\.?\d*$/g;
         const {row, column, store:{table:{rules}}} =  this.prop;
-        const rule = rules?rules[column.property]:null; // 获取当前属性的校验规则
+        const rule = rules ? rules[column.property] : null; // 获取当前属性的校验规则
         if(rule){ // 存在规则才进行校验
           this.validateState = 'validating';
-          let descriptor = {};
+          let descriptor = {}, model = {};
           descriptor[column.property] = rule;
           let validator = new AsyncValidator(descriptor);
-          let cell, type = 'string', model = {};
 
-          for(let i=0; i<rule.length; i++){
-            cell = rule[i] || {};
-            type = cell.type ? cell.type : 'string';
-          }
-
-          let cvtVal = getTypeOfVal(this.value, type);
-          model[column.property] = typeof cvtVal === 'undefined' ? this.value : cvtVal;
+          model[column.property] = this.getTypeOfVal(this.value, rule);
           validator.validate(model, { firstFields: true, row : row }, (errors, fields) => {
             this.validateState = !errors ? 'success' : 'error';
             this.validateMessage = errors ? errors[0].message : '';
-
             callback(errors);
           });
         }
@@ -123,7 +145,7 @@
             p.store.commit('setErrCount', 'row'+p.$index+p.column.property);
           }
         }
-        
+
         this.dispatch('FormTable', 'err-change');
       },
     

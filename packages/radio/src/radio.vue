@@ -35,6 +35,10 @@
     componentName: 'ElRadio',
 
     props: {
+      validItemName: {     // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
       value: {},
       label: {},
       disabled: Boolean,
@@ -80,6 +84,8 @@
             this.dispatch('ElRadioGroup', 'input', [val]);
           } else {
             this.$emit('input', val);
+            this.dispatch('ElForm', 'compare-change', this);
+            this.dispatch(this.validItemName, 'compare-change', this);
           }
         }
       },
@@ -89,6 +95,14 @@
           ? this._radioGroup.disabled || this.disabled
           : this.disabled;
       }
+    },
+    mounted() {
+      this.$nextTick(() =>{
+        if (!this.isGroup) {
+          this.dispatch('ElForm', 'compare-change', this); 
+          this.dispatch(this.validItemName, 'compare-change', this);
+        }
+      });
     }
   };
 </script>

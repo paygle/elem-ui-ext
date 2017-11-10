@@ -244,6 +244,7 @@
 | disabled  | 按钮禁用    | boolean   |  — | false   |
 | checked  | 当前是否勾选    | boolean   |  — | false   |
 | indeterminate  | 设置 indeterminate 状态，只负责样式控制    | boolean   |  — | false   |
+| validItem-name  | valid-item组件域名         |  String     |   ——    |  ValidItem |
 
 ### Checkbox-group Attributes
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
@@ -253,6 +254,7 @@
 | text-color  | 按钮激活时的文本颜色    | string   | — | #ffffff   |
 | min     | 可被勾选的 checkbox 的最小数量   | number    |       —        |     —    |
 | max     | 可被勾选的 checkbox 的最大数量   | number    |       —        |     —    |
+| validItem-name  | valid-item组件域名         |  String     |   ——    |  ValidItem |
 
 ### Checkbox Events
 | 事件名称      | 说明    | 回调参数      |

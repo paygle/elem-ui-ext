@@ -1,6 +1,11 @@
-import * as cacheUtil from './cache-util';   // 缓存工具类，从 store 目录转移
+import * as cacheUtil from './cache-util'; // 缓存工具类
+import pako from 'pako'; //gzip压缩工具
 const $ = window.$ || window.jQuery || console && console.warn('Need jQuery lib pre.');
 const API_URL = window.API_URL || "";
+
+//是否启用请求报文gzip压缩
+const GZIP_ENABLE=true;
+
 /**
  * Created by wangjingl@sunline.cn on 2016/12/1.
  */
@@ -162,10 +167,16 @@ export default {
       "codelistIds": options.codelistIds,
       "model": options.model
     };
+    _model=JSON.stringify(_model);
+    let compressAble = GZIP_ENABLE && _model.length>1000 ; //仅对大于1k的报文进行压缩
+
+    if(compressAble){ 
+      _model=pako.gzip(_model, {to: "string"});
+    }
     return $.ajax(options.url, {
       async: options.async,
       type: "POST",
-      contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+      contentType: "application/x-www-form-urlencoded; charset=UTF-8 ;gzip="+compressAble ,
       dataType: options.dataType,
       xhrFields: { //跨域发送Ajax时，Request header中便会带上 Cookie 信息
         withCredentials: true
@@ -173,7 +184,7 @@ export default {
       headers: {
         "X-Custom-Header": "Ajax"
       },
-      data: JSON.stringify(_model),
+      data: _model,
       success: function (data, textStatus, jqXHR) {
         var outputModel = null;
         try {

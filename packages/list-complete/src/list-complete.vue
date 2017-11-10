@@ -1,5 +1,5 @@
 <template>
-  <div class="el-autocomplete">
+  <div class="el-autocomplete list-complete" v-clickoutside="handleClose">
     <el-input
       ref="input"
       :value="value"
@@ -9,9 +9,9 @@
       :size="size"
       :icon="icon"
       :on-icon-click="onIconClick"
+      :get-fill-styl="getFillStyl"
       @change="handleChange"
-      @focus="handleFocus"
-      @blur="handleBlur">
+      @focus="handleFocus">
       <template slot="prepend" v-if="$slots.prepend">
         <slot name="prepend"></slot>
       </template>
@@ -31,7 +31,7 @@
   import ElInput from 'element-ui/packages/input';
   import ListCompleteSuggestions from './list-complete-suggestions.vue';
   import Emitter from 'element-ui/src/mixins/emitter';
-  import debounce from 'throttle-debounce/debounce';
+  import Clickoutside from 'element-ui/src/utils/clickoutside';
 
   export default {
     name: 'ListComplete',
@@ -40,12 +40,23 @@
 
     componentName: 'ListComplete',
 
+    directives: { Clickoutside },
+
     components: {
       ElInput,
       ListCompleteSuggestions
     },
 
     props: {
+      getFillStyl: Function,     // 获取自定义组件配色
+      validateEvent: {
+        type: Boolean,
+        default: true
+      },
+      validItemName: {     // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
       propName: String,     // 默认筛选属性名
       popWidth: String,     // 弹出框宽度
       popperClass: String,
@@ -96,6 +107,9 @@
           }
         });
       },
+      handleClose() {
+        this.isFocus = false;  
+      },
       handleChange(value) {
         if(this.value !== value){
           this.$emit('input', value);
@@ -104,6 +118,10 @@
             return;
           }
           this.getData(value);
+          this.$nextTick(()=>{
+            this.dispatch('ElForm', 'compare-change', this);
+            this.dispatch(this.validItemName, 'compare-change', this);
+          });
         }
       },
       handleFocus() {
@@ -112,12 +130,6 @@
           this.getData(this.value);
         }
       },
-      handleBlur() {
-        // 因为 blur 事件处理优先于 select 事件执行
-        debounce(300, ()=>{
-          this.isFocus = false;
-        });
-      },
 
       select(item) {
         let value = this.propName ? item[this.propName] : item.value;
@@ -125,12 +137,22 @@
         this.$emit('select', item);
         this.$nextTick(_ => {
           this.suggestions = [];
+          if (this.validateEvent) {
+            // 验证 valid-item 组件
+            this.dispatch('ElFormItem', 'el.form.blur', value);
+            this.dispatch('ElForm', 'compare-change', this);
+            this.dispatch(this.validItemName, 'valid.item.blur', value);
+          }
         });
       }
     },
     mounted() {
       this.$on('item-click', item => {
         this.select(item);
+      });
+      this.$nextTick(() =>{ 
+        this.dispatch('ElForm', 'compare-change', this); 
+        this.dispatch(this.validItemName, 'compare-change', this);
       });
     },
     beforeDestroy() {

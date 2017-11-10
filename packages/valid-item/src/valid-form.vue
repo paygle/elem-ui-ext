@@ -1,27 +1,18 @@
 <template>
-  <form class="el-form" :class="[
-    labelPosition ? 'el-form--label-' + labelPosition : '',
-    { 'el-form--inline': inline }
-  ]">
+  <form class="valid-form">
     <slot></slot>
   </form>
 </template>
 <script>
   export default {
-    name: 'ElForm',
+    name: 'ValidForm',
 
-    componentName: 'ElForm',
+    componentName: 'ValidForm',
 
     props: {
       model: Object,
       rules: Object,
-      labelPosition: String,
       labelWidth: String,
-      labelSuffix: {
-        type: String,
-        default: ''
-      },
-      inline: Boolean,
       showMessage: {
         type: Boolean,
         default: true
@@ -42,16 +33,16 @@
       };
     },
     created() {
-      this.$on('el.form.addField', (field) => {
+      this.$on('valid.form.addField', (field) => {
         if (field) {
           // 设置初始值
-          field.errStyl = this.errStyl;
+          field.errItemStyl = this.errStyl;
           if (this.compareStyl) field.isCustomStyl = true;
           this.fields.push(field);
         }
       });
       /* istanbul ignore next */
-      this.$on('el.form.removeField', (field) => {
+      this.$on('valid.form.removeField', (field) => {
         if (field.prop) {
           this.fields.splice(this.fields.indexOf(field), 1);
         }
@@ -111,7 +102,7 @@
       },
       validate(callback) {
         if (!this.model) {
-          console && console.warn('[Element Warn][Form]model is required for validate to work!');
+          console && console.warn('[Valid Form Warn][Form]model is required for validate to work!');
           return;
         };
         let valid = true;

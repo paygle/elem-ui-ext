@@ -52,5 +52,6 @@
 |-------------  |---------------- |---------------- |---------------------- |-------- |
 | icon          |   图标样式类名  | String | — | — |
 | canceled     | 是否允许取消选择 | Boolean | — | — |  
+| valid-item-name  | valid-item组件域名  |  String     |   ——    |  ValidItem  |
 
  

@@ -6,9 +6,11 @@
       ref="reference"
       v-model="addressLabel"
       :disabled="disabled"
+      :style="customCrtStyl"
       @mouseover="inputMSEnter"
       @mouseout="inputMSOut"
       @focus="handleOpenBox"
+      @blur="handleBlur"
       :placeholder="placeholder"
       readonly>
     <span class="txt-box" v-if="translated" v-text="addressLabel"></span>
@@ -19,7 +21,7 @@
       :city-end="cityEnd" 
       :addr-data="addrData" 
       v-show="isShowAddrBox" 
-      disabled="disabled">
+      :disabled="readonly || disabled">
     </address-pop>
   </transition>
 </div>
@@ -31,7 +33,7 @@ import { t } from 'element-ui/src/locale';
 import Emitter from 'element-ui/src/mixins/emitter';
 import Clickoutside from 'element-ui/src/utils/clickoutside';
 import { addClass, removeClass } from 'element-ui/src/utils/dom';
-import { TypeOf, createDomElement, getLocalDataItem, setLocalDataItem } from 'element-ui/src/utils/funcs';
+import { TypeOf, createDomElement, getLocalDataItem, setLocalDataItem, isOwnEmpty } from 'element-ui/src/utils/funcs';
 
 const $ = window.$ || window.jQuery || console && console.warn('Need jQuery lib pre.'); // 引入jQuery
 
@@ -65,6 +67,12 @@ export default {
   },
   mixins: [Emitter],
   props: {
+    readonly: Boolean,
+    validItemName: {     // 使用 valid-item组件时的组件名称
+      type: String,
+      default: 'ValidItem'
+    },
+    getFillStyl: Function,         // 获取自定义组件配色
     tipDisabled: {             // 默认不禁用显示tooltip
       type: Boolean,
       default: false
@@ -103,6 +111,7 @@ export default {
   },
   data() {
     return {
+      customStyl: '',            // 自定义样式
       tipContent: '',            // tooltip内容
       tipTimeHander: null,
       innerTipShow: false,      // 默认禁用 tooltip功能
@@ -121,6 +130,17 @@ export default {
     };
   },
   methods: {
+    // 独立样式设置
+    customfillStyl(value) {
+      if (typeof this.getFillStyl === 'function') {
+        let val = typeof this.parentValue !== 'undefined' ? this.parentValue : value;
+        this.customSfStyl = this.getFillStyl.call(null, val);
+      }
+    },
+    // 设置错误样式
+    setCustomStyle(styl) {
+      this.customStyl = styl;
+    },
     inputMSEnter(e) {
       getAddressData.call(this); // 如果未加载数据再次载入数据
       let pos, gapw, style;
@@ -241,7 +261,7 @@ export default {
 
     },
     handleOpenBox(e) {
-      if (!this.disabled) {
+      if (!this.disabled && !this.readonly) {
         this.isShowAddrBox = true;
       }
     },
@@ -256,15 +276,31 @@ export default {
       if (this.$refs.popper) {
         this.$refs.popper.doDestroy();
       }
+    },
+    handleBlur(e) {
+      // 验证 valid-item 组件
+      console.log('Address blur');
+      this.dispatch('ElFormItem', 'el.form.blur', this.value);
+      this.dispatch(this.validItemName, 'valid.item.blur', this.value);
+      this.dispatch('ElForm', 'compare-change', this);
+      this.dispatch(this.validItemName, 'compare-change', this);
     }
   },
   computed: {
     inputStyle() {
       let s = 'place-text el-input__inner';
-      if (this.disabled) {
+      if (this.disabled || this.readonly) {
         s += ' is-disabled';
       }
       return s;
+    },
+    customCrtStyl() {
+      if (typeof this.customStyl === 'object' && !isOwnEmpty(this.customStyl)) {
+        return this.customStyl;
+      } else if (typeof this.customSfStyl === 'object' && !isOwnEmpty(this.customSfStyl)) {
+        return this.customSfStyl;
+      }
+      return {};
     }
   },
   watch: {
@@ -285,6 +321,12 @@ export default {
       this.$emit('input', val);
       this.$emit('change', val);
       this.dispatch('ElFormItem', 'el.form.change', val);
+      this.dispatch(this.validItemName, 'valid.item.change', val);
+      this.dispatch('ElForm', 'compare-change', this);
+      this.dispatch(this.validItemName, 'compare-change', this);
+      this.$nextTick(()=>{
+        this.customfillStyl(this.value);
+      });
     },
     addressLabel(val) {
       let addr = TypeOf(this.addressLabel) === 'String' ? this.addressLabel.split('-') : [];
@@ -310,10 +352,15 @@ export default {
   created() {
     this.$on('handleClose', this.handleClose);
     this.$on('valueChange', this.valueChange);
+    this.$on('custom-style', this.setCustomStyle);
   },
   mounted() {
     getAddressData.call(this);
     this.tipUpdateStatus();
+    this.$nextTick(() => {
+      this.dispatch('ElForm', 'compare-change', this); 
+      this.dispatch(this.validItemName, 'compare-change', this);
+    });
   }
 };
 </script>

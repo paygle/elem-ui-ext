@@ -108,7 +108,7 @@
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
 | compo-name     | 组件名称   |  String  |    ——  | ValidItem 同名为同一个表单域 |
-| model          | 需要验证的绑定值     | String, Number, Boolean |   ——  |    ——   |
+| model          | 需要验证的绑定对象     | Object |   ——  |    ——   |
 | prop           | 需要验证的字段名称   |  String           |     ——      |     ——   |
 | rules          | 验证规则            |  Object           |     ——      |    ——   |
 | item-width     | 组件宽度            |  String           |     ——      |    ——    |
@@ -122,6 +122,21 @@
 | error          | 错误提示内容         |  String          |      ——      |    ——   |
 | show-message   | 是否显示验证消息     |  Boolean         | true/false   |   true |
 | display        | 项目默认显示模式     |  String    | inline-block/block  |  inline-block |
+| err-styl    | 错误样式设置      |  Object     |   ——    |  ——   |
+| valid-trigger  | 触发外部验证函数  |  Function     |   ——    |  ——   |
+| compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   |
+
+### ValidForm Attributes （仅需要 err-styl、 compare-styl 功能时使用这个组件）
+
+| 参数          | 说明            | 类型            | 可选值                 | 默认值   |
+|-------------  |---------------- |---------------- |---------------------- |-------- |
+| model        | 需要验证的绑定对象   |  Object  |   ——  |    ——   |
+| rules          | 验证规则            |  Object           |     ——      |    ——   |
+| label-width    | 标签宽度            |  String           |     ——      |    ——    |
+| show-message   | 是否显示验证消息     |  Boolean         | true/false   |   true |
+| err-styl    | 错误样式设置      |  Object     |   ——    |  ——   |
+| valid-trigger  | 触发外部验证函数  |  Function     |   ——    |  ——   |
+| compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   |
 
 ### ValidItem Events
 | 事件名称 | 说明 | 回调参数 |

@@ -5,8 +5,12 @@
     :readonly="!editable || readonly"
     :disabled="disabled"
     :size="size"
+    :id="id"
+    :parent-value="value"
+    :get-fill-styl="getFillStyl"
     v-clickoutside="handleClose"
     :placeholder="placeholder"
+    :name="name"
     @focus="handleFocus"
     @blur="handleBlur"
     @keydown.native="handleKeydown"
@@ -202,6 +206,11 @@ export default {
   mixins: [Emitter, NewPopper],
 
   props: {
+    validItemName: {     // 使用 valid-item组件时的组件名称
+      type: String,
+      default: 'ValidItem'
+    },
+    getFillStyl: Function,     // 获取自定义组件配色
     dataType: {       // 日期绑定值的类型默认 date, 可选值： string | date
       type: String,
       default: 'date'
@@ -211,10 +220,12 @@ export default {
     readonly: Boolean,
     placeholder: String,
     disabled: Boolean,
+    name: String,
     clearable: {
       type: Boolean,
       default: true
     },
+    id: String,
     popperClass: String,
     editable: {
       type: Boolean,
@@ -268,11 +279,14 @@ export default {
         } else {
           this.currentValue = isDate(val) ? new Date(compatDateStr(val)) : val;
         }
+        this.dispatch('ElForm', 'compare-change', this);
+        this.dispatch(this.validItemName, 'compare-change', this);
       }
     },
     displayValue(val) {
       this.$emit('change', val);
       this.dispatch('ElFormItem', 'el.form.change');
+      this.dispatch(this.validItemName, 'valid.item.change');
     }
   },
 
@@ -367,6 +381,10 @@ export default {
       gpuAcceleration: false
     };
     this.placement = PLACEMENT_MAP[this.align] || PLACEMENT_MAP.left;
+    this.$nextTick(()=>{
+      this.dispatch('ElForm', 'compare-change', this);
+      this.dispatch(this.validItemName, 'compare-change', this);
+    });
   },
 
   methods: {
@@ -417,6 +435,7 @@ export default {
     handleBlur() {
       this.$emit('blur', this);
       this.dispatch('ElFormItem', 'el.form.blur', this);
+      this.dispatch(this.validItemName, 'valid.item.blur');
     },
 
     handleKeydown(event) {
@@ -491,13 +510,13 @@ export default {
         }
       };
       updateOptions();
-      const _this = this; 
       this.unwatchPickerOptions = this.$watch('pickerOptions', () => updateOptions(), { deep: true });
 
       this.$el.appendChild(this.picker.$el);
       this.picker.resetView && this.picker.resetView();
 
       this.picker.$on('dodestroy', this.doDestroy);
+      const _this = this;
       this.picker.$on('pick', (date = '', visible = false) => {
 
         // 自定义格式化输出日期

@@ -1,6 +1,16 @@
 @charset "UTF-8";
 @import "./var.css";
- 
+
+div .el-input-number__decrease {
+  right: 25px;
+}
+
+div .el-input-number__decrease,
+div .el-input-number__increase {
+  width: 26px;
+  line-height: 24px;
+}
+
 .el-input-group__append,
 .el-input-group__prepend {
   overflow: hidden;

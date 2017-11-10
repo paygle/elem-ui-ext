@@ -297,6 +297,10 @@
 |picker-options | 当前时间日期选择器特有的选项参考下表 | object |  — | {} |
 | range-separator | 选择范围时的分隔符 | string | - | ' - ' |
 | default-value | 可选，DatePicker打开时默认显示的时间 | Date | 可被new Date()解析 | - |
+| data-type    | 日期绑定值的类型      |  string, date     |   ——    |  date |
+| validItem-name  | valid-item组件域名   String     |   ——    |  ValidItem |
+| get-fill-styl   | 获取自定义组件配色  |  Function     |   ——    |   —— |
+
 
 ### Picker Options
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |

@@ -147,10 +147,30 @@
         validateMessage: '',
         validateDisabled: false,
         validator: {},
-        isNested: false
+        isNested: false,
+        isCustomStyl: false,  // 是否以自定义为主
+        customStyl: '',
+        errStyl: {}    // 错误样式设置
       };
     },
     methods: {
+      // 自定义样式设置
+      customStylSet(field, status, styl) {
+        // 验证样式设置
+        if (typeof styl !== 'undefined') this.customStyl = styl;
+        if (status === 'error') {
+          this.broadcast('ElInput', 'custom-style', this.errStyl);
+          this.broadcast('AddressBox', 'custom-style', this.errStyl);
+        } else  if (status === 'custom' && this.validateState !== 'error') {
+          this.broadcast('ElInput', 'custom-style', styl);
+          this.broadcast('AddressBox', 'custom-style', styl);
+        } else if ((this.isCustomStyl && status !== 'custom') || styl === '') {
+          if (this.customStyl === '' && this.validateState !== 'error') {
+            this.broadcast('ElInput', 'custom-style', {});
+            this.broadcast('AddressBox', 'custom-style', {});
+          } 
+        }
+      },
       getTypeData(value, rules){ // 自定义获取日期数据类型
         let typevalue="", cdate;
         if(TypeOf(rules) === 'Array'){
@@ -173,7 +193,16 @@
         return typevalue;
       },
       validate(trigger, callback = noop) {
+        this.validateDisabled = false;
         var rules = this.getFilteredRule(trigger);
+
+        // 验证样式设置
+        this.$nextTick(()=> {
+          this.customStylSet(this.prop, this.validateState);
+          // 触发外部校验
+          if (typeof this.form.validTrigger === 'function') this.form.validTrigger.call(null, this.form.model);
+        });
+
         if ((!rules || rules.length === 0) && !this._props.hasOwnProperty('required')) {
           callback();
           return true;
@@ -185,16 +214,16 @@
         descriptor[this.prop] = rules;
 
         var validator = new AsyncValidator(descriptor);
-        var model = {};
+        var model = {}, that = this;
 
         model[this.prop] = this.getTypeData(this.fieldValue, rules);
 
         validator.validate(model, { firstFields: true }, (errors, fields) => {
-          this.validateState = !errors ? 'success' : 'error';
-          this.validateMessage = errors ? errors[0].message : '';
-
-          callback(this.validateMessage);
+          that.validateState = !errors ? 'success' : 'error';
+          that.validateMessage = errors ? errors[0].message : '';
+          callback(that.validateMessage);
         });
+
       },
       // 自定义清除状态
       resetStatus() {
@@ -222,6 +251,8 @@
           this.validateDisabled = true;
           prop.o[prop.k] = this.initialValue;
         }
+
+        this.customStylSet(this.prop, 'clear');
       },
       getRules() {
         var formRules = this.form.rules;

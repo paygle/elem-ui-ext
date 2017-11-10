@@ -372,7 +372,6 @@ const forced = {
     renderCell: function(h,  { row, column, store, $index }) { 
       let option = column.dateOption || {};
       let dataType = option.dataType || 'string';
-      
       return (
         <el-date-picker
           value={ row[column.property] }
@@ -736,6 +735,7 @@ export default {
     }
 
     column.renderCell = function(h, data) {
+
       let {row, column} = data;
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
@@ -762,9 +762,13 @@ export default {
       }
 
       return (_self.showOverflowTooltip || _self.showTooltipWhenOverflow) && _self.type === 'default'
-        ? <div class="cell el-tooltip" style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data, _self) }</div>
-        : <form-table-item 
-             prop={data} 
+        ? <div class="cell el-tooltip"
+          class={ 'row' + data.$index + data.column.property }
+          style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data, _self) }</div>
+        : <form-table-item
+             prop={data}
+             property={ 'row' + data.$index + data.column.property }
+             class={ 'row' + data.$index + data.column.property }
              value={row[column.property]}>
               { renderCell(h, data, _self) }
           </form-table-item>;

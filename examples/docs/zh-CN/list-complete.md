@@ -107,5 +107,7 @@
 | trigger-on-focus |  是否在输入框 focus 时显示建议列表	|  boolean	|	—		 |   true |
 | on-icon-click	 |  点击图标的回调函数 |   function	  |    —	     	|  — |
 |   icon	       |  输入框尾部图标	    |   string      | 	  —        | 	— |
+| valid-item-name  | valid-item组件域名  |  String     |   ——    |  ValidItem  |
+| get-fill-styl   | 获取自定义组件配色  |  Function     |   ——    |   ——   |
 
  

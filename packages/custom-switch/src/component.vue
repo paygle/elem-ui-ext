@@ -3,14 +3,17 @@
     <div class="el-switch__mask" v-show="disabled"></div>
     <input
       class="el-switch__input"
+      :class="{ 'allow-focus': allowFocus }"
       type="checkbox"
       @change="handleChange"
+      @focus="handleFocus"
+      @blur="handleBlur"
       ref="input"
       :name="name"
       :true-value="ontValue"
       :false-value="offValue"
       :disabled="disabled">
-    <span class="el-switch__core" ref="core" :style="{ 'width': coreWidth + 'px' }">
+    <span class="el-switch__core" ref="core" :style="{ 'width': coreWidth + 'px' }" @click="setFocus">
       <span class="el-switch__button" :style="{ transform }"></span>
     </span>
     <transition name="label-fade">
@@ -33,11 +36,18 @@
     </transition>
   </label>
 </template>
+
 <script>
+  import Emitter from 'element-ui/src/mixins/emitter';
   export default {
     name: 'CustomSwitch',
+    mixins: [Emitter],
     componentName: 'CustomSwitch',
     props: {
+      validItemName: {     // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
       value: {
         type: [Boolean, String, Number],
         default: true
@@ -93,6 +103,10 @@
       name: {
         type: String,
         default: ''
+      },
+      allowFocus: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -131,6 +145,7 @@
     },
     watch: {
       checked() {
+        this.$refs.input.checked = this.checked;
         if (this.ontColor || this.offColor) {
           this.setBackgroundColor();
         }
@@ -138,18 +153,36 @@
     },
     methods: {
       handleChange(event) {
-        this.$emit('change', !this.checked ? this.ontValue : this.offValue);
         this.$emit('input', !this.checked ? this.ontValue : this.offValue);
+        this.$emit('change', !this.checked ? this.ontValue : this.offValue);
         this.$nextTick(() => {
           // set input's checked property
           // in case parent refuses to change component's value
           this.$refs.input.checked = this.checked;
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
         });
       },
       setBackgroundColor() {
         let newColor = this.checked ? this.ontColor : this.offColor;
         this.$refs.core.style.borderColor = newColor;
         this.$refs.core.style.backgroundColor = newColor;
+      },
+      setFocus() {
+        // set focus on input
+        if (this.allowFocus) {
+          this.$refs.input.focus();
+        }
+      },
+      handleBlur(event) {
+        if (this.allowFocus) {
+          this.$emit('blur', event);
+        }
+      },
+      handleFocus(event) {
+        if (this.allowFocus) {
+          this.$emit('focus', event);
+        }
       }
     },
     mounted() {
@@ -161,6 +194,10 @@
         this.setBackgroundColor();
       }
       this.$refs.input.checked = this.checked;
+      this.$nextTick(() => {
+        this.dispatch('ElForm', 'compare-change', this);
+        this.dispatch(this.validItemName, 'compare-change', this);
+      });
     }
   };
 </script>

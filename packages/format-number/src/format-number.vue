@@ -14,6 +14,8 @@
       :minlength="minlength"
       :auto-complete="autoComplete"
       :autofocus="autofocus"
+      :parent-value="currentValue"
+      :get-fill-styl="getFillStyl"
       :form="form" delayed>
     </el-input>
   </div>
@@ -30,10 +32,15 @@ export default {
   },
   mixins: [emitter],
   props: {
+    validItemName: {     // 使用 valid-item组件时的组件名称
+      type: String,
+      default: 'ValidItem'
+    },
     value: { // 格式转换数字最大位数不能超过16位
       type: [String, Number],
       default: '0'
     },
+    getFillStyl: Function,     // 获取自定义组件配色
     isEmpty: Boolean,    // 默认是否可以为空
     placeholder: String,
     readonly: Boolean,
@@ -82,6 +89,8 @@ export default {
           this.formatValue = this.getFormatVal(val);
         }
         this.$nextTick(function () {
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
           if (!isNaN(this.max) && typeof this.max !== 'undefined' && this.value > this.max) {
             this.emitValue(this.max);
           }
@@ -97,6 +106,9 @@ export default {
   computed: {
     formatRegx() {
       return '^\\-?[\\d\\' + this.splitMark + ']*(\\.?\\d*)$';
+    },
+    currentValue() {
+      return this.getValue(this.formatValue);
     }
   },
 
@@ -218,6 +230,10 @@ export default {
         // 验证 valid-item 组件
         this.dispatch(this.validItemName, 'valid.item.blur');
         this.dispatch('ElFormItem', 'el.form.blur');
+        this.$nextTick(()=>{
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
+        });
       }
     },
 
@@ -241,6 +257,10 @@ export default {
 
   mounted() {
     this.formatValue = this.getFormatVal();
+    this.$nextTick(()=>{
+      this.dispatch('ElForm', 'compare-change', this);
+      this.dispatch(this.validItemName, 'compare-change', this);
+    });
   }
 };
 </script>

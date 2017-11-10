@@ -23,7 +23,7 @@
     <div
       class="el-table__body-wrapper"
       ref="bodyWrapper"
-      :style="[bodyHeight,ieMaxHeight]">
+      :style="[bodyHeight, ieMaxHeight]">
       <table-body
         :expand-only-one="expandOnlyOne"
         :context="context"
@@ -217,6 +217,10 @@
 
       defaultExpandAll: Boolean,
 
+      defaultSort: Object,
+
+      tooltipEffect: String,
+
       expandOnlyOne: {    // 同时仅允许打开一行数据
         type: Boolean,
         default: false
@@ -227,9 +231,9 @@
         default: false
       },
 
-      defaultSort: Object,
+      compareStyl: Array,   // 比较字段设置样式
 
-      tooltipEffect: String
+      modifiedStyl: Function  //修改后的样式
     },
 
     components: {
@@ -240,6 +244,47 @@
     },
 
     methods: {
+      // 设置行样式
+      setRowStyle(rowIndexs, styl) {
+
+        const rows = this.$el.querySelectorAll('tbody > tr.el-table__row');
+        if (rows.length < 1 || typeof styl === 'undefined') return;
+
+        function setRowIndexStyl(index, stylObj) {
+          let row = rows[index];
+          if (row && typeof stylObj === 'object') {
+            for (let p in stylObj) {
+              if (stylObj.hasOwnProperty(p)) row.style[p] = stylObj[p];
+            }
+          }
+        }
+
+        if (Array.isArray(rowIndexs)) { //格式: [1,2,4,6,8]
+          for (let k = 0; k < rowIndexs.length; k++) setRowIndexStyl.call(this, rowIndexs[k], styl);
+        } else if (!isNaN(rowIndexs)) {  //格式: 5
+          setRowIndexStyl.call(this, rowIndexs, styl);
+        } else if (typeof rowIndexs === 'string') {
+          if (rowIndexs === 'all') {     //格式:  all
+            for (let k = 0; k < rows.length; k++) setRowIndexStyl.call(this, k, styl);
+          } else if (/^\d+\-\d+$/g.test(rowIndexs)) { //格式: 0-12
+            let span = rowIndexs.split('-');
+            for (let k = parseInt(span[0], 10); k <= parseInt(span[1], 10); k++) {
+              setRowIndexStyl.call(this, k, styl);
+            }
+          }
+        }
+      },
+
+      // 数据修改比较
+      modifiedCompare() {
+        this.store.commit('modifiedCompare');
+      },
+
+      //锁定初始数据用于判定是否为修改
+      lockData() {
+        this.store.commit('lockData');
+      },
+
       setCurrentRow(row) {
         this.store.commit('setCurrentRow', row);
       },
@@ -312,6 +357,9 @@
           }
           // if (this.$el) { //导致无法展示
           //   this.isHidden = this.$el.clientWidth === 0;
+          //   if (this.isHidden && this.layout.bodyWidth) {
+          //     setTimeout(() => this.doLayout());
+          //   }
           // }
         });
       }
@@ -377,7 +425,6 @@
               : this.maxHeight - this.layout.footerHeight) + 'px'
           };
         }
-
         return style;
       },
 
@@ -467,6 +514,8 @@
       });
 
       this.$ready = true;
+      // 初始化比对样式
+      this.$nextTick(_ => this.store.commit('updateCompare'));
     },
 
     data() {

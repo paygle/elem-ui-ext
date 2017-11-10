@@ -16,7 +16,7 @@
   >
     <el-input
       ref="input"
-      :readonly="!filterable"
+      :readonly="!filterable || readonly"
       :placeholder="currentLabels.length ? undefined : placeholder"
       v-model="inputValue"
       @change="debouncedInputChange"
@@ -41,14 +41,14 @@
     </el-input>
     <span 
       ref="textbox"
-      class="el-cascader__label" 
+      class="el-cascader__label"
       @mouseover="tipMSEnter"
       @mouseout="tipMSOut"
       v-show="inputValue === ''">
       <template v-if="showAllLevels">
         <template v-for="(label, index) in currentLabels">
           {{ label }}
-          <span v-if="index < currentLabels.length - 1"> / </span>
+          <span v-if="index < currentLabels.length - 1" :key="index"> {{split}} </span>
         </template>
       </template>
       <template v-else>
@@ -125,6 +125,7 @@ export default {
         return t('el.cascader.placeholder');
       }
     },
+    readonly: Boolean,
     disabled: Boolean,
     clearable: {
       type: Boolean,
@@ -150,7 +151,11 @@ export default {
       type: Function,
       default: () => (() => {})
     },
-    tipDisabled: {             // Ä¬ÈÏ²»½ûÓÃÏÔÊ¾tooltip
+    split: {                 //  åˆ†éš”ç¬¦å·
+      type: String,
+      default: ' / '
+    },
+    tipDisabled: {             // é»˜è®¤ä¸ç¦ç”¨æ˜¾ç¤ºtooltip
       type: Boolean,
       default: false
     }
@@ -165,14 +170,14 @@ export default {
       inputHover: false,
       inputValue: '',
       flatOptions: null,
-      parentTipText: '',         // ¸¸Àà×é¼şÌáÊ¾ÄÚÈİ
-      tipContent: '',            // tooltipÄÚÈİ
+      parentTipText: '',         // çˆ¶ç±»ç»„ä»¶æç¤ºå†…å®¹
+      tipContent: '',            // tooltipå†…å®¹
       notifyStyl: {},
       notifyWidth: 0,
       isNoticeShow: false,
       tipTimeHander: null,
       noticeDom: null,
-      innerTipShow: false   // Ä¬ÈÏ½ûÓÃ tooltip¹¦ÄÜ
+      innerTipShow: false   // é»˜è®¤ç¦ç”¨ tooltipåŠŸèƒ½
     };
   },
 
@@ -220,10 +225,10 @@ export default {
         this.menu.options = value;
       }
     },
-    currentLabels(val){   //×Ô¶¯ÉèÖÃÊÇ·ñÏÔÊ¾hoverÌáÊ¾
+    currentLabels(val){   //è‡ªåŠ¨è®¾ç½®æ˜¯å¦æ˜¾ç¤ºhoveræç¤º
       this.setTipContent(val);
     },
-    parentTipText(val) {  //¡¡¸¸Àà×é¼şÌáÊ¾ÄÚÈİ¸üĞÂ
+    parentTipText(val) {  //ã€€çˆ¶ç±»ç»„ä»¶æç¤ºå†…å®¹æ›´æ–°
       if(typeof val === 'string' && val !== ''){
         if(this.noticeDom) {
           this.noticeDom.innerHTML = val;
@@ -275,7 +280,7 @@ export default {
         }
       });
     },
-    getPlaceWidth(el){  // ¼ÆËã×é¼ş³ıpaddingµÄ¿í¶È
+    getPlaceWidth(el){  // è®¡ç®—ç»„ä»¶é™¤paddingçš„å®½åº¦
       let elStyl, paddingLeft, paddingRight;
       if(el) {
         elStyl = getComputedStyle(el);
@@ -286,7 +291,7 @@ export default {
         return 0;
       }
     },
-    getTipContentWidth(el, text){ // ¼ÆËãÎÄ±¾¿í¶È
+    getTipContentWidth(el, text){ // è®¡ç®—æ–‡æœ¬å®½åº¦
       let elStyl, fontSize,  zhword, zhWidth;
       text = text || '';
       elStyl = getComputedStyle(el);
@@ -295,7 +300,7 @@ export default {
       zhWidth = zhword.length * fontSize;
       return (String(text).length - zhword.length) * fontSize * 0.5 + zhWidth;
     },
-    getTipStatus(el){  // »ñÈ¡tip¶¯Ì¬ÅäÖÃ
+    getTipStatus(el){  // è·å–tipåŠ¨æ€é…ç½®
       let width, contentWidth;
       if(el){
         width = this.getPlaceWidth(el);
@@ -428,7 +433,7 @@ export default {
       this.menuVisible = false;
     },
     handleClick() {
-      if (this.disabled) return;
+      if (this.disabled || this.readonly) return;
       if (this.filterable) {
         this.menuVisible = true;
         this.$refs.input.$refs.input.focus();
@@ -465,6 +470,7 @@ export default {
 
   mounted() {
     this.flatOptions = this.flattenOptions(this.options);
+    this.$nextTick(() => { this.inputValue = this.currentLabels.join(this.split); }); //åˆå§‹åŒ–èµ‹å€¼
   }
 };
 </script>

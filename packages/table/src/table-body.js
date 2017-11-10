@@ -269,10 +269,10 @@ export default {
       if (cell) {
         column = getColumnByCell(table, cell);
         if (column) {
-          table.$emit(`cell-${name}`, row, column, cell, event);
+          table.$emit(`cell-${name}`, row, column, cell, event, table);
         }
       }
-      table.$emit(`row-${name}`, row, event, column);
+      table.$emit(`row-${name}`, row, event, column, table);
     },
 
     handleExpandClick(row) {

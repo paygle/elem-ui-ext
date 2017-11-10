@@ -87,8 +87,10 @@
             this.dispatch('ElCheckboxGroup', 'input', [val]);
           } else if (this.value !== undefined) {
             this.$emit('input', val);
+            this.dispatch('ElForm', 'compare-change', this);
           } else {
             this.selfModel = val;
+            this.dispatch('ElForm', 'compare-change', this);
           }
         }
       },

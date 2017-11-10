@@ -125,6 +125,7 @@
 | off-color  | switch 关闭时的背景色    | string   | — | #C0CCDA |
 | name  | switch 对应的 name 属性    | string   | — | — |
 | allow-focus  | 允许 switch 触发 focus 和 blur 事件 | boolean | — | false |
+| validItem-name  | valid-item组件域名         |  String     |   ——    |  ValidItem |
 
 ### Events
 | 事件名称      | 说明    | 回调参数      |

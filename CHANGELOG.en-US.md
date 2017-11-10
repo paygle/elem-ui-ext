@@ -1,5 +1,27 @@
 ## Changelog
 
+### 1.4.9
+
+*2017-11-01*
+
+- Fixed Form validating not triggered correctly in some conditions, #7744
+- Fixed range selection of DatePicker not working in Chromium 53-57 browsers, #7927
+
+### 1.4.8
+
+*2017-10-24*
+
+- Fixed SubMenu retracting when moving the mouse rapidly on the SubMenu of collapsed Menu, #7579
+- Fixed hidden last shortcut of DateTimePicker when the shortcut menu is long, #7567 (by @DuLinRain)
+- Added `show-timeout` and `hide-timeout` attributes for Dropdown, #7621 (by @phongkt-dev)
+
+### 1.4.7
+
+*2017-10-16*
+
+- Fixed compatibility of Autocomplete and Vue 2.5.x, #6942 (by @rennai)
+- Added `allow-focus` attribute for Switch, #7494 (by @breadadams)
+
 ### 1.4.6
 
 *2017-09-27*

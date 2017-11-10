@@ -28,6 +28,7 @@
       @keydown.down.native.prevent="decrease"
       @blur="handleBlur"
       @input="debounceHandleInput"
+      :get-fill-styl="getFillStyl"
       :disabled="disabled"
       :size="size"
       :max="max"
@@ -46,10 +47,12 @@
 <script>
   import ElInput from 'element-ui/packages/input';
   import { once, on } from 'element-ui/src/utils/dom';
+  import Emitter from 'element-ui/src/mixins/emitter';
   import debounce from 'throttle-debounce/debounce';
 
   export default {
     name: 'ElInputNumber',
+    mixins: [Emitter],
     directives: {
       repeatClick: {
         bind(el, binding, vnode) {
@@ -77,6 +80,11 @@
       ElInput
     },
     props: {
+      getFillStyl: Function,     // 获取自定义组件配色
+      validItemName: {                 // 使用 valid-item组件时的组件名称
+        type: String,
+        default: 'ValidItem'
+      },
       step: {
         type: Number,
         default: 1
@@ -177,6 +185,10 @@
       },
       handleBlur() {
         this.$refs.input.setCurrentValue(this.currentValue);
+        this.dispatch('ElFormItem', 'el.form.change');
+        this.dispatch(this.validItemName, 'valid.item.change');
+        this.dispatch('ElForm', 'compare-change', this);
+        this.dispatch(this.validItemName, 'compare-change', this);
       },
       setCurrentValue(newVal) {
         const oldVal = this.currentValue;
@@ -189,6 +201,11 @@
         this.$emit('change', newVal, oldVal);
         this.$emit('input', newVal);
         this.currentValue = newVal;
+
+        this.$nextTick(()=>{
+          this.dispatch('ElForm', 'compare-change', this);
+          this.dispatch(this.validItemName, 'compare-change', this);
+        });
       },
       handleInput(value) {
         if (value === '') {

@@ -1774,6 +1774,8 @@
 | show-summary | 是否在表尾显示合计行 | Boolean | — | false |
 | sum-text | 合计行第一列的文本 | String | — | 合计 |
 | summary-method | 自定义的合计计算方法 | Function({ columns, data }) | — | — |
+| modified-styl    | 修改后的样式计算      |  Function     |   ——    |  ——   |
+| compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   |
 
 ### Table Events
 | 事件名 | 说明 | 参数 |
