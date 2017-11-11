@@ -24,7 +24,7 @@ export const focusInput = (el) => {
     let dom = document.body.querySelector(el);
     if (dom !== null && typeof dom === 'object') focus(dom);
   } else if (typeof el === 'object' && el !== null) {
-    focus(el);
+    el.$el ? focus(el.$el) : focus(el);
   }
 };
 

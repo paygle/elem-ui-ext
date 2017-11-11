@@ -231,7 +231,7 @@ const TableStore = function(table, initialState = {}) {
     operindex: 0, // 当前操作行
     disableField: {  //是否使用禁用字段
       field: 'disabled',  // 禁用字段名称
-      trueVal: '1', 
+      trueVal: '1',
       falseVal: '0'
     },
     currentRow: null,
@@ -310,6 +310,8 @@ TableStore.prototype.mutations = {
   },
   // 数据修改比较
   modifiedCompare(states) {
+    // console.log('数据修改比较...');
+    // console.time('modifiedCompare');
     let row,itemStyl,table = this.table;
     // 比较对象是否相等
     function isEqualObj(item$1, item$2) {
@@ -400,7 +402,7 @@ TableStore.prototype.mutations = {
         }
       }
     }
-
+    // console.timeEnd('modifiedCompare');
   },
 
   //锁定初始数据用于判定是否为修改

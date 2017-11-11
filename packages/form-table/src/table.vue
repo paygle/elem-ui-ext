@@ -293,7 +293,8 @@
 
       // 数据修改比较
       modifiedCompare() {
-        this.store.commit('modifiedCompare');
+        clearTimeout(this.timeHanlder);  // 一定要使用定时器，否则严重损耗性能
+        this.timeHanlder = setTimeout(() => { this.store.commit('modifiedCompare'); }, 500);
       },
       // 比较清除
       compareClear() {
@@ -391,7 +392,7 @@
       validate(callback, show=false) {
         let valid = true;
         let errorsBox=[];
-        
+
         this.fields.forEach((field, index) => {
 
           field.validate('', errors => {
@@ -473,8 +474,8 @@
 
       ieMaxHeight() { // 修复IE9表格引起的页面抖动
         let len = Array.isArray(this.data) ? this.data.length : 0;
-        if(typeof this.height === 'undefined' && len > 0 && 
-          navigator.appName == "Microsoft Internet Explorer" && 
+        if(typeof this.height === 'undefined' && len > 0 &&
+          navigator.appName == "Microsoft Internet Explorer" &&
           navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
           return {maxHeight: (30 * len + 10) + 'px', overflow: 'hidden'};
         }
@@ -573,7 +574,7 @@
           if (this.$ready) this.doLayout();
         }
       },
- 
+
       rules() {     // 规则监听
         this.validate();
       },
@@ -641,7 +642,8 @@
         layout,
         isHidden: false,
         renderExpanded: null,
-        resizeProxyVisible: false
+        resizeProxyVisible: false,
+        timeHanlder: null
       };
     }
   };
