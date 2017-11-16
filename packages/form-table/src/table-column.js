@@ -762,8 +762,8 @@ export default {
       }
 
       return (_self.showOverflowTooltip || _self.showTooltipWhenOverflow) && _self.type === 'default'
-        ? <div class="cell el-tooltip"
-          class={ 'row' + data.$index + data.column.property }
+        ? <div
+          class={ 'cell el-tooltip ' + 'row' + data.$index + data.column.property }
           style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data, _self) }</div>
         : <form-table-item
              prop={data}

@@ -296,8 +296,8 @@ export default {
       }
 
       return _self.showOverflowTooltip || _self.showTooltipWhenOverflow
-        ? <div class="cell el-tooltip"
-          class={ 'row' + data.$index + data.column.property }
+        ? <div
+          class={ 'cell el-tooltip ' + 'row' + data.$index + data.column.property }
           style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data) }</div>
         : <div class="cell" class={ 'row' + data.$index + data.column.property }>{ renderCell(h, data) }</div>;
     };

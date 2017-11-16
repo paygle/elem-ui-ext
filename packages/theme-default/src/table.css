@@ -172,6 +172,9 @@
 
     & td > div {
       box-sizing: border-box;
+      white-space: nowrap;
+      text-overflow: ellipsis;    /* 定制隐藏样式 */
+      overflow: hidden;
     }
 
     @e fixed, fixed-right {
