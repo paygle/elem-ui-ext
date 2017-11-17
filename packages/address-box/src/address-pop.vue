@@ -2,31 +2,31 @@
   <div class="address-chooser" :style="{ minWidth: minWidth }">
     <div class="address-tabs">
       <div class="bt-line"></div>
-      <span style="margin-left: 10px;" 
-        :class="['tab', 'el-icon-arrow-down',{active:isActiveProvince}]" 
+      <span style="margin-left: 10px;"
+        :class="['tab', 'el-icon-arrow-down',{active:isActiveProvince}]"
         @click.stop="tabProvince" v-text="provinceWord" v-show="isShowProvince"></span>
       <span :class="['tab', 'el-icon-arrow-down',{active:isActiveCity}]" @click.stop="tabCity" v-text="cityWord" v-show="isShowCity"></span>
       <span :class="['tab', 'el-icon-arrow-down',{active:isActiveArea}]" @click.stop="tabArea" v-text="areaWord" v-show="isShowArea"></span>
     </div>
     <div class="address-contents">
       <ul class="address-province" v-show="isActiveProvince">
-        <li v-for="(item, index) in provinceData" 
+        <li v-for="(item, index) in provinceData"
           :key="index"
-          @click.stop="clickProvince(item.c_area_code)" 
+          @click.stop="clickProvince(item.c_area_code)"
           v-text="item.c_area_cname">
         </li>
       </ul>
       <ul class="address-city" v-show="isActiveCity">
         <li v-for="(item, index) in cityData"
-          :key="index" 
-          @click.stop="clickCity(item.c_area_code)" 
+          :key="index"
+          @click.stop="clickCity(item.c_area_code)"
           v-text="item.c_area_cname">
         </li>
       </ul>
       <ul class="address-area" v-if="!cityEnd" v-show="isActiveArea">
-        <li v-for="(item, index) in areaData" 
+        <li v-for="(item, index) in areaData"
           :key="index"
-          @click.stop="clickArea(item.c_area_code)" 
+          @click.stop="clickArea(item.c_area_code)"
           v-text="item.c_area_cname">
         </li>
       </ul>
@@ -138,14 +138,10 @@ export default {
               this.isShowArea = true;
             } else {
               this.areaData = null;
+              this.selectEndCity();
             }
             // 到市级获取值
-            if (this.cityEnd) {
-              this.addressValue = this.province + '-' + this.city;
-              this.addressLabel = this.provinceWord + '-' + this.cityWord;
-              this.handleClose();
-              this.dispatch('AddressBox', 'valueChange', { value: this.addressValue, label: this.addressLabel });
-            }
+            if (this.cityEnd) this.selectEndCity();
             break;
           }
         }
@@ -166,6 +162,12 @@ export default {
           }
         }
       }
+    },
+    selectEndCity() {
+      this.addressValue = this.province + '-' + this.city;
+      this.addressLabel = this.provinceWord + '-' + this.cityWord;
+      this.handleClose();
+      this.dispatch('AddressBox', 'valueChange', { value: this.addressValue, label: this.addressLabel });
     },
     reset() {
       this.province = -1;

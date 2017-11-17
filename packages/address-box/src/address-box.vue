@@ -147,7 +147,7 @@ export default {
       let inputEl = this.$el.querySelector('input');
       let inputWidth = this.getPlaceWidth(inputEl);
       this.notifyWidth = this.getTipContentWidth(inputEl, this.tipContent);
-      
+
       if(this.innerTipShow){
         this.tipTimeHander = setTimeout(()=>{
           pos = inputEl.getBoundingClientRect();
@@ -195,7 +195,7 @@ export default {
           let width, contentWidth;
           let el = this.$el.querySelector('.txt-box');
           this.tipContent = String(this.addressLabel);
- 
+
           if(el){
             width = this.getPlaceWidth(el);
             contentWidth = this.getTipContentWidth(el, this.tipContent);
@@ -358,7 +358,7 @@ export default {
     getAddressData.call(this);
     this.tipUpdateStatus();
     this.$nextTick(() => {
-      this.dispatch('ElForm', 'compare-change', this); 
+      this.dispatch('ElForm', 'compare-change', this);
       this.dispatch(this.validItemName, 'compare-change', this);
     });
   }
