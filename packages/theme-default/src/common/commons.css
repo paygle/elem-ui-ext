@@ -1600,7 +1600,7 @@ div .message-ebox {
 .address-chooser {
   position: absolute;
   background-color: var(--white-color);;
-  max-width: 38em;
+  max-width: 50em;
   min-width: 30em;
   width: 100%;
   padding-top: 5px;
@@ -1706,7 +1706,8 @@ div .message-ebox {
   width: 100%;
   padding: 10px;
   box-sizing: border-box;
-  overflow: hidden;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .address-contents li {
