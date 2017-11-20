@@ -92,6 +92,7 @@ import SideGuide from '../packages/side-guide/index.js';
 import TableTotal from '../packages/table-total/index.js';
 import TabsFrame from '../packages/tabs-frame/index.js';
 import ValidForm from '../packages/valid-form/index.js';
+import ValidField from '../packages/valid-field/index.js';
 import ValidItem from '../packages/valid-item/index.js';
 import WaterFall from '../packages/water-fall/index.js';
 import CustomSwitch from '../packages/custom-switch/index.js';
@@ -193,6 +194,7 @@ const components = [
   TableTotal,
   TabsFrame,
   ValidForm,
+  ValidField,
   ValidItem,
   WaterFall,
   CustomSwitch,
@@ -331,6 +333,7 @@ module.exports = {
   TableTotal,
   TabsFrame,
   ValidForm,
+  ValidField,
   ValidItem,
   WaterFall,
   CustomSwitch,

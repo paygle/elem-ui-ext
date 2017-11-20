@@ -46,17 +46,17 @@
   <valid-item label="测试1" 
     :model="vaItems.name" 
     @validate="validateTest" 
-    prop="name" 
+    prop="name"
     :rules="inputRule" 
-    item-width="200px" 
+    item-width="200px"
     label-width="60px">
     <el-input v-model="vaItems.name" placeholder="名字验证"></el-input>
   </valid-item>
-  <valid-item label="测试2" 
-    :model="vaItems.number" 
-    @validate="validateTest" 
-    prop="number" 
-    :rules="inputRule" 
+  <valid-item label="测试2"
+    :model="vaItems.number"
+    @validate="validateTest"
+    prop="number"
+    :rules="inputRule"
     item-width="200px"  
     label-width="60px">
     <el-input v-model="vaItems.number" histype='number' precision="2" placeholder="数字验证"></el-input>
@@ -103,10 +103,10 @@
 ```
 :::
 
-### ValidItem Attributes
+### ValidItem & ValidField Attributes
 
-| 参数          | 说明            | 类型            | 可选值                 | 默认值   |
-|-------------  |---------------- |---------------- |---------------------- |-------- |
+| 参数          | 说明            | 类型            | 可选值                 | 默认值   | 备注|
+|-------------  |---------------- |---------------- |---------------------- |-------- |-----|
 | compo-name     | 组件名称   |  String  |    ——  | ValidItem 同名为同一个表单域 |
 | model          | 需要验证的绑定对象     | Object |   ——  |    ——   |
 | prop           | 需要验证的字段名称   |  String           |     ——      |     ——   |
@@ -122,9 +122,9 @@
 | error          | 错误提示内容         |  String          |      ——      |    ——   |
 | show-message   | 是否显示验证消息     |  Boolean         | true/false   |   true |
 | display        | 项目默认显示模式     |  String    | inline-block/block  |  inline-block |
-| err-styl    | 错误样式设置      |  Object     |   ——    |  ——   |
-| valid-trigger  | 触发外部验证函数  |  Function     |   ——    |  ——   |
-| compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   |
+| err-styl    | 错误样式设置      |  Object     |   ——    |  ——   | 属于ValidField |
+| valid-trigger  | 触发外部验证函数  |  Function     |   ——    |  ——   | 属于ValidField |
+| compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   | 属于ValidField |
 
 ### ValidForm Attributes （仅需要 err-styl、 compare-styl 功能时使用这个组件）
 
