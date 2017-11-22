@@ -16,11 +16,11 @@
     <span class="txt-box" v-if="translated" v-text="addressLabel"></span>
   </div>
   <transition name="md-fade-bottom" @after-leave="doDestroy">
-    <address-pop 
-      ref="popper" 
-      :city-end="cityEnd" 
-      :addr-data="addrData" 
-      v-show="isShowAddrBox" 
+    <address-pop
+      ref="popper"
+      :city-end="cityEnd"
+      :addr-data="addrData"
+      v-show="isShowAddrBox"
       :disabled="readonly || disabled">
     </address-pop>
   </transition>

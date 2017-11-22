@@ -28,6 +28,98 @@ export const focusInput = (el) => {
   }
 };
 
+function DateCompute(init) {
+  function getDateTimes(Dstr) {
+    if (!/^\d+((\s+\d+)?(\:\d+){0,2})?/g.test(Dstr)) return 0;
+    let DDT,TIME, dt = { DD:0, hh:0, mm: 0, ss: 0 };
+    if (/^\d+\s+\d+/g.test(Dstr)) {
+      DDT = Dstr.split(/\s+/);
+      dt.DD = DDT[0];
+      TIME = String(DDT[1]).split(':');
+
+    } else if (/^\d+((\:\d+){0,2})?/g.test(Dstr)) {
+      TIME = String(Dstr).split(':');
+    }
+    dt.hh = TIME[0] || 0;
+    dt.mm = TIME[1] || 0;
+    dt.ss = TIME[2] || 0;
+    dt.DD = dt.DD * 24 * 60 * 60 * 1000;
+    dt.hh = dt.hh * 60 * 60 * 1000;
+    dt.mm = dt.mm * 60 * 1000;
+    dt.ss = dt.ss * 1000;
+    return dt.DD + dt.hh + dt.mm + dt.ss;
+  }
+
+  function getStrDate(date) {
+    let YY, MM, DD, hh, mm, ss;
+    function getf(n) {
+      if (n < 10) return '0' + n;
+      return n;
+    }
+    YY = date.getFullYear();
+    MM = date.getMonth() + 1;
+    DD = date.getDate();
+    hh = date.getHours();
+    mm = date.getMinutes();
+    ss = date.getSeconds();
+
+    return YY + '-' +
+      getf(MM) + '-' +
+      getf(DD) + ' ' +
+      getf(hh) + ':' +
+      getf(mm) + ':' +
+      getf(ss);
+  }
+
+  // 加法
+  this.add = function(dt) {
+    this.ntime += getDateTimes(dt);
+    this.date = new Date(this.ntime);
+    return {
+      add: this.add,
+      sub: this.sub,
+      ntime: this.ntime,
+      date: this.date,
+      val: getStrDate(this.date)
+    };
+  };
+  // 减法
+  this.sub = function(dt) {
+    this.ntime -= getDateTimes(dt);
+    this.date = new Date(this.ntime);
+    return {
+      add: this.add,
+      sub: this.sub,
+      ntime: this.ntime,
+      date: this.date,
+      val: getStrDate(this.date)
+    };
+  };
+
+  let ntime, cpdt;
+  if (init instanceof Date) {
+    cpdt = init;
+    ntime = init.valueOf();
+  } if (typeof init === 'string' && /\d/g.test(init)) {
+    cpdt = new Date(String(init).replace(/\-/g, '/'));
+    ntime = cpdt.valueOf();
+  }
+  return {
+    add: this.add,
+    sub: this.sub,
+    ntime: ntime,
+    date: cpdt,
+    val: getStrDate(cpdt)
+  };
+}
+
+/**
+ * 日期时间加减运算
+ * 支持的初始格式:  2017-01-11 19:20、 2018-01-11 和  Date 对象
+ * 支持的加减数格式： 12 18:12:15、 18、 12 18、 18:12、 18:12:15
+ */
+export const dateCalc = DateCompute;
+
 /**
  * 判断对象是否为空对象
  */
@@ -61,7 +153,6 @@ export const isOwnEmpty = (obj) => {
 };
 
 /**
- * 
  * @param tag 标签名
  * @param attrs 属性对象
  * @param children 子结点对象
@@ -143,13 +234,13 @@ export const setLocalDataItem = (field, value, dat, time) => {
  * CSS样式计算器
  * operator [String]  操作符号 + - * /
  * unitA [String, Number]  单位操作数A  两个操作符号不同时以unitA的单位为准
- * unitB [String, Number]  单位操作数B  [* /] 操作时unitB参数必须是 Number类型 
+ * unitB [String, Number]  单位操作数B  [* /] 操作时unitB参数必须是 Number类型
  */
 export const cssUnitsCalc = (operator, unitA, unitB) => {
 
   if (operator && typeof unitA !== 'undefined' && typeof unitB !== 'undefined') {
 
-    let regxNum = /^\-?\d+/g;
+    let regxNum = /^\-?\d+(\.\d+)?/g;
     let regxUnit = /[A-Za-z\-%]+$/gi;
     let a_num = String(unitA).replace(regxUnit, '');
     let a_unit = String(unitA).replace(regxNum, '');
@@ -444,7 +535,7 @@ export const UniqueEditArray = (existList, newList, delList, editList) => {
  * 比较两个纯JS对象（不包含函数的对象）的属性值是否相等
  * @one [ Object ]  需要比较的第一个对象
  * @two [ Object ]  需要比较的第二个对象
- * 返回 Boolean 
+ * 返回 Boolean
  */
 export const ObjectPlainIsEqual = (one, two) => {
   let oneType = TypeOf(one);
@@ -513,7 +604,7 @@ export const Date2Week = (date) => {
  * 检查是否是有权限的url
  */
 export const isAuthorizedUrl = (url) => {
-  var reg = new RegExp(url + "$"); //endWith 
+  var reg = new RegExp(url + "$"); //endWith
   let menusData = window.userMenus || [];
   for (var menu of menusData) {
     if (reg.test(menu.url)) {

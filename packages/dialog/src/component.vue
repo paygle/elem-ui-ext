@@ -5,12 +5,12 @@
         class="el-dialog"
         :class="[sizeClass, customClass]"
         ref="dialog"
-        :style="style">
+        :style="[style, adjpos]">
         <div class="el-dialog__header">
           <slot name="title">
             <span class="el-dialog__title">{{title}}</span>
           </slot>
-          <button type="button" class="el-dialog__headerbtn" aria-label="Close" 
+          <button type="button" class="el-dialog__headerbtn" aria-label="Close"
                   v-if="showClose" @click="handleClose">
             <i class="el-dialog__close el-icon el-icon-close"></i>
           </button>
@@ -27,6 +27,9 @@
 <script>
   import Popup from 'element-ui/src/utils/popup';
   import emitter from 'element-ui/src/mixins/emitter';
+  import { Browser, cssUnitsCalc } from 'element-ui/src/utils/funcs';
+
+  const BSR = new Browser();
 
   export default {
     name: 'ElDialog',
@@ -43,7 +46,7 @@
         type: Boolean,
         default: true
       },
-  
+
       modalAppendToBody: {
         type: Boolean,
         default: true
@@ -86,6 +89,12 @@
       beforeClose: Function
     },
 
+    data() {
+      return {
+        adjpos: {}
+      };
+    },
+
     watch: {
       visible(val) {
         this.$emit('update:visible', val);
@@ -94,6 +103,7 @@
           this.$el.addEventListener('scroll', this.updatePopper);
           this.$nextTick(() => {
             this.$refs.dialog.scrollTop = 0;
+            this.adjustPos();
           });
         } else {
           this.$el.removeEventListener('scroll', this.updatePopper);
@@ -107,11 +117,24 @@
         return `el-dialog--${ this.size }`;
       },
       style() {
-        return this.size === 'full' ? {} : { 'top': this.top };
+        if (BSR.browser === 'IE' && BSR.version < 10) {
+          return this.size === 'full' ? { 'left': 0 } : { 'top': this.top, 'left': 0 };
+        } else {
+          return this.size === 'full' ? {} : { 'top': this.top };
+        }
       }
     },
 
     methods: {
+      adjustPos() {
+        if (this.size !== 'full' && BSR.browser === 'IE' && BSR.version < 10 && this.$refs.dialog) {
+          let bw = getComputedStyle(document.body).width;
+          let wd = getComputedStyle(this.$refs.dialog).width;
+          let stf = cssUnitsCalc('-', bw, wd);
+          let hf = cssUnitsCalc('/', stf, 2);
+          this.adjpos = { 'margin-left': hf };
+        }
+      },
       handleWrapperClick() {
         if (!this.closeOnClickModal) return;
         this.handleClose();

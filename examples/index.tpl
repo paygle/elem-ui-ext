@@ -15,7 +15,7 @@
         document.write('<script src="//shadow.elemecdn.com/npm/es6-promise@4.1.1/dist/es6-promise.min.js"><\/script><script>ES6Promise.polyfill()<\/script>')
       }
     </script>
-    <script src="//cdn.jsdelivr.net/npm/vue@2.5.3/dist/vue.runtime.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue@2.5.8/dist/vue.runtime.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/vue-router@3.0.1/dist/vue-router.min.js"></script><% } %>
   </body>
   <% if (process.env.NODE_ENV === 'production') { %><script>
