@@ -159,6 +159,8 @@
   import { mousewheel } from './util';
   import Notification from 'element-ui/packages/notification';
   import Emitter from 'element-ui/src/mixins/emitter';
+  import { on, off } from 'element-ui/src/utils/dom';
+  import { focusInput } from 'element-ui/src/utils/funcs';
 
   let tableIdSeed = 1;
 
@@ -420,6 +422,80 @@
         var field = this.fields.filter(field => field.prop === prop)[0];
         if (!field) { throw new Error('must call validateField with valid prop string!'); }
         field.validate('', cb);
+      },
+      // 跳转到输入框
+      jumpToFocus(e) {
+        //t38 d40
+        if (e.keyCode === 38) {
+          this.gotoNextFocus(this.getCurrentFocusName(e.target), 'up');
+        } else if (e.keyCode === 40) {
+          this.gotoNextFocus(this.getCurrentFocusName(e.target), 'down');
+        }
+      },
+      getCurrentFocusName(elem) {
+        if (elem) {
+          let current = elem,
+            clsName,
+            isFind,
+            r, clses,
+            splitCls = ['row'];
+          do {
+            current = current.parentNode;
+            clsName = current.parentNode.className;
+            isFind = /row\d+[a-zA-Z]+\w+/.test(clsName);
+          } while (!isFind && this.$el.contains(current));
+
+          clses = clsName.split(/\s+/);
+          for (let i = 0; i < clses.length; i++) {
+            if (/row\d+[a-zA-Z]+\w+/.test(clses[i])) {
+              clsName = clses[i];
+              break;
+            } else {
+              clsName = null;
+            }
+          }
+          if (clsName) {
+            r = clsName.replace(/row\d+/ig, '');
+            splitCls.push(clsName.replace('row', '').replace(r, ''));
+            splitCls.push(r);
+            return splitCls;
+          } else {
+            return [];
+          }
+        }
+        return [];
+      },
+      gotoNextFocus(clsParam, updw) {
+
+        if (clsParam.length !== 3) return;
+        let rowlen = this.store.states.data.length;
+        let rowindex = parseInt(clsParam[1], 10);
+        let arrow = updw === 'up' ? -1 : 1;
+        let queryElem, inputElm, times = 0, gonext;
+
+        do {
+          times++;
+          if (updw === 'up' && rowindex > 0) {
+            clsParam[1] = rowindex + arrow;
+          } else if (updw === 'up' && rowindex === 0) {
+            clsParam[1] = rowlen - 1;
+          } else if (updw === 'down' && rowindex < rowlen - 1) {
+            clsParam[1] = rowindex + arrow;
+          } else if (updw === 'down' && rowindex === rowlen - 1) {
+            clsParam[1] = 0;
+          }
+          rowindex = parseInt(clsParam[1], 10);
+          queryElem = this.$el.querySelector('.'+clsParam.join(''));
+          if (queryElem) {
+            inputElm = queryElem.querySelector('input') || queryElem.querySelector('textarea');
+            focusInput(inputElm);
+            if (inputElm && (inputElm.readonly || inputElm.disabled)) {
+              gonext = true;
+            } else {
+              gonext = false;
+            }
+          }
+        } while ((!inputElm || gonext) && times < rowlen);
       }
     },
 
@@ -477,7 +553,7 @@
         if(typeof this.height === 'undefined' && len > 0 &&
           navigator.appName == "Microsoft Internet Explorer" &&
           navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
-          return {maxHeight: (30 * len + 10) + 'px', overflow: 'hidden'};
+          return {maxHeight: (30 * len + 80) + 'px', overflow: 'hidden'};
         }
         return {};
       },
@@ -584,6 +660,10 @@
       }
     },
 
+    beforeDestroy() {
+      if (this.$refs.bodyWrapper) off(this.$refs.bodyWrapper, 'keyup', this.jumpToFocus);
+    },
+
     destroyed() {
       if (this.windowResizeListener) removeResizeListener(this.$el, this.windowResizeListener);
     },
@@ -620,7 +700,10 @@
         }
       }
       // 初始化比对样式
-      this.$nextTick(_ => this.store.commit('updateCompare'));
+      this.$nextTick(_ => {
+        this.store.commit('updateCompare');
+        on(this.$refs.bodyWrapper, 'keyup', this.jumpToFocus);
+      });
     },
 
     data() {
