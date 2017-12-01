@@ -1,5 +1,5 @@
 <script>
-  const data = require('../../../examples/assets/data/waterful.json');
+  const data = require('../../../examples/assets/waterful.json');
   export default {
     data() {
       return {

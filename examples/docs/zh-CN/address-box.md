@@ -1,5 +1,5 @@
 <script>
-  const addrdata = require('../../../examples/assets/data/address-data.json');
+  const addrdata = require('../../../examples/assets/address-data.json');
   export default {
     data() {
       return {
