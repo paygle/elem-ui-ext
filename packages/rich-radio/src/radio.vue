@@ -22,6 +22,7 @@
       v-model="model"
       @focus="focus = true"
       @blur="focus = false"
+      @click="_=> model = model"
       :name="name"
       :disabled="isDisabled">
     </span>

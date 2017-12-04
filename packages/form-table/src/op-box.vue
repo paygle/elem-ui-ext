@@ -8,7 +8,7 @@
         icon="delete2" 
         size="mini"
         :disabled="disabled"
-        @click="deleteHandle">
+        v-on:click.stop="deleteHandle">
       </el-button>
       <el-button 
         v-if="!iShwMorebtn && editVisit" 
@@ -17,7 +17,7 @@
         size="mini" 
         icon="pencil"
         :disabled="disabled"
-        @click="editHandle">
+        v-on:click.stop="editHandle">
       </el-button>
       <el-button 
         ref="addbtn" 
@@ -27,7 +27,7 @@
         size="mini" 
         icon="document"
         :disabled="disabled"
-        @click="addPreLoad">
+        v-on:click.stop="addPreLoad">
       </el-button>
       <el-button 
         v-if="iShwMorebtn && saveVisit" 
@@ -36,7 +36,7 @@
         size="mini" 
         icon="save"
         :disabled="disabled"
-        @click="saveHandle">
+        v-on:click.stop="saveHandle">
       </el-button>
     </el-button-group>
     <span v-show="headerNoButton">操作</span>
