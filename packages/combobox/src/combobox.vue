@@ -88,11 +88,11 @@
           :class="{ 'is-empty': !allowCreate && filteredOptionsCount === 0 }"
           v-show="options.length > 0 && !loading">
           <div v-if="dictId">
-            <combo-option 
-              v-for="(item, index) in comboItems" 
-              v-if="typeof item === 'object'" 
+            <combo-option
+              v-for="(item, index) in comboItems"
+              v-if="typeof item === 'object'"
               :key="item.c_cod"
-              :label="item.c_cname" 
+              :label="item.c_cname"
               :value="item.c_code">
             </combo-option>
           </div>
@@ -218,12 +218,7 @@
       },
       getFillStyl: Function,           // 获取自定义组件配色
       optionsData: [Array, Object],    // Option初始化数据
-      translated: {                    // 是否翻译代码为中文
-        type: [Boolean, String], 
-        default(){
-          return false;
-        }
-      },
+      translated: Boolean,             // 是否翻译代码为中文
       id: String,
       size: String,
       readonly: Boolean,
@@ -265,7 +260,7 @@
           default : false
       },
       //下拉框在行编辑中时的行数据
-      dictRowData:Object, 
+      dictRowData:Object,
       //下拉框在行编辑中时参数是否级联本行的数据
       dictRowCascade:{
           type : Boolean,
@@ -371,7 +366,7 @@
           this.voidRemoteQuery = val === '';
           this.broadcast('ComboOption', 'resetIndex');
         } else if (typeof this.filterMethod === 'function') {
-          
+
           if(val === this.filterValue && val!="" &&  this.filterValue!="") return;
           // 自定义过滤方法处理
           if(!this.isFilterLoad){
@@ -485,7 +480,7 @@
         !this.showPager && this.initSelected(cacheData);
       },
 
-      comboLoading(val) { 
+      comboLoading(val) {
         //comboLoading变为ture时，自动远程加载数据
         if(val===true){
           this.mergeParams();
@@ -879,7 +874,7 @@
       },
 
       //加载远程数据
-      loadRemoteData(callback){ 
+      loadRemoteData(callback){
         var self=this;
         if(!this.$store){  // 警告提示
           console && console.warn('Vuex $store required!');
@@ -988,7 +983,7 @@
       },
       filterAll(query){
         this.isFilterLoad=true;
-        
+
         if(query==''){
           let start = (this.currentPage-1) * this.pageSize;
           let end = this.currentPage * this.pageSize;
@@ -1002,7 +997,7 @@
           }
           this.comboItems = util.getOriginalData(arr);
         }
-        
+
         this.isFilterLoad=false;
       },
       optionIndexChg(idx) {

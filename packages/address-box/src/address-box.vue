@@ -83,12 +83,7 @@ export default {
         return ADDRESS_DATA_URL;
       }
     },
-    translated: {   // 是否翻译省市县代码为中文
-      type: [Boolean, String],
-      default() {
-        return false;
-      }
-    },
+    translated: Boolean,  // 是否翻译省市县代码为中文
     value: {},            // 省市县数值
     disabled: Boolean,
     resdata: {             // 省市县全部数据

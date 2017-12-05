@@ -194,12 +194,7 @@
       },
       getFillStyl: Function,           // 获取自定义组件配色
       optionsData: [Array, Object],    // Option初始化数据
-      translated: {                    // 是否翻译代码为中文
-        type: [Boolean, String], 
-        default(){
-          return false;
-        }
-      },
+      translated: Boolean,             // 是否翻译代码为中文
       id: String,
       size: String,
       readonly: Boolean,
@@ -306,7 +301,7 @@
           this.remoteMethod(val);
           this.broadcast('ElOption', 'resetIndex');
         } else if (typeof this.filterMethod === 'function') {
-          
+
           if(val === this.filterValue && val!="" &&  this.filterValue!="") return;
           // 自定义过滤方法处理
           if(!this.isFilterLoad){
