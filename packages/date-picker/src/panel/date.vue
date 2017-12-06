@@ -20,7 +20,7 @@
             @click="handleShortcutClick(shortcut)">{{ shortcut.text }}</button>
         </div>
         <div class="el-picker-panel__body">
-          
+
           <div class="el-date-picker__header" v-show="currentView !== 'time'">
             <button
               type="button"
@@ -98,6 +98,7 @@
                 :placeholder="t('el.datepicker.selectTime')"
                 :value="visibleTime"
                 size="small"
+                :disabled="disabledTime"
                 @change.native="visibleTime = $event.target.value" />
               <time-picker
                 ref="timepicker"
@@ -116,6 +117,7 @@
         class="el-picker-panel__footer"
         v-show="footerVisible && currentView === 'date'">
         <a
+          v-if="!disabledTime"
           href="JavaScript:"
           class="el-picker-panel__link-btn"
           @click="changeToNow">{{ t('el.datepicker.now') }}</a>
@@ -333,6 +335,13 @@
       },
 
       confirm() {
+        // 锁定时间
+        if (this.disabledTime && this.lockTime) {
+          let date = parseDate(this.lockTime, this.timeFormat) || new Date();
+          this.date.setHours(date.getHours());
+          this.date.setMinutes(date.getMinutes());
+          this.date.setSeconds(date.getSeconds());
+        }
         this.date.setMilliseconds(0);
         this.$emit('pick', this.date);
       },
@@ -366,6 +375,8 @@
 
     data() {
       return {
+        lockTime: null,
+        disabledTime: false,
         popperClass: '',
         pickerWidth: 0,
         date: this.$options.defaultValue ? new Date(this.$options.defaultValue) : new Date(),
@@ -394,6 +405,9 @@
 
       visibleTime: {
         get() {
+          if (this.disabledTime && this.lockTime) {
+            return formatDate(this.lockTime, this.timeFormat);
+          }
           return formatDate(this.date, this.timeFormat);
         },
 

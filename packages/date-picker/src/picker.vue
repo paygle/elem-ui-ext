@@ -2,7 +2,7 @@
   <el-input
     class="el-date-editor"
     :class="'el-date-editor--' + type"
-    :readonly="!editable || readonly"
+    :readonly="disabledTime || !editable || readonly"
     :disabled="disabled"
     :size="size"
     :id="id"
@@ -220,6 +220,8 @@ export default {
     readonly: Boolean,
     placeholder: String,
     disabled: Boolean,
+    disabledTime: Boolean,   // 禁用时间
+    lockTime: String,        // 锁定时间
     name: String,
     clearable: {
       type: Boolean,
@@ -257,6 +259,11 @@ export default {
   },
 
   watch: {
+    disabledTime(val) {
+      if (this.picker) {
+        this.picker.disabledTime = val;
+      }
+    },
     pickerVisible(val) {
       if (!val) this.dispatch('ElFormItem', 'el.form.blur');
       if (this.readonly || this.disabled) return;
@@ -485,6 +492,8 @@ export default {
       this.picker.width = this.reference.getBoundingClientRect().width;
       this.picker.showTime = this.type === 'datetime' || this.type === 'datetimerange';
       this.picker.selectionMode = this.selectionMode;
+      this.picker.disabledTime = this.disabledTime;
+      this.picker.lockTime = this.lockTime;
       if (this.format) {
         this.picker.format = this.format;
       }

@@ -18,7 +18,7 @@
             @click="handleShortcutClick(shortcut)">{{shortcut.text}}</button>
         </div>
         <div class="el-picker-panel__body">
-          
+
           <div class="el-picker-panel__content el-date-range-picker__content is-left">
             <div class="el-date-range-picker__header">
               <button
@@ -71,7 +71,7 @@
               @pick="handleRangePick">
             </date-table>
           </div>
-          
+
           <div class="el-date-range-picker__time-header" v-if="showTime">
             <span class="el-date-range-picker__editors-wrap">
               <span class="el-date-range-picker__time-picker-wrap">
@@ -90,6 +90,7 @@
                   :placeholder="t('el.datepicker.startTime')"
                   class="el-date-range-picker__editor"
                   :value="minVisibleTime"
+                  :disabled="disabledTime"
                   @focus="minTimePickerVisible = !minTimePickerVisible"
                   @change.native="handleTimeChange($event, 'min')" />
                 <time-picker
@@ -120,6 +121,7 @@
                   :placeholder="t('el.datepicker.endTime')"
                   class="el-date-range-picker__editor"
                   :value="maxVisibleTime"
+                  :disabled="disabledTime"
                   @focus="minDate && (maxTimePickerVisible = !maxTimePickerVisible)"
                   :readonly="!minDate"
                   @change.native="handleTimeChange($event, 'max')" />
@@ -204,10 +206,16 @@
       },
 
       minVisibleTime() {
+        if (this.disabledTime && this.lockTime) {
+          return formatDate(this.lockTime, 'HH:mm:ss');
+        }
         return this.minDate ? formatDate(this.minDate, 'HH:mm:ss') : '';
       },
 
       maxVisibleTime() {
+        if (this.disabledTime && this.lockTime) {
+          return formatDate(this.lockTime, 'HH:mm:ss');
+        }
         return (this.maxDate || this.minDate) ? formatDate(this.maxDate || this.minDate, 'HH:mm:ss') : '';
       },
 
@@ -228,6 +236,8 @@
 
     data() {
       return {
+        lockTime: null,
+        disabledTime: false,
         popperClass: '',
         minPickerWidth: 0,
         maxPickerWidth: 0,
@@ -475,6 +485,17 @@
       },
 
       handleConfirm(visible = false) {
+        // Ëø¶¨Ê±¼ä
+        if (this.disabledTime && this.lockTime) {
+          let date = parseDate(this.lockTime, 'HH:mm:ss') || new Date();
+          let t = {HH: date.getHours(), mm: date.getMinutes(), ss: date.getSeconds()};
+          this.minDate.setHours(t.HH);
+          this.minDate.setMinutes(t.mm);
+          this.minDate.setSeconds(t.ss);
+          this.maxDate.setHours(t.HH);
+          this.maxDate.setMinutes(t.mm);
+          this.maxDate.setSeconds(t.ss);
+        }
         this.$emit('pick', [this.minDate, this.maxDate], visible);
       },
 
