@@ -10,12 +10,14 @@
           sideStore: this.siderStore,  
           data: [{
             anchor: 'vehicle',
+            index: 123,
             text: '车',
             icon: 'el-icon-car-back',
             hidden: true,                
             list: [
               {
                anchor: 'vehicle',
+               index: 3324,
                text: '粤B123545',
                icon: 'el-icon-car-back',
               }
@@ -23,6 +25,7 @@
             operations:[
             {
               action: this.actionSiderVeh,
+              index: 6444,
               text: '新增',
               icon: 'el-icon-circle-plus'
             }
@@ -30,11 +33,13 @@
           },
           {
             anchor: 'human',
+            index: 6555,
             text: '人',
             icon: 'el-icon-somebody',
             list: [
             {
               anchor: 'human',
+              index: 76433,
               text: '李四',
               icon: 'el-icon-somebody'
             }
@@ -42,16 +47,19 @@
             operations:[
             {
               action: this.actionSiderMan,
+              index: 64433,
               text: '新增',
               icon: 'el-icon-circle-plus'
             },
             {
               action: this.editSiderMan,
+              index: 963,
               text: '修改',
               icon: 'el-icon-vwedit'
             },
             {
               action: this.deleteSiderMan,
+              index: 65444,
               text: '删除',
               icon: 'el-icon-circle-cross'
             }
@@ -67,34 +75,38 @@
       siderStore(store){
         console.log('siderStore:', store)
       },
-      actionSiderVeh(store){
+      actionSiderVeh(store, index){
          const newVeh = {
                 anchor: 'vehicle',
                 text: '粤B123545',
                 icon: 'el-icon-car-back'
               }
         this.vehicle = 'vehicle'
+        console.log('clicked', index);
         store.commit('addCell', 0, newVeh)      
       },
-      actionSiderMan(store){
+      actionSiderMan(store, index){
         const newMan = {
                 anchor: 'human',
                 text: '张三',
                 icon: 'el-icon-somebody'
               }
         this.human = 'human'
+        console.log('clicked', index);
         store.commit('addCell', 1, newMan);   
       }, 
-      editSiderMan(store){
+      editSiderMan(store, index){
         const newMan = {
                 anchor: 'human',
                 text: '张三丰',
                 icon: 'el-icon-somebody'
               }
         this.human = 'human'
+        console.log('clicked', index);
         store.commit('editCell', 1,0, newMan);   
       }, 
-      deleteSiderMan(store){
+      deleteSiderMan(store, index){
+        console.log('clicked', index);
         store.commit('deleteCell', 1, 0);    
       },
     }
@@ -126,12 +138,14 @@
           sideStore: this.siderStore,  
           data: [{
             anchor: 'vehicle',
+            index: 123,
             text: '车',
             icon: 'el-icon-car-back',
             hidden: true,                
             list: [
               {
                anchor: 'vehicle',
+               index: 3324,
                text: '粤B123545',
                icon: 'el-icon-car-back',
               }
@@ -139,6 +153,7 @@
             operations:[
             {
               action: this.actionSiderVeh,
+              index: 6444,
               text: '新增',
               icon: 'el-icon-circle-plus'
             }
@@ -146,11 +161,13 @@
           },
           {
             anchor: 'human',
+            index: 6555,
             text: '人',
             icon: 'el-icon-somebody',
             list: [
             {
               anchor: 'human',
+              index: 76433,
               text: '李四',
               icon: 'el-icon-somebody'
             }
@@ -158,16 +175,19 @@
             operations:[
             {
               action: this.actionSiderMan,
+              index: 64433,
               text: '新增',
               icon: 'el-icon-circle-plus'
             },
             {
               action: this.editSiderMan,
+              index: 963,
               text: '修改',
               icon: 'el-icon-vwedit'
             },
             {
               action: this.deleteSiderMan,
+              index: 65444,
               text: '删除',
               icon: 'el-icon-circle-cross'
             }
@@ -183,7 +203,7 @@
       siderStore(store){
         console.log('siderStore:', store)
       },
-      actionSiderVeh(store){
+      actionSiderVeh(store, index){
          const newVeh = {
                 anchor: 'vehicle',
                 text: '粤B123545',
@@ -192,7 +212,7 @@
         this.vehicle = 'vehicle'
         store.commit('addCell', 0, newVeh)      
       },
-      actionSiderMan(store){
+      actionSiderMan(store, index){
         const newMan = {
                 anchor: 'human',
                 text: '张三',
@@ -201,7 +221,7 @@
         this.human = 'human'
         store.commit('addCell', 1, newMan);   
       }, 
-      editSiderMan(store){
+      editSiderMan(store, index){
         const newMan = {
                 anchor: 'human',
                 text: '张三丰',
@@ -210,7 +230,7 @@
         this.human = 'human'
         store.commit('editCell', 1,0, newMan);   
       }, 
-      deleteSiderMan(store){
+      deleteSiderMan(store, index){
         store.commit('deleteCell', 1, 0);    
       },
     }

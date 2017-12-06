@@ -1,27 +1,33 @@
 <template>
   <div class="side-guide" ref="sideGuide" :style="guideStyl">
-     <ul v-show="zoom" class="side-box" v-for="item in guideData">
-       <side-cell 
+     <ul v-show="zoom"
+      class="side-box"
+      v-for="(item, key) in guideData"
+      :key="key">
+       <side-cell
         v-show="!item.hidden"
-        :icon="item.icon" 
-        :anchor="item.anchor" 
-        :action="item.action" 
+        :icon="item.icon"
+        :index="item.index"
+        :anchor="item.anchor"
+        :action="item.action"
         :text="item.text"
         :store="store"></side-cell>
        <side-cell
         v-for="(cell, index) in item.list"
         :key="index"
-        :icon="cell.icon" 
-        :anchor="cell.anchor" 
-        :action="cell.action" 
-        :text="cell.text" 
+        :index="cell.index"
+        :icon="cell.icon"
+        :anchor="cell.anchor"
+        :action="cell.action"
+        :text="cell.text"
         :store="store"></side-cell>
-       <side-cell 
+       <side-cell
         v-for="(op, index) in item.operations"
         :key="index"
-        :icon="op.icon" 
-        :anchor="op.anchor" 
-        :action="op.action" 
+        :index="op.index"
+        :icon="op.icon"
+        :anchor="op.anchor"
+        :action="op.action"
         :text="op.text"
         :store="store"></side-cell>
      </ul>
@@ -51,7 +57,7 @@ export default {
     return {
       store,
       parentEl: null,
-      data: {},        // 数据 
+      data: {},        // 数据
       guideStyl: {},
       zoom: true
     };
@@ -103,12 +109,12 @@ export default {
         styl[this.displaySide] = '5px';
 
         if( (sH - 30) > bHeight ) {
-          styl['top'] = ((sH - bHeight)/2 - 30) + 'px'; 
+          styl['top'] = ((sH - bHeight)/2 - 30) + 'px';
         } else {
           styl['top'] = '1%';
           styl['height'] = '96%';
         }
-        
+
         this.guideStyl = styl;
       });
       if(typeof this.data['sideStore'] === 'function') {
@@ -132,7 +138,7 @@ export default {
       this.$destroy();
     }
   },
-  
+
   mounted(){
     setTimeout(()=>{ this.updateStyle(); }, 300);
     this.$on('updateStyle', this.updateStyle);

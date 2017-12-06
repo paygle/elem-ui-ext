@@ -5,6 +5,7 @@ export default {
   componentName: 'SideCell',
   mixins:[Emitter],
   props:{
+    index: null,     // 点击定位值
     icon: {
       type: String,
       default: ''
@@ -43,7 +44,7 @@ export default {
       // let that = this, direction = end > start ?  -1  : 1;
 
       // const browserGo =  function(step, start) {
-          
+
       //     if(isWebkit){
       //       scrollTop += step;
       //       that.setScrollTop(scrollTop);
@@ -74,7 +75,7 @@ export default {
       //       that. setScrollTop(that.docLayout.height);
       //     }else if(direction<0 && scrollTop <1){
       //       that. setScrollTop(scrollTop);
-      //     } 
+      //     }
       //     cancelAnimationFrame(reqHander);
       //   }
       // }
@@ -88,7 +89,7 @@ export default {
       }
 
       if(typeof this.action === 'function') {
-        this.action.call(null, this.store);
+        this.action.call(null, this.store, this.index);
         this.dispatch('SideGuide', 'updateStyle');
       }
     }
