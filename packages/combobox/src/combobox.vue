@@ -685,9 +685,11 @@
           let inputChildNodes = this.$refs.reference.$el.childNodes;
           let input = [].filter.call(inputChildNodes, item => item.tagName === 'INPUT')[0];
           const tags = this.$refs.tags;
+          let height = String(getComputedStyle(input).height).replace('px', '');
+          let hs = height < sizeMap['mini'] ? sizeMap['mini'] : height; // 修复调试定死导致变样
           input.style.height = this.selected.length === 0
-            ? (sizeMap[this.size] || 36) + 'px'
-            : Math.max(tags ? (tags.clientHeight + 6) : 0, sizeMap[this.size] || 36) + 'px';
+            ? (sizeMap[this.size] || hs) + 'px'
+            : Math.max(tags ? (tags.clientHeight + 6) : 0, sizeMap[this.size] || hs) + 'px';
           if (this.visible && this.emptyText !== false) {
             this.broadcast('ElSelectDropdown', 'updatePopper');
           }
