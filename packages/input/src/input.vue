@@ -12,7 +12,7 @@
   ]">
     <template v-if="type !== 'textarea'">
       <!-- 前置元素 -->
-      <div class="el-input-group__prepend" v-if="$slots.prepend">
+      <div class="el-input-group__prepend" :style="preWidth" v-if="$slots.prepend">
         <slot name="prepend"></slot>
       </div>
       <!-- input 图标 -->
@@ -33,7 +33,7 @@
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
-        :style="customCrtStyl"
+        :style="[customCrtStyl, fixedChrome]"
         @mouseover="inputMSEnter"
         @mouseout="inputMSOut"
         @keydown="fixIeReadonly"
@@ -65,7 +65,7 @@
   import emitter from 'element-ui/src/mixins/emitter';
   import calcTextareaHeight from './calcTextareaHeight';
   import merge from 'element-ui/src/utils/merge';
-  import { getFloatNumber, createDomElement, isOwnEmpty } from 'element-ui/src/utils/funcs';
+  import { getFloatNumber, createDomElement, isOwnEmpty, Browser } from 'element-ui/src/utils/funcs';
 
   const getMaxMinVal = function(value, max, min, type){
     if(type !== "string" && value !== "" && value !== "-"){
@@ -127,6 +127,7 @@
         type: [Number, String],
         default: -1
       },
+      prependWidth: String, // 前置宽度
       parentValue: null,   // 父组件值
       getFillStyl: Function,         // 获取自定义组件配色
       value: [String, Number],
@@ -173,6 +174,20 @@
       },
       textareaStyle() {
         return merge({}, this.textareaCalcStyle, { resize: this.resize });
+      },
+
+      fixedChrome() {
+        let bws = new Browser();
+        if (bws.browser === 'Chrome') {
+          return {height: '100%'};
+        }
+        return {};
+      },
+      preWidth() {
+        if (this.prependWidth) {
+          return {width: this.prependWidth};
+        }
+        return {};
       },
       customCrtStyl() {
         if (typeof this.customStyl === 'object' && !isOwnEmpty(this.customStyl)) {

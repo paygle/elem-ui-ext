@@ -788,6 +788,7 @@ export default {
 |  max        |  最大值           |   Number    |          ——        |     ——   |
 |  min        |  最小值           |   Number    |          ——        |     ——   |
 |  precision  |  小数精度位数      |   Number    |          ——        |   0 |
+| prepend-width |  前置宽度       |   String    |          ——        |     —— |
 |  roundoff   | 是否四舍五入取值   |   Boolean    |         ——        |   false |
 | tip-disabled | 是否禁用tootip   |   Boolean    |         ——        |   false |
 | valid-item-name | 单组件验证组件名称   |   String   |         ——     |   ValidItem |
