@@ -12,7 +12,9 @@
   ]">
     <template v-if="type !== 'textarea'">
       <!-- 前置元素 -->
-      <div class="el-input-group__prepend" :style="preWidth" v-if="$slots.prepend">
+      <div class="el-input-group__prepend"
+        v-if="$slots.prepend"
+        :style="[preWidth, fixedFirefox]">
         <slot name="prepend"></slot>
       </div>
       <!-- input 图标 -->
@@ -79,6 +81,7 @@
     }
     return value;
   };
+  const bws = new Browser();
 
   export default {
     name: 'ElInput',
@@ -175,11 +178,15 @@
       textareaStyle() {
         return merge({}, this.textareaCalcStyle, { resize: this.resize });
       },
-
       fixedChrome() {
-        let bws = new Browser();
         if (bws.browser === 'Chrome') {
           return {height: '100%'};
+        }
+        return {};
+      },
+      fixedFirefox() {
+        if (bws.browser === 'Firefox') {
+          return {overflow: 'hidden'};
         }
         return {};
       },

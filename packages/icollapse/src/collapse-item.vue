@@ -11,7 +11,7 @@
     </div>
     <el-collapse-transition>
       <div class="el-collapse-item__wrap" v-show="isActive">
-        <div class="el-collapse-item__content">
+        <div ref="itemctt" class="el-collapse-item__content">
           <slot></slot>
         </div>
       </div>
@@ -45,7 +45,8 @@ export default {
       angleLeft: {},
       orginAngleLeft: '',
       labelWidth: {},
-      orginLabelWidth: ''
+      orginLabelWidth: '',
+      hasContent: true
     };
   },
 
@@ -61,7 +62,7 @@ export default {
 
   computed: {
     isActive() {
-      return this.$parent.activeNames.indexOf(this.name) > -1;
+      return this.hasContent && this.$parent.activeNames.indexOf(this.name) > -1;
     }
   },
 
@@ -97,7 +98,7 @@ export default {
         let CnText = text.match(regxCn), Cnlen = CnText ? CnText.length : 0;
         let EnText = text.match(regxEn), Enlen = EnText ? EnText.length : 0;
         let fontSize = this.getNumberValue(labelNode, 'font-size') + 1;
-        let cw, cpWidth = fontSize * Cnlen + fontSize * Enlen / 2;
+        let cw, cpWidth = fontSize * Cnlen + fontSize * Enlen / 2 + 20;
         let BottomLeft = this.getNumberValue(bottomNode, 'left');
         let AngleLeft = this.getNumberValue(angleNode, 'left');
         let LabelWidth = this.getNumberValue(labelNode, 'width');
@@ -132,6 +133,8 @@ export default {
       this.orginAngleLeft = this.getNumberValue(angleNode, 'left');
       this.orginLabelWidth = this.getNumberValue(labelNode, 'width');
       this.computedStyle();
+      //无内容不展开
+      this.hasContent = this.$refs.itemctt && this.$refs.itemctt.innerHTML !== '';
     });
   }
 };

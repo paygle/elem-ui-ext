@@ -3,7 +3,7 @@
      <ul v-show="zoom"
       class="side-box"
       v-for="(item, key) in guideData"
-      :key="key">
+      :key="'item' + key">
        <side-cell
         v-show="!item.hidden"
         :icon="item.icon"
@@ -14,7 +14,7 @@
         :store="store"></side-cell>
        <side-cell
         v-for="(cell, index) in item.list"
-        :key="index"
+        :key="'cell' + index"
         :index="cell.index"
         :icon="cell.icon"
         :anchor="cell.anchor"
@@ -23,7 +23,7 @@
         :store="store"></side-cell>
        <side-cell
         v-for="(op, index) in item.operations"
-        :key="index"
+        :key="'op' + index"
         :index="op.index"
         :icon="op.icon"
         :anchor="op.anchor"

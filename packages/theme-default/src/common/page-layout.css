@@ -10,9 +10,7 @@ div .el-input-number__increase {
   width: 26px;
   line-height: 24px;
 }
-.el-input-group__prepend{
-  overflow: hidden;
-}
+
 .el-input-group__prepend .el-select{
   width: auto;
 }
