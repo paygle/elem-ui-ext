@@ -575,12 +575,15 @@ export const UniqueEditArray = (existList, newList, delList, editList) => {
  * 比较两个纯JS对象（不包含函数的对象）的属性值是否相等
  * @one [ Object ]  需要比较的第一个对象
  * @two [ Object ]  需要比较的第二个对象
+ * @ignore [Array]  忽略比较的字段
  * 返回 Boolean
  */
-export const ObjectPlainIsEqual = (one, two) => {
+export const ObjectPlainIsEqual = (one, two, ignore) => {
   let oneType = TypeOf(one);
   let twoType = TypeOf(two);
   let equal = true, v;
+  ignore = ignore || [];
+
   // g 集合是否包含 s 集合内容且相等
   function subset(g, s) {
     for (let i in g) {
@@ -592,8 +595,10 @@ export const ObjectPlainIsEqual = (one, two) => {
           } else {
             equal = false;
           }
-        } else if (TypeOf(v) !== 'Function') {
+        } else if (TypeOf(v) !== 'Function' && ignore.indexOf(i) < 0) {
           if (v !== s[i]) equal = false;
+        } else if (ignore.indexOf(i) > -1) {
+          equal = true;
         } else {
           throw new Error('ObjectPlainIsEqual Type ' + v + ' error.');
         }
