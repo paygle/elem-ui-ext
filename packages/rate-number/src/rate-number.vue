@@ -4,6 +4,7 @@
     @blur="blurChange"
     type="text"
     :name="name"
+    :tabindex="tabindex"
     :placeholder="placeholder"
     :validate-event="false"
     :disabled="disabled"
@@ -40,6 +41,7 @@ export default{
       type: String,
       default: 'ValidItem'
     },
+    tabindex: null,
     isEmpty: Boolean,    // 默认是否可以为空
     placeholder: String,
     size: String,
@@ -79,7 +81,7 @@ export default{
       currentValue: 0,
       oldValue: 0,
       modelValue: 0,
-      rateIcon: 'el-icon-percent' 
+      rateIcon: 'el-icon-percent'
     };
   },
   watch:{
@@ -120,7 +122,7 @@ export default{
         } else {
 
           pv = "";
-         
+
         }
 
         this.modelValue = n;
@@ -147,7 +149,7 @@ export default{
     getSizeNumber(val){
       if(val === ""){
         return "";
-      }else if(this.getRate() === 'percent'){ 
+      }else if(this.getRate() === 'percent'){
         return math.div(this.setPrecision(val), 100);
       }else{
         return math.div(this.setPrecision(val), 1000);
@@ -173,9 +175,9 @@ export default{
     },
     setCurrentValue(value) {
       if(!isNaN(value) && value !== ""){
-      
+
         value = Number(value);
-      
+
         let pv = this.getRateValue(value);
 
         if (pv === this.currentValue) return;

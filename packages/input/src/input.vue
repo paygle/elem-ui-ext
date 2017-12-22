@@ -32,6 +32,7 @@
         v-if="type !== 'textarea'"
         class="el-input__inner"
         v-bind="$props"
+        :tabindex="tabindex"
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
@@ -57,6 +58,7 @@
       @input="handleInput"
       ref="textarea"
       v-bind="$props"
+      :tabindex="tabindex"
       :style="[textareaStyle, customCrtStyl]"
       @focus="handleFocus"
       @blur="handleBlur">
@@ -71,7 +73,7 @@
 
   const getMaxMinVal = function(value, max, min, type){
     if(type !== "string" && value !== "" && value !== "-"){
-      if(isNaN(value)) { value = 0; } 
+      if(isNaN(value)) { value = 0; }
       if(typeof max !== "undefined" && !isNaN(max) && value > max) {
         value = max;
       }
@@ -109,6 +111,7 @@
     },
 
     props: {
+      tabindex: null,
       validItemName: {     // 使用 valid-item组件时的组件名称
         type: String,
         default: 'ValidItem'
@@ -257,7 +260,7 @@
           that.tipTimeHander = setTimeout(()=>{
             pos = inputEl.getBoundingClientRect();
             gapw = that.notifyWidth > 0 ? (that.notifyWidth - inputWidth)/2 : 0;
-            
+
             if(isParentText) color = 'red';
             style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
 
@@ -350,7 +353,7 @@
         this.$emit('input', value);
         this.setCurrentValue(value);
         this.$emit('change', value);
-        this.$emit('any-change', value);    // 任何修改都调用  
+        this.$emit('any-change', value);    // 任何修改都调用
         this.$emit('blur', event);
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.blur', [this.currentValue]);

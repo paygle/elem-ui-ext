@@ -6,6 +6,7 @@
     :disabled="disabled"
     :size="size"
     :id="id"
+    :tabindex="tabindex"
     :parent-value="value"
     :get-fill-styl="getFillStyl"
     v-clickoutside="handleClose"
@@ -215,6 +216,7 @@ export default {
       type: String,
       default: 'date'
     },
+    tabindex: null,
     size: String,
     format: String,
     readonly: Boolean,

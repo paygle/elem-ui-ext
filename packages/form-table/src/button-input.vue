@@ -1,8 +1,9 @@
 <template>
   <div class="button-input">
-    <el-input 
+    <el-input
         :type="type"
         :name="name"
+        :tabindex="tabindex"
         :placeholder="placeholder"
         :disabled="disabledInput"
         :readonly="readonly"
@@ -31,9 +32,10 @@ export default{
   components:{
     ElInput,
     ElButton
-  },         
+  },
   props:{
     value: [String, Number],
+    tabindex: null,
     placeholder: String,
     size: String,
     readonly: Boolean,

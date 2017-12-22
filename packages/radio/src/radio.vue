@@ -16,6 +16,7 @@
         @focus="focus = true"
         @blur="focus = false"
         :name="name"
+        :tabindex="tabindex"
         :disabled="isDisabled">
     </span>
     <span class="el-radio__label">
@@ -39,6 +40,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       value: {},
       label: {},
       disabled: Boolean,
@@ -54,7 +56,7 @@
     computed: {
 
       ie9styl() { // ÐÞ¸´IE9ÑùÊ½
-        if(navigator.appName == "Microsoft Internet Explorer" && 
+        if(navigator.appName == "Microsoft Internet Explorer" &&
           navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
           return 'fix-ie9';
         }
@@ -99,7 +101,7 @@
     mounted() {
       this.$nextTick(() =>{
         if (!this.isGroup) {
-          this.dispatch('ElForm', 'compare-change', this); 
+          this.dispatch('ElForm', 'compare-change', this);
           this.dispatch(this.validItemName, 'compare-change', this);
         }
       });

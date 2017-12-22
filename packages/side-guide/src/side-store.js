@@ -12,6 +12,7 @@ const SideStore = function (sider, initState={}){
     align: initState.align,              // 文字对齐   left | center | right
     displaySide: initState.displaySide,  // 菜单显示位置  left | right
     setGuider: initState.setGuider,      // 设置实例数据对象回调函数
+    expand: initState.expand,            // 默认是否展开
     data: []
   };
 
@@ -23,10 +24,10 @@ const SideStore = function (sider, initState={}){
 };
 
 SideStore.prototype.mutations = {
-  
+
   setData(states, o) {
     states.data = o.data;
-    states.setGuider = o.setGuider;
+    states.expand = typeof o.expand === 'undefined' ? true : o.expand; // 默认是否展开
     states.width = o.width || '90px';                // 菜单宽度
     states.align = o.align || 'center';              // 文字对齐   left | center | right
     states.displaySide = o.displaySide || 'right';   // 菜单显示位置  left | right

@@ -4,6 +4,7 @@
       ref="input"
       :value="value"
       :disabled="disabled"
+      :tabindex="tabindex"
       :placeholder="placeholder"
       :name="name"
       :size="size"
@@ -57,6 +58,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       propName: String,     // 默认筛选属性名
       popWidth: String,     // 弹出框宽度
       popperClass: String,
@@ -91,12 +93,12 @@
     },
     watch: {
       suggestionVisible(val) {
-        this.broadcast('ListCompleteSuggestions', 'visible', 
+        this.broadcast('ListCompleteSuggestions', 'visible',
         [val, this.$refs.input.$refs.input.offsetWidth]);
       }
     },
     methods: {
-      getData(queryString) { 
+      getData(queryString) {
         this.loading = true;
         this.fetchSuggestions(queryString, (suggestions) => {
           this.loading = false;
@@ -108,7 +110,7 @@
         });
       },
       handleClose() {
-        this.isFocus = false;  
+        this.isFocus = false;
       },
       handleChange(value) {
         if(this.value !== value){
@@ -150,8 +152,8 @@
       this.$on('item-click', item => {
         this.select(item);
       });
-      this.$nextTick(() =>{ 
-        this.dispatch('ElForm', 'compare-change', this); 
+      this.$nextTick(() =>{
+        this.dispatch('ElForm', 'compare-change', this);
         this.dispatch(this.validItemName, 'compare-change', this);
       });
     },

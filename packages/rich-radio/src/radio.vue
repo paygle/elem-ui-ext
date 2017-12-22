@@ -9,7 +9,7 @@
     >
     <span v-if="layout==='tick'" class="rich-radio__inner">
       <i :class="'el-icon-' + icon" v-if="icon"></i
-      ><span 
+      ><span
       class="rich-radio__label"
       ><slot></slot
       ><template v-if="!$slots.default">{{label}}</template>
@@ -24,6 +24,7 @@
       @blur="focus = false"
       @click="_=> model = model"
       :name="name"
+      :tabindex="tabindex"
       :disabled="isDisabled">
     </span>
   </label>
@@ -43,6 +44,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       value: {},
       label: {},
       icon: String,
@@ -112,9 +114,9 @@
     },
     mounted() {
       if (!this.isGroup) {
-        this.$nextTick(() => { 
+        this.$nextTick(() => {
           this.dispatch('ElForm', 'compare-change', this);
-          this.dispatch(this.validItemName, 'compare-change', this); 
+          this.dispatch(this.validItemName, 'compare-change', this);
         });
       }
     }

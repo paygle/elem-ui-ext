@@ -3,6 +3,7 @@
     @click="handleClick"
     :autofocus="autofocus"
     :type="type"
+    :tabindex="tabindex"
     :native-type="nativeType"
     :size="size"
     :icon="icon"
@@ -27,6 +28,7 @@ export default {
       type: String,
       default: 'default'
     },
+    tabindex: null,
     size: String,
     icon: {
       type: String,

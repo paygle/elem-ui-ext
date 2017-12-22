@@ -10,9 +10,9 @@
     >
       <span v-if="layout==='tick'" class="rich-checkbox__inner">
         <i :class="'el-icon-' + icon" v-if="icon"></i
-        ><span class="rich-checkbox__label" 
+        ><span class="rich-checkbox__label"
           v-if="$slots.default || label"
-        ><slot></slot><template 
+        ><slot></slot><template
           v-if="!$slots.default">{{label}}</template>
         </span>
       </span>
@@ -25,6 +25,7 @@
         :true-value="trueLabel"
         :false-value="falseLabel"
         v-model="model"
+        :tabindex="tabindex"
         @change="handleChange"
         @focus="focus = true"
         @blur="focus = false">
@@ -32,6 +33,7 @@
         v-else
         class="rich-checkbox__original"
         type="checkbox"
+        :tabindex="tabindex"
         :disabled="disabled"
         :value="label"
         :name="name"
@@ -131,6 +133,7 @@
           return 'tick';
         }
       },
+      tabindex: null,
       indeterminate: Boolean,
       disabled: Boolean,
       checked: Boolean,
@@ -162,11 +165,11 @@
 
     created() {
       this.checked && this.addToStore();
-      
+
       if (!this.isGroup) {
-        this.$nextTick(() => { 
+        this.$nextTick(() => {
           this.dispatch('ElForm', 'compare-change', this);
-          this.dispatch(this.validItemName, 'compare-change', this); 
+          this.dispatch(this.validItemName, 'compare-change', this);
         });
       }
     }

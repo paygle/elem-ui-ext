@@ -98,15 +98,13 @@ const getDefaultColumn = function(type, options) {
 
 const DEFAULT_RENDER_CELL = function(h, { row, column }) {
   const property = column.property;
+  const value = property && property.indexOf('.') === -1
+    ? row[property]
+    : getValueByPath(row, property);
   if (column && column.formatter) {
-    return column.formatter(row, column);
+    return column.formatter(row, column, value);
   }
-
-  if (property && property.indexOf('.') === -1) {
-    return row[property];
-  }
-
-  return getValueByPath(row, property);
+  return value;
 };
 
 export default {
@@ -146,6 +144,7 @@ export default {
     fixed: [Boolean, String],
     formatter: Function,
     selectable: Function,
+    colIndex: [Number, String],       // 列序号，辅助 tabindex时使用
     reserveSelection: Boolean,
     filterMethod: Function,
     filteredValue: Array,
@@ -247,6 +246,7 @@ export default {
       showOverflowTooltip: this.showOverflowTooltip || this.showTooltipWhenOverflow,
       formatter: this.formatter,
       selectable: this.selectable,
+      colIndex: this.colIndex,
       reserveSelection: this.reserveSelection,
       fixed: this.fixed === '' ? true : this.fixed,
       filterMethod: this.filterMethod,
@@ -266,9 +266,14 @@ export default {
     this.columnConfig = column;
 
     let renderCell = column.renderCell;
-    let _self = this;
+    let _self = this, hiddenExpandIcon = '';
 
     if (type === 'expand') {
+       // 自定义隐藏展开式编辑
+      if(this.owner.store.table.expandIconHidden){
+        column.realWidth = 1;
+        hiddenExpandIcon = 'hidden-expand-icon';
+      }
       owner.renderExpanded = function(h, data) {
         return _self.$scopedSlots.default
           ? _self.$scopedSlots.default(data)
@@ -276,13 +281,17 @@ export default {
       };
 
       column.renderCell = function(h, data) {
-        return <div class="cell">{ renderCell(h, data, this._renderProxy) }</div>;
+        return <div class={'cell ' + hiddenExpandIcon}>{ renderCell(h, data, this._renderProxy) }</div>;
       };
 
       return;
     }
 
     column.renderCell = function(h, data) {
+
+      let {row, store} = data;
+      data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {};
+
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
         renderCell = function() {
@@ -308,8 +317,10 @@ export default {
       }
 
       return _self.showOverflowTooltip || _self.showTooltipWhenOverflow
-        ? <div class="cell el-tooltip" style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ _self.convertCodelist( renderCell(h, data) ) }</div>
-        : <div class="cell">{ _self.convertCodelist( renderCell(h, data) ) }</div>;
+        ? <div
+          class={ 'cell el-tooltip ' + 'row' + data.$index + data.column.property }
+          style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ _self.convertCodelist( renderCell(h, data) ) }</div>
+        : <div class="cell" class={ 'row' + data.$index + data.column.property }>{ _self.convertCodelist( renderCell(h, data) ) }</div>;
     };
   },
 
@@ -409,7 +420,7 @@ export default {
     } else {
       columnIndex = [].indexOf.call(parent.$el.children, this.$el);
     }
-
+    owner.store.setColIndexOrder(this.colIndex, this.prop);
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
   },
 

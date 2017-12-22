@@ -199,6 +199,35 @@ const tableAddressChanged = function (states, row, column, val) {
   }
   return changed;
 };
+
+const setTabindex = function(direction = 'vertical', startindex = 1, orginData = [], colIndexs = []) {
+
+  if (!orginData.length) return [];
+
+  let tabindexMap = JSON.parse(JSON.stringify(orginData));
+  let colIdx = [], keyidx, len = tabindexMap.length;
+  // default order map
+  tabindexMap.forEach((item)=>{
+    Object.keys(item).forEach((key)=>{ item[key] = 0; })
+  });
+
+  if (direction === 'vertical') {
+
+    for (let i = 1; i < colIndexs.length; i++) {
+      if (colIndexs[i]) { colIdx.push(colIndexs[i]); }
+    }
+    for (let k = 0; k < len; k++) {
+      Object.keys(tabindexMap[k]).forEach((key)=>{
+        keyidx = colIdx.indexOf(key);
+        if (keyidx > -1) {
+          tabindexMap[k][key] = len * keyidx + k + startindex;
+        }
+      });
+    }
+  }
+  return tabindexMap;
+};
+
 const TableStore = function(table, initialState = {}) {
   if (!table) {
     throw new Error('Table is required.');
@@ -207,6 +236,9 @@ const TableStore = function(table, initialState = {}) {
 
   this.states = {
     rowKey: null,
+    _tabidxs: [],
+    direction: 'vertical',
+    colIndexOrder:[],
     _columns: [],
     originColumns: [],
     columns: [],
@@ -250,6 +282,16 @@ const TableStore = function(table, initialState = {}) {
       this.states[prop] = initialState[prop];
     }
   }
+};
+
+TableStore.prototype.setColIndexOrder = function(index, columnName) {
+  if (index && columnName) this.states.colIndexOrder[index] = columnName;
+};
+
+TableStore.prototype.updateTabindex = function(startindex, direction) {
+  startindex = startindex || 1;
+  direction = direction || this.states.direction;
+  this.states._tabidxs = setTabindex(direction, startindex, this.states.data, this.states.colIndexOrder);
 };
 
 TableStore.prototype.mutations = {
@@ -310,8 +352,6 @@ TableStore.prototype.mutations = {
   },
   // 数据修改比较
   modifiedCompare(states) {
-    // console.log('数据修改比较...');
-    // console.time('modifiedCompare');
     let row,itemStyl,table = this.table;
     // 比较对象是否相等
     function isEqualObj(item$1, item$2) {
@@ -432,6 +472,7 @@ TableStore.prototype.mutations = {
     let index = states.data.indexOf(row);
     if (index !== -1) {
       states.data.splice(index, 1);
+      store.updateTabindex(store.table.startTabindex);
       store.commit('compareDel', index);
     }
   },

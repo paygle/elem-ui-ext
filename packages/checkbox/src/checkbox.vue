@@ -14,6 +14,7 @@
         class="el-checkbox__original"
         type="checkbox"
         :name="name"
+        :tabindex="tabindex"
         :disabled="disabled"
         :true-value="trueLabel"
         :false-value="falseLabel"
@@ -25,6 +26,7 @@
         v-else
         class="el-checkbox__original"
         type="checkbox"
+        :tabindex="tabindex"
         :disabled="disabled"
         :value="label"
         :name="name"
@@ -119,6 +121,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       value: {},
       label: {},
       indeterminate: Boolean,
@@ -154,7 +157,7 @@
       this.checked && this.addToStore();
       if (!this.isGroup) {
         this.$nextTick(() => {
-          this.dispatch('ElForm', 'compare-change', this); 
+          this.dispatch('ElForm', 'compare-change', this);
           this.dispatch(this.validItemName, 'compare-change', this);
         });
       }

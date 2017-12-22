@@ -13,6 +13,7 @@
       type="radio"
       v-model="value"
       :name="name"
+      :tabindex="tabindex"
       :disabled="isDisabled">
     <span class="el-radio-button__inner" :style="value === label ? activeStyle : null">
       <slot></slot>
@@ -27,6 +28,7 @@
     props: {
       label: {},
       disabled: Boolean,
+      tabindex: null,
       name: String
     },
     computed: {

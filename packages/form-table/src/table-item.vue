@@ -136,7 +136,7 @@
             callback(errors);
           });
         }
-        
+
         let p = this.prop;
         if(p.column.property){
           if(this.validateState != 'error'){
@@ -148,7 +148,7 @@
 
         this.dispatch('FormTable', 'err-change');
       },
-    
+
       onFieldBlur() {
         this.validate('blur');
       },

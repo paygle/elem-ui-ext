@@ -5,6 +5,7 @@
       class="el-switch__input"
       :class="{ 'allow-focus': allowFocus }"
       type="checkbox"
+      :tabindex="tabindex"
       @change="handleChange"
       @focus="handleFocus"
       @blur="handleBlur"
@@ -48,6 +49,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       value: {
         type: [Boolean, String, Number],
         default: false

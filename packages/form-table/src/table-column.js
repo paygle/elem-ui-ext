@@ -54,7 +54,7 @@ const getDisabledVal = function(row, column, store, $index, type) {
   if (isDisField) {
     if (row[disableField.field] === trueVal) return true;
     return type === 'op' ? getCallOp() : getCallEdit();
-  } 
+  }
   return type === 'op' ? getCallOp() : getCallEdit();
 };
 
@@ -99,7 +99,7 @@ const forced = {
     className: 'el-table__expand-column'
   },
   manual: {
-    renderHeader: function(h, {column}) {  
+    renderHeader: function(h, {column}) {
       return column.label || '';
     },
     renderCell: function(h, data, self) {
@@ -111,7 +111,7 @@ const forced = {
     sortable: false
   },
   operate: {
-    renderHeader: function(h, { row, column, store}) {  
+    renderHeader: function(h, { row, column, store}) {
       let tableData = store.states.data;
       return (
         <op-box
@@ -127,7 +127,7 @@ const forced = {
           store  ={ store }/>
       );
     },
-    renderCell: function(h, { row, column, store, $index}) { 
+    renderCell: function(h, { row, column, store, $index}) {
       let rowIndex = store.states.data.indexOf(row);
       let tableData = store.states.data;
 
@@ -151,8 +151,11 @@ const forced = {
   input: { // 文本框类型
     renderCell: function(h, { row, column, store, $index}, that) {
       let option = column.inputOption || {};
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
-        <el-input type= { option.type }
+        <el-input
+          type= { option.type }
+          tabindex={ store.states._tabidxs[$index][column.property] }
           precision={ option.precision }
           roundoff={ option.roundoff }
           histype={ option.histype }
@@ -176,8 +179,11 @@ const forced = {
   rate: { // 文本框百分比千分比类型
     renderCell: function(h, { row, column, store, $index}, that) {
       let option = column.inputOption || {};
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
-        <rate-number type= { option.type }
+        <rate-number
+          type= { option.type }
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property] }
           rate={ column.useRate }
           name= { option.name }
@@ -200,8 +206,11 @@ const forced = {
   fnumber: { // 数字格式化
     renderCell: function(h, { row, column, store, $index}, that) {
       let option = column.inputOption || {};
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
-        <format-number type= { option.type }
+        <format-number
+          type= { option.type }
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property] }
           name= { option.name }
           isEmpty={ option.isEmpty }
@@ -226,8 +235,10 @@ const forced = {
    labelBtn: { // 标签翻译加按钮类型
     renderCell: function(h, { row, column, store, $index}, that) {
       let option = column.labelOption || {};
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
         <button-label
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property] }
           formatter={ column.formatter }
           dictId= { option.dictId || column.dictId }
@@ -250,8 +261,11 @@ const forced = {
   inputBtn: { // 文本框加按钮类型
     renderCell: function(h, { row, column, store, $index}, that) {
       let option = column.inputBtnOption || {};
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
-        <button-input type= { option.type }
+        <button-input
+          type= { option.type }
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property] }
           formatter={ column.formatter }
           name= { option.name }
@@ -278,7 +292,7 @@ const forced = {
     sortable: false
   },
   checkbox: { // 检查类型
-      renderHeader: function(h, { column, store }) { 
+      renderHeader: function(h, { column, store }) {
         if (!store.states.headerChecks.hasOwnProperty(column.property)){
           store.states.headerChecks[column.property] = false;
         }
@@ -292,10 +306,12 @@ const forced = {
       },
       renderCell: function(h,  { row, column, store, $index }) {
         let option = column.checkboxOption || {};
+        store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
         setTimeout(function(){  store.commit('checkAllboxChanged', column); });
-          
+
         return (column.boxStyl && column.boxStyl === 'rich')
           ? <rich-checkbox
+            tabindex={ store.states._tabidxs[$index][column.property] }
             value={ row[column.property] }
             checked = { option.checked }
             name = { option.name }
@@ -307,6 +323,7 @@ const forced = {
               { option.marked || row[column.property] }
             </rich-checkbox>
           :<el-checkbox
+            tabindex={ store.states._tabidxs[$index][column.property] }
             value={ row[column.property] }
             checked = { option.checked }
             name = { option.name }
@@ -320,20 +337,22 @@ const forced = {
     sortable: false
   },
   switch: { // 检查类型
-      renderCell: function(h,  { row, column, store, $index }) { 
+      renderCell: function(h,  { row, column, store, $index }) {
         let option = column.switchOption || {};
+        store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
         return (
           <custom-switch
+            tabindex={ store.states._tabidxs[$index][column.property] }
             value={ row[column.property] }
             name = { option.name }
             width = { option.width }
             oIconClass = { option.onIconClass }
             offIconClass = { option.offIconClass }
             oText = { option.onText }
-            offText = { option.offText } 
-            oColor = { option.onColor } 
+            offText = { option.offText }
+            oColor = { option.onColor }
             offColor = { option.offColor }
-            oValue = { option.onValue } 
+            oValue = { option.onValue }
             offValue = { option.offValue }
             disabled={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colSwitchChanged', row, column, val); } }>
@@ -343,12 +362,14 @@ const forced = {
     sortable: false
   },
   select: { //select类型
-    renderCell: function (h, { row, column, store, $index }, this$1) { 
+    renderCell: function (h, { row, column, store, $index }, this$1) {
       // 动态加载Option
       let option = setOptionData(column.setColOption, row, column, $index, column.selectOption);
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
         <el-select
           translated = { column.translated === 'select' }
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property]}
           optionsData={ column.optionsData }
           name = { option.name }
@@ -369,11 +390,13 @@ const forced = {
     sortable: false
   },
   date: { // 日期类型
-    renderCell: function(h,  { row, column, store, $index }) { 
+    renderCell: function(h,  { row, column, store, $index }) {
       let option = column.dateOption || {};
       let dataType = option.dataType || 'string';
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
         <el-date-picker
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property] }
           type = { option.type }
           dataType = { dataType }
@@ -394,8 +417,10 @@ const forced = {
   address: { // 地址类型
     renderCell: function(h,  { row, column, store, $index }) {
       let option = column.addressOption || {};
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
         <address-box
+          tabindex={ store.states._tabidxs[$index][column.property] }
           translated = { column.translated === 'address' }
           value = { row[column.property] }
           resdata = { column.addressData }
@@ -412,8 +437,10 @@ const forced = {
     renderCell: function (h, { row, column, store, $index }, this$1) {
       // 动态加载Option
       let option = setOptionData(column.setColOption, row, column, $index, column.comboboxOption);
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
       return (
         <combobox
+          tabindex={ store.states._tabidxs[$index][column.property] }
           value={ row[column.property]}
           dictId = { option.dictId || column.dictId }
           forceRefresh = { option.forceRefresh }
@@ -431,7 +458,7 @@ const forced = {
           multiple = { option.multiple }
           placeholder = { option.placeholder }
           disabled={ getDisabledVal(row, column, store, $index) }
-          onInput={ (val) => { store.commit('colSelectChanged', row, column, val); } }>          
+          onInput={ (val) => { store.commit('colSelectChanged', row, column, val); } }>
         </combobox>
       );
     },
@@ -477,7 +504,7 @@ function FnTrue(){ return true; }
 
 export default {
   name: 'FormTableColumn',
-  componentName: 'FormTableColumn', 
+  componentName: 'FormTableColumn',
   props: {
     type: {
       type: String,
@@ -512,25 +539,26 @@ export default {
     fixed: [Boolean, String],
     formatter: Function,
     selectable: Function,
+    colIndex: [Number, String],       // 列序号，辅助 tabindex时使用
     addVisiable: {                // 隐藏 添加按钮
       type: Function,
       default(){
         return FnTrue;
       }
-    }, 
-    deleteVisiable: {            // 隐藏 删除按钮 
+    },
+    deleteVisiable: {            // 隐藏 删除按钮
       type: Function,
       default(){
         return FnTrue;
       }
-    } ,            
-    saveVisiable: {               // 隐藏 保存按钮 
+    } ,
+    saveVisiable: {               // 隐藏 保存按钮
       type: Function,
       default(){
         return FnTrue;
       }
-    } ,              
-    editVisiable: {                // 隐藏 动作按钮 
+    } ,
+    editVisiable: {                // 隐藏 动作按钮
       type: Function,
       default(){
         return FnTrue;
@@ -661,6 +689,7 @@ export default {
       formatter: this.formatter,
       selectable: this.selectable,
 
+      colIndex: this.colIndex,
       translated: this.translated,
       useRate: this.useRate,
       setColOption: this.setColOption,
@@ -689,7 +718,7 @@ export default {
       selectOption: this.selectOption,          // select类型初始化参数
       optionsData: this.optionsData,            // 初始化select列表数据
       dateOption: this.dateOption,              // 日期控件初始化参数
-      pickerOptions: this.pickerOptions, 
+      pickerOptions: this.pickerOptions,
       addressOption: this.addressOption,        // 地址类型初始化参数
       addressData: this.addressData,            // 初始化地址数据
       comboboxOption: this.comboboxOption,        // combobox类型初始化参数
@@ -736,7 +765,8 @@ export default {
 
     column.renderCell = function(h, data) {
 
-      let {row, column} = data;
+      let {row, column, store} = data;
+      data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {};
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
         renderCell = function() {
@@ -865,7 +895,7 @@ export default {
     } else {
       columnIndex = [].indexOf.call(parent.$el.children, this.$el);
     }
-
+    owner.store.setColIndexOrder(this.colIndex, this.prop);
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
   }
 };

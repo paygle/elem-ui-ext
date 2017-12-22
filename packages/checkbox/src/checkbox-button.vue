@@ -13,6 +13,7 @@
       class="el-checkbox-button__original"
       type="checkbox"
       :name="name"
+      :tabindex="tabindex"
       :disabled="disabled"
       :true-value="trueLabel"
       :false-value="falseLabel"
@@ -25,6 +26,7 @@
       class="el-checkbox-button__original"
       type="checkbox"
       :name="name"
+      :tabindex="tabindex"
       :disabled="disabled"
       :value="label"
       v-model="model"
@@ -32,7 +34,7 @@
       @focus="focus = true"
       @blur="focus = false">
 
-    <span class="el-checkbox-button__inner" 
+    <span class="el-checkbox-button__inner"
       v-if="$slots.default || label"
       :style="isChecked ? activeStyle : null">
       <slot>{{label}}</slot>
@@ -58,6 +60,7 @@
     props: {
       value: {},
       label: {},
+      tabindex: null,
       disabled: Boolean,
       checked: Boolean,
       name: String,

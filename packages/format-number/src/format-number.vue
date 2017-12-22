@@ -1,11 +1,12 @@
 <template>
   <div class="format-number">
-    <el-input 
+    <el-input
       v-model="formatValue"
       ref="inputel"
       type="text"
       @blur="blurChange"
       :name="name"
+      :tabindex="tabindex"
       :placeholder="placeholder"
       :validate-event="false"
       :disabled="disabled"
@@ -40,6 +41,7 @@ export default {
       type: [String, Number],
       default: '0'
     },
+    tabindex: null,
     getFillStyl: Function,     // 获取自定义组件配色
     isEmpty: Boolean,    // 默认是否可以为空
     placeholder: String,
@@ -161,7 +163,7 @@ export default {
           value = value.replace(/^\-/g, '');
           minus = '-';
         }
-        
+
         splitVal = String(this.setPrecision(value)).split('.');
 
         if (splitVal.length >= 2) {

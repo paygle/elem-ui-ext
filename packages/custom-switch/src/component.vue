@@ -10,6 +10,7 @@
       @blur="handleBlur"
       ref="input"
       :name="name"
+      :tabindex="tabindex"
       :true-value="ontValue"
       :false-value="offValue"
       :disabled="disabled">
@@ -48,6 +49,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       value: {
         type: [Boolean, String, Number],
         default: true

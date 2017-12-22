@@ -14,6 +14,7 @@
       type="radio"
       v-model="value"
       :name="name"
+      :tabindex="tabindex"
       :disabled="isDisabled">
     <span class="rich-radio-button__inner" :style="value === label ? activeStyle : null">
       <slot></slot>
@@ -28,6 +29,7 @@
     props: {
       label: {},
       icon: String,
+      tabindex: null,
       disabled: Boolean,
       name: String
     },

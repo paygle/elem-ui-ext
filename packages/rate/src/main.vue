@@ -1,7 +1,8 @@
 <template>
   <div class="el-rate">
     <span
-      v-for="item in max"
+      v-for="(item, index) in max"
+      :key="index"
       class="el-rate__item"
       @mousemove="setCurrentValue(item, $event)"
       @mouseleave="resetCurrentValue"

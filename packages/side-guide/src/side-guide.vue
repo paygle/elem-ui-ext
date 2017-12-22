@@ -52,6 +52,7 @@ export default {
       width: '90px',           // 菜单宽度
       align: 'center',         // 文字对齐   left | center | right
       displaySide: 'right',    // 菜单显示位置  left | right
+      expand: true,
       setGuider: null          // 设置实例数据对象回调函数
     });
     return {
@@ -74,6 +75,9 @@ export default {
     },
     displaySide () {
       return this.store.states.displaySide;
+    },
+    expand () {
+      return this.store.states.expand;
     }
   },
   watch:{
@@ -102,13 +106,17 @@ export default {
     updateStyle() {
 
       this.$nextTick(() => {
-
-        let styl = { width: this.mWidth, textAlign: this.mAlign, overflow: 'auto'};
         let bHeight = this.getInnerHeigth();
         let sH = document.documentElement.clientHeight;
+        let styl = {
+          width: this.zoom ? this.mWidth : '30px',
+          textAlign: this.mAlign,
+          overflow: 'auto'
+        };
         styl[this.displaySide] = '5px';
-
-        if( (sH - 30) > bHeight ) {
+        if (!this.zoom) {
+          styl['top'] = '15%';
+        }else if( (sH - 30) > bHeight ) {
           styl['top'] = ((sH - bHeight)/2 - 30) + 'px';
         } else {
           styl['top'] = '1%';
@@ -132,6 +140,7 @@ export default {
       }else {
         this.guideStyl['width'] = this.mWidth;
       }
+      this.updateStyle()
     },
     doDestroy(){
       if (this.$el && this.updateStyle) off(window, 'resize', this.updateStyle);
@@ -143,6 +152,7 @@ export default {
     setTimeout(()=>{ this.updateStyle(); }, 300);
     this.$on('updateStyle', this.updateStyle);
     on(window, 'resize', this.updateStyle);
+    this.zoom = this.expand
   },
   beforDestroy(){
     off(window, 'resize', this.updateStyle);

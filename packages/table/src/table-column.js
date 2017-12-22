@@ -143,6 +143,7 @@ export default {
     fixed: [Boolean, String],
     formatter: Function,
     selectable: Function,
+    colIndex: [Number, String],       // 列序号，辅助 tabindex时使用
     reserveSelection: Boolean,
     filterMethod: Function,
     filteredValue: Array,
@@ -233,6 +234,7 @@ export default {
       showOverflowTooltip: this.showOverflowTooltip || this.showTooltipWhenOverflow,
       formatter: this.formatter,
       selectable: this.selectable,
+      colIndex: this.colIndex,
       reserveSelection: this.reserveSelection,
       fixed: this.fixed === '' ? true : this.fixed,
       filterMethod: this.filterMethod,
@@ -271,6 +273,10 @@ export default {
     }
 
     column.renderCell = function(h, data) {
+
+      let {row, store} = data;
+      data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {};
+
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
         renderCell = function() {
@@ -393,7 +399,7 @@ export default {
     } else {
       columnIndex = [].indexOf.call(parent.$el.children, this.$el);
     }
-
+    owner.store.setColIndexOrder(this.colIndex, this.prop);
     owner.store.commit('insertColumn', this.columnConfig, columnIndex, this.isSubColumn ? parent.columnConfig : null);
   }
 };

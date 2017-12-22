@@ -3,9 +3,9 @@
     <div class="lbl-txt">
     <el-tooltip :disabled="innerTipDisabled" :content="tipContent" placement="bottom" effect="light" defree>
       <span class="label-ctx" v-if="isFormatter" v-text="currentLabel"></span>
-      <dict-label 
+      <dict-label
         v-else
-        v-model="currentValue" 
+        v-model="currentValue"
         :width="width"
         :dict-id="dictId"
         :dict-params="dictParams"
@@ -14,7 +14,12 @@
       </dict-label>
     </el-tooltip>
     </div>
-    <el-button :disabled="disabled" :plain="true" type="info" @click="iconButtonClick">
+    <el-button
+      :disabled="disabled"
+      :plain="true"
+      type="info"
+      :tabindex="tabindex"
+      @click="iconButtonClick">
       <i :class="[btnIcon]"></i>
     </el-button>
   </div>
@@ -35,6 +40,7 @@ export default {
   },
   props: {
     value: [String, Number],
+    tabindex: null,
     disabled: Boolean,
     btnIcon: {
       type: String,

@@ -1,6 +1,7 @@
 <template>
   <button :disabled="disabled" class="el-button"
     @click="handleClick"
+    :tabindex="tabindex"
     :autofocus="autofocus"
     :type="nativeType"
     :class="[
@@ -39,7 +40,8 @@
       loading: Boolean,
       disabled: Boolean,
       plain: Boolean,
-      autofocus: Boolean
+      autofocus: Boolean,
+      tabindex: null
     },
 
     methods: {

@@ -5,6 +5,7 @@
     <input type="text" class="txt-box" :class="inputStyle"  v-show="!translated"
       ref="reference"
       v-model="addressLabel"
+      :tabindex="tabindex"
       :disabled="disabled"
       :style="customCrtStyl"
       @mouseover="inputMSEnter"
@@ -67,6 +68,7 @@ export default {
   },
   mixins: [Emitter],
   props: {
+    tabindex: null,
     readonly: Boolean,
     validItemName: {     // 使用 valid-item组件时的组件名称
       type: String,

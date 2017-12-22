@@ -28,6 +28,7 @@
       @keydown.down.native.prevent="decrease"
       @blur="handleBlur"
       @input="debounceHandleInput"
+      :tabindex="tabindex"
       :get-fill-styl="getFillStyl"
       :disabled="disabled"
       :size="size"
@@ -85,6 +86,7 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       step: {
         type: Number,
         default: 1

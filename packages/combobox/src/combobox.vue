@@ -5,6 +5,7 @@
     <div
       class="el-select__tags"
       v-if="multiple"
+      :tabindex="tabindex"
       @click.stop="toggleMenu"
       ref="tags"
       :style="{ 'max-width': inputWidth - 32 + 'px' }">
@@ -22,7 +23,7 @@
       </transition-group>
       <span style="padding:2px;"
         v-if="translated"
-        v-for="item in selected">
+        v-for="(item, idx) in selected" :key="idx">
         {{ item.currentLabel }}
       </span>
       <input v-show="!translated"
@@ -30,6 +31,7 @@
         class="el-select__input"
         :class="`is-${ size }`"
         @focus="visible = true"
+        :tabindex="tabindex"
         :disabled="disabled"
         :readonly="readonly"
         @keyup="managePlaceholder"
@@ -57,6 +59,7 @@
       :name="name"
       :size="size"
       :id="id"
+      :tabindex="tabindex"
       :disabled="disabled"
       :readonly="!filterable || multiple || readonly"
       :validate-event="false"
@@ -219,6 +222,7 @@
       getFillStyl: Function,           // 获取自定义组件配色
       optionsData: [Array, Object],    // Option初始化数据
       translated: Boolean,             // 是否翻译代码为中文
+      tabindex: null,
       id: String,
       size: String,
       readonly: Boolean,

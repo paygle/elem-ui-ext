@@ -3,6 +3,7 @@
     <el-input
       ref="input"
       v-bind="$props"
+      :tabindex="tabindex"
       @compositionstart.native="handleComposition"
       @compositionupdate.native="handleComposition"
       @compositionend.native="handleComposition"
@@ -59,6 +60,7 @@
           };
         }
       },
+      tabindex: null,
       popperClass: String,
       placeholder: String,
       disabled: Boolean,

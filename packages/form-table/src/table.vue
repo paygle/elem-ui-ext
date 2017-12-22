@@ -232,6 +232,11 @@
 
       disableField: [String, Object] ,   //是否使用禁用字段
 
+      startTabindex: {   // tabindex开始数值
+        type: Number,
+        default: 1
+      },
+
       expandOnlyOne: {    // 同时仅允许打开一行数据
         type: Boolean,
         default: false
@@ -416,79 +421,20 @@
         if (!field) { throw new Error('must call validateField with valid prop string!'); }
         field.validate('', cb);
       },
+      // 组合键处理
+      keyRelease(e) {
+        if (e.keyCode === 17) this.ctrlKey = false;
+      },
       // 跳转到输入框
       jumpToFocus(e) {
-        //t38 d40
-        if (e.keyCode === 38) {
-          this.gotoNextFocus(this.getCurrentFocusName(e.target), 'up');
-        } else if (e.keyCode === 40) {
-          this.gotoNextFocus(this.getCurrentFocusName(e.target), 'down');
+        if (e.keyCode === 17) this.ctrlKey = true;
+        if (this.ctrlKey &&  [37, 39].indexOf(e.keyCode) > -1) { // left-right
+          this.store.updateTabindex(this.startTabindex, 'h');
+          this.store.states.direction = 'h'
+        } else if (this.ctrlKey && [38, 40].indexOf(e.keyCode) > -1) { // up-down
+          this.store.updateTabindex(this.startTabindex);
+          this.store.states.direction = 'vertical'
         }
-      },
-      getCurrentFocusName(elem) {
-        if (elem) {
-          let current = elem,
-            clsName,
-            isFind,
-            r, clses,
-            splitCls = ['row'];
-          do {
-            current = current.parentNode;
-            clsName = current.parentNode.className;
-            isFind = /row\d+[a-zA-Z]+\w+/.test(clsName);
-          } while (!isFind && this.$el.contains(current));
-
-          clses = clsName.split(/\s+/);
-          for (let i = 0; i < clses.length; i++) {
-            if (/row\d+[a-zA-Z]+\w+/.test(clses[i])) {
-              clsName = clses[i];
-              break;
-            } else {
-              clsName = null;
-            }
-          }
-          if (clsName) {
-            r = clsName.replace(/row\d+/ig, '');
-            splitCls.push(clsName.replace('row', '').replace(r, ''));
-            splitCls.push(r);
-            return splitCls;
-          } else {
-            return [];
-          }
-        }
-        return [];
-      },
-      gotoNextFocus(clsParam, updw) {
-
-        if (clsParam.length !== 3) return;
-        let rowlen = this.store.states.data.length;
-        let rowindex = parseInt(clsParam[1], 10);
-        let arrow = updw === 'up' ? -1 : 1;
-        let queryElem, inputElm, times = 0, gonext;
-
-        do {
-          times++;
-          if (updw === 'up' && rowindex > 0) {
-            clsParam[1] = rowindex + arrow;
-          } else if (updw === 'up' && rowindex === 0) {
-            clsParam[1] = rowlen - 1;
-          } else if (updw === 'down' && rowindex < rowlen - 1) {
-            clsParam[1] = rowindex + arrow;
-          } else if (updw === 'down' && rowindex === rowlen - 1) {
-            clsParam[1] = 0;
-          }
-          rowindex = parseInt(clsParam[1], 10);
-          queryElem = this.$el.querySelector('.'+clsParam.join(''));
-          if (queryElem) {
-            inputElm = queryElem.querySelector('input') || queryElem.querySelector('textarea');
-            focusInput(inputElm);
-            if (inputElm && (inputElm.readonly || inputElm.disabled)) {
-              gonext = true;
-            } else {
-              gonext = false;
-            }
-          }
-        } while ((!inputElm || gonext) && times < rowlen);
       }
     },
 
@@ -654,7 +600,10 @@
     },
 
     beforeDestroy() {
-      if (this.$refs.bodyWrapper) off(this.$refs.bodyWrapper, 'keyup', this.jumpToFocus);
+      if (this.$refs.bodyWrapper) {
+        off(this.$refs.bodyWrapper, 'keydown', this.keyRelease);
+        off(this.$refs.bodyWrapper, 'keyup', this.jumpToFocus);
+      }
     },
 
     destroyed() {
@@ -695,7 +644,8 @@
       // 初始化比对样式
       this.$nextTick(_ => {
         this.store.commit('updateCompare');
-        on(this.$refs.bodyWrapper, 'keyup', this.jumpToFocus);
+        on(this.$refs.bodyWrapper, 'keydown', this.jumpToFocus);
+        on(this.$refs.bodyWrapper, 'keyup', this.keyRelease);
       });
     },
 
@@ -718,7 +668,8 @@
         layout,
         renderExpanded: null,
         resizeProxyVisible: false,
-        timeHanlder: null
+        timeHanlder: null,
+        ctrlKey: false
       };
     }
   };
