@@ -36,6 +36,7 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 |    rate    |    比率类型     |   String     |  percent 或 permillage   |  percent |
 |    is-empty     | 是否接收空值，清除为0 |   Boolean    |      ——       |  false  |
 | valid-item-name  | valid-item组件域名  |  String     |   ——    |  ValidItem  |

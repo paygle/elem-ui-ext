@@ -29,4 +29,5 @@
 ### 与 el-switch 文档一致，仅用于 form-table 组件中代替 el-switch
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | validItem-name  | valid-item组件域名 |  String   |   ——    |  ValidItem |

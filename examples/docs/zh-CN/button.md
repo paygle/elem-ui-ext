@@ -187,6 +187,7 @@ Button 组件提供除了默认值以外的三种尺寸，可以在不同场景�
 ### Attributes
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | size     | 尺寸   | string  |   large,small,mini            |    —     |
 | type     | 类型   | string    |   primary,success,warning,danger,info,text |     —    |
 | plain     | 是否朴素按钮   | Boolean    | — | false   |

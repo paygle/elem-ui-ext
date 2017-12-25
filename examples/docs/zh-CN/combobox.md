@@ -27,6 +27,7 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 |  dict-id    |  字典ID               |   String       |          ——          |   *
 | dict-params |  字典参数             |   Object       |          ——          |   null |
 | force-refresh |  强制每次自动刷新    |   Boolean      |          ——          |   false |

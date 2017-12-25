@@ -208,7 +208,7 @@ const setTabindex = function(direction = 'vertical', startindex = 1, orginData =
   let colIdx = [], keyidx, len = tabindexMap.length;
   // default order map
   tabindexMap.forEach((item)=>{
-    Object.keys(item).forEach((key)=>{ item[key] = 0; })
+    Object.keys(item).forEach((key)=>{ item[key] = 0; });
   });
 
   if (direction === 'vertical') {

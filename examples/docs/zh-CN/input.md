@@ -758,6 +758,7 @@ export default {
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | type         | 类型   | string  | text/textarea | text |
 | value         | 绑定值           | string, number  | — | — |
 | maxlength     | 最大输入长度      | number          |  —  | — |

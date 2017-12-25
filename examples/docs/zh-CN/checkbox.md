@@ -237,6 +237,7 @@
 ### Checkbox Attributes
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | label     | 选中状态的值（只有在`checkbox-group`或者绑定对象类型为`array`时有效）| string    |       —        |     —    |
 | true-label | 选中时的值   | string, number | — |     —    |
 | false-label | 没有选中时的值   | string, number    |      —         |     —    |

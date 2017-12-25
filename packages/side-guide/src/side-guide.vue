@@ -140,7 +140,7 @@ export default {
       }else {
         this.guideStyl['width'] = this.mWidth;
       }
-      this.updateStyle()
+      this.updateStyle();
     },
     doDestroy(){
       if (this.$el && this.updateStyle) off(window, 'resize', this.updateStyle);
@@ -152,7 +152,7 @@ export default {
     setTimeout(()=>{ this.updateStyle(); }, 300);
     this.$on('updateStyle', this.updateStyle);
     on(window, 'resize', this.updateStyle);
-    this.zoom = this.expand
+    this.zoom = this.expand;
   },
   beforDestroy(){
     off(window, 'resize', this.updateStyle);

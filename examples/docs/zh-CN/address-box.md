@@ -56,6 +56,7 @@
 全局配置对象：window.COMPONENTS_CONFIG.ADDRESS_DATA_URL
 | 参数          | 说明            | 类型            | 可选值    | 默认值   |
 |------------- |---------------- |---------------- |---------- |---------------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 |   data-url  | JSON数据URL          |  String    |   ——     |  在全局对象中配置 ADDRESS_DATA_URL
 |   resdata   | JSON地址数据         |  Array      |   ——    |    []
 |   disabled  | 禁用组件             |  Boolean    |   ——    |   false

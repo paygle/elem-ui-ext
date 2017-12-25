@@ -258,9 +258,39 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
 ```
 地址全局变量配置： window.COMPONENTS_CONFIG.ADDRESS_DATA_URL
 ```
+#### table组件的 tabindex 属性用法及设置
+
+<form-table :start-tabindex="30">
+  <form-table-column col-index="1" type="input" prop="name" label="名称"></form-table-column>
+  <form-table-column
+    col-index="2"
+    prop="addr"
+    label="tab地址">
+    <template slot-scope="scope">
+      <input
+        type="text"
+        :tabindex="scope.tabrow.addr"
+        v-model="scope.row.addr">
+    </template>
+  </form-table-column>
+</form-table>
+
+上例代码中：
+  start-tabindex 属性，在当前页面的全局 tabindex 开始值
+  col-index 属性，在当前表格组件中列的排列位置
+  在<template> 模板中：tabindex 属性，请设置 scope.tabrow[.列字段名称]
+
+请注意：Tab键的切换方向默认为左右方向。在表格组件中，点击任意输入框，然后，
+使用 CTRL + (↑ 或 ↓) 切换 Tab键的上下方向，使用 CTRL + (→ 或 ←) 切换 Tab键的左右方向。
+
+其他表单类的组件请自行添加 tabindex 属性，确定按Tab键时的次序问题。
+
+#### <form-table-column/> 属性参数
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
+|  col-index        | 辅助Tab键功能列排序     |   Number    |         ——        |      ——     |
+|  start-tabindex   | 表格Tab键序数值必须大于0 |   Number    |         ——        |      ——     |
 |  expand-only-one  | 同时仅允许展开一行数据  |  Boolean     |       ——         |  false |
 | expand-icon-hidden |   隐藏展开图标         |  Boolean     |       ——         |  false |
 |      type         |    对应列的类型        |   String     |        ——         |   支持的类型 |

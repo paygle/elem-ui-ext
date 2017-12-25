@@ -154,7 +154,6 @@
   import TableFooter from './table-footer';
   import { mousewheel } from './util';
   import { on, off } from 'element-ui/src/utils/dom';
-  import { focusInput } from 'element-ui/src/utils/funcs';
 
   let tableIdSeed = 1;
 
@@ -373,10 +372,10 @@
         if (e.keyCode === 17) this.ctrlKey = true;
         if (this.ctrlKey &&  [37, 39].indexOf(e.keyCode) > -1) { // left-right
           this.store.updateTabindex(this.startTabindex, 'h');
-          this.store.states.direction = 'h'
+          this.store.states.direction = 'h';
         } else if (this.ctrlKey && [38, 40].indexOf(e.keyCode) > -1) { // up-down
           this.store.updateTabindex(this.startTabindex);
-          this.store.states.direction = 'vertical'
+          this.store.states.direction = 'vertical';
         }
       }
     },

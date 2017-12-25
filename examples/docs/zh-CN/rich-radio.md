@@ -50,6 +50,7 @@
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | icon          |   图标样式类名  | String | — | — |
 | canceled     | 是否允许取消选择 | Boolean | — | — |  
 | valid-item-name  | valid-item组件域名  |  String     |   ——    |  ValidItem  |

@@ -137,6 +137,7 @@
 ### Radio Attributes
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | label     | Radio 的 value   | string,number,boolean    |       —        |      —   |
 | disabled  | 是否禁用    | boolean   | — | false   |
 | name | 原生 name 属性 | string    |      —         |     —    |
@@ -158,5 +159,6 @@
 ### Radio-button Attributes
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | label     | Radio 的 value  | string,number  |        —       |     —    |
 | disabled  | 是否禁用    | boolean   | — | false   |

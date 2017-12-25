@@ -113,6 +113,7 @@
 
 | 参数      | 说明    | 类型      | 可选值       | 默认值   |
 |---------- |-------- |---------- |-------------  |-------- |
+|  tabindex   | Tab键切换次序值    |   Number    |         ——        |      ——     |
 | disabled  | 是否禁用    | boolean   | — | false   |
 | width  | switch 的宽度（像素）    | number   | — | 58（有文字）/ 46（无文字） |
 | on-icon-class  | switch 打开时所显示图标的类名，设置此项会忽略 `on-text`    | string   | — | — |
