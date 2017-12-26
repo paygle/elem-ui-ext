@@ -101,5 +101,6 @@
   "combobox": "./packages/combobox/index.js",
   "form-table": "./packages/form-table/index.js",
   "form-table-column": "./packages/form-table-column/index.js",
-  "sys-notify": "./packages/sys-notify/index.js"
+  "sys-notify": "./packages/sys-notify/index.js",
+  "grid-layer": "./packages/grid-layer/index.js"
 }

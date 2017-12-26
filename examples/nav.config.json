@@ -68,6 +68,10 @@
               "title": "freeze 冻结窗格"
             },
             {
+              "path": "/grid-layer",
+              "title": "GridLayer 流布局"
+            },
+            {
               "path": "/water-fall",
               "title": "WaterFall 瀑布流"
             }

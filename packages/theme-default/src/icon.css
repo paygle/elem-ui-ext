@@ -402,6 +402,10 @@
 
 .el-icon-shield-err:before { content: "\E6DD"; }
 
+.el-icon-hollow-heart:before { content: "\E6DE"; }
+
+.el-icon-solid-heart:before { content: "\E6DF"; }
+
 .el-icon-loading {
   animation: rotating 1s linear infinite;
 }
