@@ -168,7 +168,7 @@
           if (this.customStyl === '' && this.validateState !== 'error') {
             this.broadcast('ElInput', 'custom-style', {});
             this.broadcast('AddressBox', 'custom-style', {});
-          } 
+          }
         }
       },
       getTypeData(value, rules){ // 自定义获取日期数据类型

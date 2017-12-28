@@ -70,10 +70,6 @@
             {
               "path": "/grid-layer",
               "title": "GridLayer 流布局"
-            },
-            {
-              "path": "/water-fall",
-              "title": "WaterFall 瀑布流"
             }
           ]
         },
@@ -302,6 +298,10 @@
             {
               "path": "/mesh-tabs",
               "title": "MeshTabs 选项卡"
+            },
+            {
+              "path": "/wrap-route",
+              "title": "wrap-route 动态组件"
             },
             {
               "path": "/tabs-frame",

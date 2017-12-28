@@ -113,13 +113,6 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
   :rules="tableRules"
   :data="tableData"
   :new-row="newRow">
-  <form-table-column type="expand">
-    <template scope="props">
-      {{ "名称" + props.row.name }}
-      {{ "日期" + props.row.date }}
-      {{ "区域" + props.row.address }}
-    </template>
-  </form-table-column>
   <form-table-column type="selection" width="50" label="选择"></form-table-column>
   <form-table-column type="fnumber" prop="numtest" label="格式化数字" width="100"></form-table-column>
   <form-table-column type="rate" prop="rate" label="比率" width="80"></form-table-column>
@@ -245,21 +238,21 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
 ```
 :::
 
-#### formTableColumn 支持的类型 
-```
+#### formTableColumn 支持的类型
+``````
   input/ inputBtn/ labelBtn/ rate/ textarea/ checkbox/ switch/ 
   select/ combobox/ date/ address/ operate/ manual
 
   其中 manual 类型不需要字符超出之后的提示功能时 代替 default 类型
   不使用 form-table-column 组件的 type 属性时，可直接使用 formatter 属性进行列翻译
-```
+``````
 
 ### FormTable Attributes
-```
+``````
 地址全局变量配置： window.COMPONENTS_CONFIG.ADDRESS_DATA_URL
-```
+``````
 #### table组件的 tabindex 属性用法及设置
-
+``````
 <form-table :start-tabindex="30">
   <form-table-column col-index="1" type="input" prop="name" label="名称"></form-table-column>
   <form-table-column
@@ -274,7 +267,7 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
     </template>
   </form-table-column>
 </form-table>
-
+``````
 上例代码中：
   start-tabindex 属性，在当前页面的全局 tabindex 开始值
   col-index 属性，在当前表格组件中列的排列位置
@@ -326,14 +319,14 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
 | valid-trigger  | 触发外部验证函数  |  Function     |   ——    |  ——   |
 | compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   |
 
-```
+
 当在 operate类型时，header头部的操作按钮被全部禁用时，头部自动默认显示 “操作” 二字。
-```
+
 
 #### 在 FormTable 组件上提供以下事件, 不支持直接对数据进行 unshift, reverse 数组操作
-```
+``````
 事件统一参数（row, colName, rowIndex, val, data）
-```
+``````
 
 #### row 当前行对象，colName 当前列名称，rowIndex 当前第几行数值， val 当前单元格改变后的值，全部表单数据对象
 
@@ -349,41 +342,42 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
 
 #### 组件翻译（支持翻译的组件类型： select/ address），当使用 translated 属性时对应的组件将不再显示只翻译的文本结果
 例如：
-```
+``````
 <form-table-column type="select" label="翻译下拉杠" translated="select"></form-table-column>
 <form-table-column type="address" label="翻译省市区" translated="address"></form-table-column>
-```
+``````
 #### 以下类型参数请参考： element-ui 对应的组件。
 
 ####  input/textarea 类型 inputOption 属性参数支持：
-```
+``````
   { type, name, placeholder, readonly, maxlength, minlength, autoComplete, autofocus, min, max, form }
   新增属性：  histype 值类型， precision 精度，roundoff 是否四舍五入
-```
+``````
 
 #### rate 类型 属性使用 inputOption 参数配置支持, 以下是独有属性：
-```
+``````
   <form-table-column type="rate" prop="percent" use-rate="permillage" label="千分比"> </form-table-column>
+``````
   属性 use-rate 默认不填为百分比
-```
+
 
 #### fnumber 数字格式化类型 属性使用 inputOption, 以下是独有属性是基于inputOption参数支持,以下是独有属性：
-```
+``````
   { split，splitMark，precision }：
 
   <form-table-column type="fnumber" prop="numtest" label="格式化数字" width="120"></form-table-column>
-```
+``````
 
 #### inputBtn 类型 inputBtnOption 属性是基于inputOption参数支持,以下是独有属性：
-```
+``````
   { btnIcon, disabled }
 
   inputBtn 类型支持 formatter方法如下： 
    <form-table-column type="inputBtn" prop="numtest" :formatter="inputFormatter" label="数字翻译"/>
-```
+``````
 
 #### labelBtn 类型参数
-```
+``````
   <form-table-column 
     type="labelBtn" 
     :formatter="labelBtnformatter"
@@ -410,10 +404,10 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
       dict-params:  Object            下拉框参数 与 labelOption内属性一致任选其一
       dict-filter:  Boolean,          大数据过滤
     }
-```
+``````
 
 #### checkbox 类型 checkboxOption 属性参数支持：
-```
+``````
   { checked, name, mtrueLabel, falseLabel, marked }
 
   checkboxOption 的 marked 属性标签显示内容，只有在 box-styl="rich" 时才有效。
@@ -428,28 +422,28 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
      :header-checked="true" label="选择"
      :checked-selection="checkedSelection"
      :checkbox-all-toggle="checkboxAllToggle" />
-```
+``````
 #### switch 类型 switchOption 属性参数支持：
-```
+``````
   { name, width, onIconClass,  offIconClass, onText, offText, onColor, offColor}
-```
 
+``````
 #### select 下拉选择类型 selectOption 属性参数支持：
-```
+``````
   { name, clearable, filterable, loading, remote, remoteMethod, filterMethod, multiple, placeholder } 
-```
 
+``````
 #### date 日期类型 dateOption 属性参数支持：
-```
+``````
   { format, readonly, placeholder, editable, align }
-```
+``````
 
 #### address 地址类型 addressOption 属性参数支持：
-```
+``````
   { dataUrl, placeholder }
-```
+``````
 
 #### combobox 下拉框类型 comboboxOption 属性(继承selectOption) 参数支持：
-```
+``````
   { dictId, dictParams, dictRowCascade, dictRowCascadeMap }
-```
+``````

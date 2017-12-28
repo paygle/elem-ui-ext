@@ -12,6 +12,7 @@ import ElDatePicker from 'element-ui/packages/date-picker';
 import ElInput from 'element-ui/packages/input';
 import ElOption from 'element-ui/packages/option';
 import ElSelect from 'element-ui/packages/select';
+import ElCascader from 'element-ui/packages/cascader';
 import ElTag from 'element-ui/packages/tag';
 import FormTableItem from './table-item';
 import OpBox from './op-box';
@@ -28,6 +29,7 @@ export default {
     ElInput,
     ElTag,
     ElSelect,
+    ElCascader,
     ElOption,
     ElDatePicker,
     FormTableItem,

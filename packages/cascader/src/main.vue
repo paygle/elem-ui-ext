@@ -16,9 +16,11 @@
   >
     <el-input
       ref="input"
-      :readonly="!filterable || readonly"
+      :tabindex="tabindex"
+      :readonly="readonly || !filterable"
       :placeholder="currentLabels.length ? undefined : placeholder"
       v-model="inputValue"
+      @focus="focushandle"
       @change="debouncedInputChange"
       :validate-event="false"
       :size="size"
@@ -39,7 +41,7 @@
         ></i>
       </template>
     </el-input>
-    <span 
+    <span
       ref="textbox"
       class="el-cascader__label"
       @mouseover="tipMSEnter"
@@ -98,9 +100,11 @@ export default {
   },
 
   props: {
+    tabindex: null,
+    initLabel: String, // 初始化翻译内容
     options: {
       type: Array,
-      required: true
+      default: ()=>[]
     },
     props: {
       type: Object,
@@ -223,6 +227,10 @@ export default {
         }
         this.flatOptions = this.flattenOptions(this.options);
         this.menu.options = value;
+        // 动态改变Label值
+        this.$nextTick(_=>{
+          if (this.currentLabels.length) this.inputValue = this.currentLabels.join(this.split);
+        });
       }
     },
     currentLabels(val){   //自动设置是否显示hover提示
@@ -239,6 +247,9 @@ export default {
   },
 
   methods: {
+    focushandle() {
+      if (!this.readonly) this.menuVisible=true;
+    },
     tipMSEnter(e) {
       let pos, gapw, style, color = "", that = this;
       let textbox = this.$refs.textbox;
@@ -250,7 +261,7 @@ export default {
         that.tipTimeHander = setTimeout(()=>{
           pos = textbox.getBoundingClientRect();
           gapw = that.notifyWidth > 0 ? (that.notifyWidth - boxWidth)/2 : 0;
-          
+
           if(isParentText) color = 'red';
           style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
 
@@ -275,7 +286,7 @@ export default {
     setTipContent(value){
       this.$nextTick(function(){
         if(!this.tipDisabled){
-          this.tipContent = Array.isArray(value) ? value.join('/') : String(value); 
+          this.tipContent = Array.isArray(value) ? value.join('/') : String(value);
           this.innerTipShow = this.getTipStatus(this.$refs.textbox);
         }
       });
@@ -353,6 +364,12 @@ export default {
       this.currentValue = value;
       this.$emit('input', value);
       this.$emit('change', value);
+      this.$emit('update:initLabel', this.currentLabels.join(this.split)); //同步初始化标签
+      // 验证 valid-item 组件
+      this.dispatch('ElFormItem', 'el.form.blur', value);
+      this.dispatch(this.validItemName, 'valid.item.blur', value);
+      // this.dispatch('ElForm', 'compare-change', this);
+      // this.dispatch(this.validItemName, 'compare-change', this);
 
       if (close) {
         this.menuVisible = false;
@@ -469,8 +486,15 @@ export default {
   },
 
   mounted() {
-    this.flatOptions = this.flattenOptions(this.options);
-    this.$nextTick(() => { this.inputValue = this.currentLabels.join(this.split); }); //初始化赋值
+    this.$nextTick(() => {
+      this.flatOptions = this.flattenOptions(this.options);
+      this.inputValue = this.currentLabels.join(this.split);
+      if (this.initLabel && this.inputValue === '') {
+        this.inputValue = this.initLabel;  //初始化标签
+      } else {
+        this.$emit('active-item-change', this.value);
+      }
+    }); //初始化赋值
   }
 };
 </script>

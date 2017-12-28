@@ -1,39 +1,39 @@
 <template>
   <div class="op-box" v-if="isShow">
     <el-button-group>
-      <el-button 
-        v-if="deleteVisit" 
+      <el-button
+        v-if="deleteVisit"
         :plain="true"
-        type="info" 
-        icon="delete2" 
+        type="info"
+        icon="delete2"
         size="mini"
         :disabled="disabled"
         v-on:click.stop="deleteHandle">
       </el-button>
-      <el-button 
-        v-if="!iShwMorebtn && editVisit" 
+      <el-button
+        v-if="!iShwMorebtn && editVisit"
         :plain="true"
-        type="info" 
-        size="mini" 
+        type="info"
+        size="mini"
         icon="pencil"
         :disabled="disabled"
         v-on:click.stop="editHandle">
       </el-button>
-      <el-button 
-        ref="addbtn" 
-        v-if="iShwMorebtn && addVisit" 
+      <el-button
+        ref="addbtn"
+        v-if="iShwMorebtn && addVisit"
         :plain="true"
         type="info"
-        size="mini" 
+        size="mini"
         icon="document"
         :disabled="disabled"
         v-on:click.stop="addPreLoad">
       </el-button>
-      <el-button 
-        v-if="iShwMorebtn && saveVisit" 
+      <el-button
+        v-if="iShwMorebtn && saveVisit"
         :plain="true"
         type="info"
-        size="mini" 
+        size="mini"
         icon="save"
         :disabled="disabled"
         v-on:click.stop="saveHandle">

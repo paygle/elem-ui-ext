@@ -90,7 +90,6 @@
 @import "./valid-form.css";
 @import "./valid-field.css";
 @import "./valid-item.css";
-@import "./water-fall.css";
 @import "./custom-switch.css";
 @import "./dict-label.css";
 @import "./combo-table-column.css";
@@ -99,4 +98,5 @@
 @import "./form-table-column.css";
 @import "./sys-notify.css";
 @import "./grid-layer.css";
+@import "./wrap-route.css";
 @import "./common/page-layout.css";

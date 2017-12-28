@@ -94,7 +94,6 @@ import TabsFrame from '../packages/tabs-frame/index.js';
 import ValidForm from '../packages/valid-form/index.js';
 import ValidField from '../packages/valid-field/index.js';
 import ValidItem from '../packages/valid-item/index.js';
-import WaterFall from '../packages/water-fall/index.js';
 import CustomSwitch from '../packages/custom-switch/index.js';
 import DictLabel from '../packages/dict-label/index.js';
 import ComboTableColumn from '../packages/combo-table-column/index.js';
@@ -103,6 +102,7 @@ import FormTable from '../packages/form-table/index.js';
 import FormTableColumn from '../packages/form-table-column/index.js';
 import SysNotify from '../packages/sys-notify/index.js';
 import GridLayer from '../packages/grid-layer/index.js';
+import WrapRoute from '../packages/wrap-route/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
 
@@ -197,7 +197,6 @@ const components = [
   ValidForm,
   ValidField,
   ValidItem,
-  WaterFall,
   CustomSwitch,
   DictLabel,
   ComboTableColumn,
@@ -206,6 +205,7 @@ const components = [
   FormTableColumn,
   SysNotify,
   GridLayer,
+  WrapRoute,
   CollapseTransition
 ];
 
@@ -337,7 +337,6 @@ module.exports = {
   ValidForm,
   ValidField,
   ValidItem,
-  WaterFall,
   CustomSwitch,
   DictLabel,
   ComboTableColumn,
@@ -345,5 +344,6 @@ module.exports = {
   FormTable,
   FormTableColumn,
   SysNotify,
-  GridLayer
+  GridLayer,
+  WrapRoute
 };

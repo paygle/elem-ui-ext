@@ -94,7 +94,6 @@
   "valid-form": "./packages/valid-form/index.js",
   "valid-field": "./packages/valid-field/index.js",
   "valid-item": "./packages/valid-item/index.js",
-  "water-fall": "./packages/water-fall/index.js",
   "custom-switch": "./packages/custom-switch/index.js",
   "dict-label": "./packages/dict-label/index.js",
   "combo-table-column": "./packages/combo-table-column/index.js",
@@ -102,5 +101,6 @@
   "form-table": "./packages/form-table/index.js",
   "form-table-column": "./packages/form-table-column/index.js",
   "sys-notify": "./packages/sys-notify/index.js",
-  "grid-layer": "./packages/grid-layer/index.js"
+  "grid-layer": "./packages/grid-layer/index.js",
+  "wrap-route": "./packages/wrap-route/index.js"
 }

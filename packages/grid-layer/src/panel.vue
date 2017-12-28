@@ -90,10 +90,8 @@ export default {
     },
 
     showData() {
-      let sd = [];
       let len = this.child.length > this.numshow ? this.numshow : this.child.length;
-      for(let i=0; i < len; i++) { sd.push(this.child[i]); }
-      return sd;
+      return this.child.slice(0, len);
     }
   },
 

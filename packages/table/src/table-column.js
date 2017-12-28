@@ -276,7 +276,6 @@ export default {
 
       let {row, store} = data;
       data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {};
-
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
         renderCell = function() {

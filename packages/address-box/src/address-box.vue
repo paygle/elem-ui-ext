@@ -11,6 +11,8 @@
       @mouseover="inputMSEnter"
       @mouseout="inputMSOut"
       @focus="handleOpenBox"
+      @keydown.tab.stop="isShowAddrBox = false"
+      @keydown.esc.stop.prevent="isShowAddrBox = false"
       @blur="handleBlur"
       :placeholder="placeholder"
       readonly>
@@ -276,7 +278,6 @@ export default {
     },
     handleBlur(e) {
       // 验证 valid-item 组件
-      console.log('Address blur');
       this.dispatch('ElFormItem', 'el.form.blur', this.value);
       this.dispatch(this.validItemName, 'valid.item.blur', this.value);
       this.dispatch('ElForm', 'compare-change', this);

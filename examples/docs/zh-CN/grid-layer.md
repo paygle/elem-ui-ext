@@ -70,7 +70,7 @@ fields 属性 默认字段名称配置
 :::
 
 
-### WaterFall Attributes
+### GridLayer Attributes
 
 | 参数          | 说明            | 类型            | 可选值                 | 默认值   |
 |-------------  |---------------- |---------------- |---------------------- |-------- |
@@ -83,4 +83,4 @@ fields 属性 默认字段名称配置
 |   trigger      |  弹框触发方式       |  String       |       ——     |  'click'     |
 |   placement    |  默认位置           | String     |       ——     | 'top-start'   |
 |   ctxHeight    |  panel 内容的高度   |  String     |       ——     |  138px'   |
-|   height       |  panel 的高度      |  String    |       ——     |  '220px'   |
+|   height       |  panel 的高度      |  String    |       ——     |  '208px'   |

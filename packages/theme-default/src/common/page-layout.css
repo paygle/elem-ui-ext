@@ -4,7 +4,6 @@
 div .el-input-number__decrease {
   right: 25px;
 }
-
 div .el-input-number__decrease,
 div .el-input-number__increase {
   width: 26px;
@@ -66,7 +65,7 @@ div .el-input-number__increase {
     overflow: hidden;
     height: 12px;
   }
-  
+
   .scroll-link{
     padding-right: 10px;
     white-space: nowrap;
@@ -89,7 +88,7 @@ div .el-input-number__increase {
     &:last-child{
       border-bottom: 0;
     }
-    
+
     a{
       cursor: pointer;
     }
@@ -434,15 +433,39 @@ div{
       border-color: var(--primary-color);
       color: var(--white-color);
     }
-    &.is-disabled.is-plain:hover, &.is-disabled.is-plain:hover i{
+    &.is-disabled:hover, &.is-disabled:hover i{
       background-color: #fff;
       border-color: var(--disabled-bcolor);
-      color: var(--disabled-color);
+      i {
+        color: var(--disabled-color);
+      }
     }
   }
 
-  .el-input__inner, .el-select .is-readonly .el-input__inner{
+  .op-box .el-button--info.is-plain{
+      background: transparent;
+      border: 0;
+      color: var(--primary-color);
+
+    &:hover, &:hover [class*="el-icon-"]{
+      background: transparent;
+      border: 0;
+      color: var(--primary-color);
+    }
+    &.is-disabled, &.is-disabled:hover i{
+      background-color: transparent;
+      border: 0;
+      i {
+        color: var(--disabled-color);
+      }
+    }
+  }
+
+  .el-input__inner{
     background-color: var(--input-inn-color);
+  }
+  .el-select .is-readonly .el-input__inner{
+    background-color: #eef1f6;
   }
 
   .el-select .el-input.is-disabled .el-input__inner {
@@ -452,7 +475,7 @@ div{
     cursor: not-allowed;
   }
 
-  
+
   &.write-line {
 
     .el-input-group__append, .el-input-group__prepend{
@@ -829,7 +852,6 @@ div .el-tabs__item{
       word-break: break-all;
     }
   }
- 
 }
 
 .el-message__group .span{
@@ -977,48 +999,4 @@ body .el-cascader__label{
     }
   }
 
-}
-
-/* water-fall 瀑布流 */
-.water-fall{
-  position: relative;
-  padding-bottom: 20px;
-
-  .water-lane{
-    display: inline-block;
-    vertical-align: top;
-    box-sizing: border-box;
-  }
-  .water-panel{
-    display: block;
-    border: 1px solid var(--pmy-light2-color);
-    box-sizing: border-box;
-    border-radius: 4px;
-    box-shadow: 0 1px 2px rgba(200,200,200, 0.5);
-    padding-bottom: 10px;
-
-    h3{
-      text-align: center;
-      padding: 12px;
-      font-size: 14px;
-      font-weight: bold;
-      color: var(--primary-color);
-      border-bottom: 1px solid var(--pmy-light2-color);
-    }
-
-    a{
-      display: block;
-      padding: 5px 15px;
-      text-decoration: none;
-      color: var(--gray-black-color);
-
-      &:active{
-        color: var(--gray-black-color);
-      }
-
-      &:hover{
-        color: var(--primary-color);
-      }
-    }
-  }
 }

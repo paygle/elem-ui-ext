@@ -317,7 +317,8 @@ const forced = {
             name = { option.name }
             trueLabel = { option.trueLabel }
             falseLabel = { option.falseLabel }
-            disabled={ getDisabledVal(row, column, store, $index) }
+            disabled = { option.disabled }
+            readonly={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colCheckboxChanged', row, column, val); }}
             onChange ={ (e) => { store.commit('checkAllboxChanged', column); }}>
               { option.marked || row[column.property] }
@@ -329,7 +330,8 @@ const forced = {
             name = { option.name }
             trueLabel = { option.trueLabel }
             falseLabel = { option.falseLabel }
-            disabled={ getDisabledVal(row, column, store, $index) }
+            disabled = { option.disabled }
+            readonly={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colCheckboxChanged', row, column, val); }}
             onChange ={ (e) => { store.commit('checkAllboxChanged', column); }}>
           </el-checkbox>;
@@ -354,7 +356,8 @@ const forced = {
             offColor = { option.offColor }
             oValue = { option.onValue }
             offValue = { option.offValue }
-            disabled={ getDisabledVal(row, column, store, $index) }
+            disabled = { option.disabled }
+            readonly={ getDisabledVal(row, column, store, $index) }
             onInput={ (val) => { store.commit('colSwitchChanged', row, column, val); } }>
           </custom-switch>
         );
@@ -381,10 +384,43 @@ const forced = {
           filterMethod = { option.filterMethod }
           multiple = { option.multiple }
           placeholder = { option.placeholder }
-          disabled={ getDisabledVal(row, column, store, $index) }
+          disabled = { option.disabled }
+          readonly={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colSelectChanged', row, column, val); } }>
           { this$1._l(column.optionsData, (item)=> <el-option value={item.value} label={item.label} />)}
         </el-select>
+      );
+    },
+    sortable: false
+  },
+  cascader: { //cascader类型
+    renderCell: function (h, { row, column, store, $index }, this$1) {
+      // 动态加载Option
+      let option = setOptionData(column.setColOption, row, column, $index, column.selectOption);
+      store.states._tabidxs[$index] = store.states._tabidxs[$index] || {};
+      return (
+        <el-cascader
+          tabindex={ store.states._tabidxs[$index][column.property] }
+          value={ row[column.property]}
+          initLabel = { row[column.initLabelProp] }
+          props = { option.props }
+          clearable = { option.clearable }
+          changeOnSelect = { option.changeOnSelect }
+          popperClass = { option.popperClass }
+          expandTrigger = { option.expandTrigger }
+          filterable = { option.filterable }
+          size = { option.size }
+          showAllLevels = { option.showAllLevels }
+          debounce = { option.debounce }
+          split = { option.split }
+          placeholder = { option.placeholder }
+          beforeFilter = { column.beforeFilter }
+          options = { column.optionsData }
+          disabled = { option.disabled }
+          readonly = { getDisabledVal(row, column, store, $index) }
+          on-active-item-change = { column.activeItemChange }
+          on-change = { (val) => { store.commit('colSelectChanged', row, column, val); } }>
+        </el-cascader>
       );
     },
     sortable: false
@@ -401,13 +437,13 @@ const forced = {
           type = { option.type }
           dataType = { dataType }
           format = { option.format }
-          readonly = { option.readonly }
           placeholder = { option.placeholder }
           editable = { option.editable }
           clearable = { option.clearable }
           align = { option.align }
           pickerOptions = { column.pickerOptions }
-          disabled={ getDisabledVal(row, column, store, $index) }
+          disabled = { option.disabled }
+          readonly={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colDatePickerChanged', row, column, val); } }>
         </el-date-picker>
       );
@@ -426,7 +462,8 @@ const forced = {
           resdata = { column.addressData }
           dataUrl = { option.dataUrl }
           placeholder = { option.placeholder }
-          disabled={ getDisabledVal(row, column, store, $index) }
+          disabled = { option.disabled }
+          readonly={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colAddressChanged', row, column, val); } }>
         </address-box>
       );
@@ -457,7 +494,8 @@ const forced = {
           filterMethod = { option.filterMethod }
           multiple = { option.multiple }
           placeholder = { option.placeholder }
-          disabled={ getDisabledVal(row, column, store, $index) }
+          disabled = { option.disabled }
+          readonly={ getDisabledVal(row, column, store, $index) }
           onInput={ (val) => { store.commit('colSelectChanged', row, column, val); } }>
         </combobox>
       );
@@ -599,6 +637,10 @@ export default {
     dictId:String,                    // combobox类型下拉框字典ID
     dictFilter: Boolean,              // 大数据过滤
     optionsData: [Object, Array],     // 初始化select列表数据
+    beforeFilter: Function,
+    activeItemChange: {
+      type: Function
+    },
     dateOption: Object,               // 日期控件初始化参数
     pickerOptions: Object,            // 日期其他参数
     addressOption: Object,            // 地址类型初始化参数
@@ -717,6 +759,8 @@ export default {
       checkedSelection: this.checkedSelection,  // 返回 true | false 控制是否选择本行，如未定义而则不关联该功能
       selectOption: this.selectOption,          // select类型初始化参数
       optionsData: this.optionsData,            // 初始化select列表数据
+      beforeFilter: this.beforeFilter,
+      activeItemChange: this.activeItemChange,
       dateOption: this.dateOption,              // 日期控件初始化参数
       pickerOptions: this.pickerOptions,
       addressOption: this.addressOption,        // 地址类型初始化参数
