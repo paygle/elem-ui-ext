@@ -365,17 +365,19 @@ export default {
       this.$emit('input', value);
       this.$emit('change', value);
       this.$emit('update:initLabel', this.currentLabels.join(this.split)); //同步初始化标签
-      // 验证 valid-item 组件
-      this.dispatch('ElFormItem', 'el.form.blur', value);
-      this.dispatch(this.validItemName, 'valid.item.blur', value);
-      // this.dispatch('ElForm', 'compare-change', this);
-      // this.dispatch(this.validItemName, 'compare-change', this);
 
       if (close) {
         this.menuVisible = false;
       } else {
         this.$nextTick(this.updatePopper);
       }
+      // 验证 valid-item 组件
+      this.$nextTick(_=>{
+        this.dispatch('ElFormItem', 'el.form.blur', value);
+        this.dispatch(this.validItemName, 'valid.item.blur', value);
+        // this.dispatch('ElForm', 'compare-change', this);
+        // this.dispatch(this.validItemName, 'compare-change', this);
+      });
     },
     handleInputChange(value) {
       if (!this.menuVisible) return;

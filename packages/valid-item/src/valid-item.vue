@@ -118,7 +118,6 @@ export default {
   },
   methods: {
     validate(trigger, callback = noop) {
-
       var rules = this.getFilteredRule(trigger);
       if (!this.prop) return;
       if (!rules || rules.length === 0) {
@@ -143,6 +142,7 @@ export default {
     },
     resetField() {
       this.broadcast('ElInput', 'input', this.initialValue);
+      this.$emit('update:model', this.initialValue);  //使用 .sync 同步Array类型重置
       this.$nextTick(function () {
         this.validateState = '';
         this.validateMessage = '';

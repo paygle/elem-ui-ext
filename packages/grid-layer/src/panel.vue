@@ -103,7 +103,7 @@ export default {
         this.popWidth = bw / maxpage * this.page;
         this.linkStyl = { width: (100 / this.page) + '%' };
       } else {
-        this.popWidth = bw / maxpage;
+        this.popWidth = bw - 40;
         this.linkStyl = { width: (100 / maxpage) + '%' };
       }
     },
