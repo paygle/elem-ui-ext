@@ -1,5 +1,18 @@
 import Emitter from 'element-ui/src/mixins/emitter';
 
+const getElementXY = function (el){ //el 要获取位置的元素对象
+  var pos = [el.offsetLeft, el.offsetTop]; //首先获得该元素相对第一个非流布局父元素的位置
+  var parentNode = el.offsetParent; //获得该元素的第一个非流布局父元素
+  if (parentNode != el) {
+    while (parentNode) {
+      pos[0] += parentNode.offsetLeft;
+      pos[1] += parentNode.offsetTop;
+      parentNode = parentNode.offsetParent; //循环定义非流布局父元素
+    }
+  }
+  return pos;
+};
+
 export default {
   name: 'SideCell',
   componentName: 'SideCell',
@@ -34,7 +47,7 @@ export default {
     scrollTarget(targetId){
       let target = document.querySelector('#'+targetId);
       if(!target) return;
-      this.setScrollTop(target.offsetTop);
+      this.setScrollTop(getElementXY(target)[1]);
 
       // let isWebkit = typeof webkitRequestAnimationFrame !== 'undefined';
       // this.docLayout = document.querySelector('body').getBoundingClientRect();
