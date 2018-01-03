@@ -70,15 +70,18 @@ const compareChgStyl = function(table, states) {
     fields.forEach((f) => {
       for (let prop in row) {
         if (row.hasOwnProperty && row.hasOwnProperty(prop) && prop === f ||
-            typeof row[prop] !== 'undefined') {
-            compareMap['row' + rowIndex + f] = styl;
+          typeof row[prop] !== 'undefined') {
+          let st = compareMap['row' + rowIndex + f] || {};
+          for (let p in styl) {
+            if (styl.hasOwnProperty(p)) st[p] = styl[p];
+          }
+          compareMap['row' + rowIndex + f] = st;
         }
       }
     });
   }
   // 设定表格样式
   table.compareStyl.forEach((cp)=>{
-
     for (let i=0; i < data.length; i++) {
       if (cp.compare.call(null, data[i], cp.fields, i)) {
         setCustomStyle(data[i], i, cp, cp.style);
@@ -90,16 +93,23 @@ const compareChgStyl = function(table, states) {
         setCustomStyle(data[i], i, cp, empty);
       }
     }
-
   });
   // 渲染样式
-  let dom, compSty;
+  let dom, input, compSty;
   for (let key in states.compareMap) {
     dom = table.$el.querySelector('.' + key);
     if (states.compareMap.hasOwnProperty(key) && dom) {
       compSty = states.compareMap[key];
       for (let p in compSty) {
         if (compSty.hasOwnProperty(p)) dom.parentNode.style[p] = compSty[p];
+      }
+      if (table.enableInputcolor) {
+        input = dom.querySelector('input') || dom.querySelector('textarea');
+        if (input) {
+          for (let c in compSty) {
+            if (compSty.hasOwnProperty(c)) input.style[c] = compSty[c];
+          }
+        }
       }
     }
   }
@@ -230,7 +240,6 @@ const TableStore = function(table, initialState = {}) {
     throw new Error('Table is required.');
   }
   this.table = table;
-
   this.states = {
     rowKey: null,
     _tabidxs: [],
@@ -254,6 +263,7 @@ const TableStore = function(table, initialState = {}) {
     selectable: null,
     newRow: null,
     tableId: '',
+    enableInputcolor: table.enableInputcolor || false, // 是否启用输入框内颜色样式
     headerChecks: {}, // 记录表头 checkbox 的状态
     editable: null, // 是否可以编辑
     errCount: {}, // 错误总数统计 {row0col:true}

@@ -16,7 +16,7 @@
           @click="cellClick(item[fields['cellNo']])">
           {{item[fields['cellNo']]}} &nbsp; {{item[fields['cellName']]}}
           <span class="favor-btn" v-on:click.stop="favoriteClick(item)">
-            <i :class="[{'el-icon-hollow-heart': item.favorite != 1},{'el-icon-solid-heart': item.favorite == 1}]"></i>
+            <i :class="[{'el-icon-star-off': item.favorite != 1},{'el-icon-star-on': item.favorite == 1}]"></i>
           </span>
         </a>
       </div>
@@ -29,7 +29,7 @@
         @click="cellClick(item[fields['cellNo']])">
         <span class="text">{{item[fields['cellNo']]}} &nbsp; {{item[fields['cellName']]}}</span>
         <span class="favor-btn" v-on:click.stop="favoriteClick(item)">
-          <i :class="[{'el-icon-hollow-heart': item.favorite != 1},{'el-icon-solid-heart': item.favorite == 1}]"></i>
+          <i :class="[{'el-icon-star-off': item.favorite != 1},{'el-icon-star-on': item.favorite == 1}]"></i>
         </span>
       </a>
     </div>

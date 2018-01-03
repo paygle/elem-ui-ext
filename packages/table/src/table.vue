@@ -221,6 +221,8 @@
 
       tooltipEffect: String,
 
+      enableInputcolor: Boolean,  // 是否启用输入框内颜色样式
+
       startTabindex: {   // tabindex开始数值
         type: Number,
         default: 1
@@ -501,7 +503,11 @@
         handler(val) {
           this.store.commit('setData', val);
           if (this.$ready) this.doLayout();
-          this.$nextTick(_ => this.store.commit('updateCompare'));
+          this.$nextTick(_ => {
+            this.store.states.modifiedMap = {};
+            this.store.states.compareMap = {};
+            this.store.commit('updateCompare');
+          });
         }
       },
 

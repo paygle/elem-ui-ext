@@ -315,10 +315,12 @@ FormTable是在 ElTable 组件基础之上扩展的，相应文档请相看 ElTa
 | combobox-option   | combobox类型下拉框选项  |   Object   |     与对应组件相同  | -- |
 |  dict-params      | combobox类型下拉框参数  |   Object   |     与对应组件相同  | -- |
 |  dict-id          | combobox类型下拉框字典ID |   String   |  与对应组件相同    | -- |
+| enable-inputcolor | 是否启用输入框内颜色样式 | Boolean    |   ——    |  false   |
 | modified-styl    | 修改后的样式计算      |  Function     |   ——    |  ——   |
 | valid-trigger  | 触发外部验证函数  |  Function     |   ——    |  ——   |
 | compare-styl   | 比较字段设置样式  |  Array     |   ——    |   ——   |
 
+lockData() 锁定比较初始值数据方法
 
 当在 operate类型时，header头部的操作按钮被全部禁用时，头部自动默认显示 “操作” 二字。
 
