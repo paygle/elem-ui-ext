@@ -61,27 +61,25 @@ const toggleRowSelection = function(states, row, selected) {
 */
 const compareChgStyl = function(table, states) {
 
- if (!Array.isArray(table.compareStyl) || !Array.isArray(table.data)) return;
- let data = table.data;  // 表数据
- let compareMap = states.compareMap;
+  if (!Array.isArray(table.compareStyl) || !Array.isArray(table.data)) return;
+  let data = table.data;  // 表数据
+  let compareMap = states.compareMap;
 
- function setCustomStyle(row, rowIndex, cp, styl) {
-   let fields = cp.stylefields || cp.fields;
-
-   fields.forEach((f) => {
-     for (let prop in row) {
-       if (row.hasOwnProperty(prop) && prop === f) {
-          compareMap['row' + rowIndex + f] = styl;
-       }
-     }
-   });
- }
-
+  function setCustomStyle(row, rowIndex, cp, styl) {
+    let fields = cp.stylefields || cp.fields;
+    fields.forEach((f) => {
+      for (let prop in row) {
+        if (row.hasOwnProperty && row.hasOwnProperty(prop) && prop === f ||
+            typeof row[prop] !== 'undefined') {
+            compareMap['row' + rowIndex + f] = styl;
+        }
+      }
+    });
+  }
   // 设定表格样式
   table.compareStyl.forEach((cp)=>{
 
     for (let i=0; i < data.length; i++) {
-
       if (cp.compare.call(null, data[i], cp.fields, i)) {
         setCustomStyle(data[i], i, cp, cp.style);
       } else {
@@ -94,7 +92,6 @@ const compareChgStyl = function(table, states) {
     }
 
   });
-
   // 渲染样式
   let dom, compSty;
   for (let key in states.compareMap) {
@@ -397,7 +394,6 @@ TableStore.prototype.mutations = {
       }
       return origin;
     }
-
     // 数据修改比较处理
     if (Array.isArray(states.data) && Array.isArray(states._initialData) && typeof table.modifiedStyl === 'function') {
       for (let rowindex = 0; rowindex < states._initialData.length; rowindex++) {
@@ -414,7 +410,6 @@ TableStore.prototype.mutations = {
           }
         }
       }
-
       // 渲染样式
       let dom, rowStyl, colStyl, rowSet = {}, rowIdx;
       for (let key in states.modifiedMap) {
@@ -499,9 +494,8 @@ TableStore.prototype.mutations = {
     if (!states.reserveSelection) {
       if (dataInstanceChanged) {
         this.clearSelection();
-      } else {
-        this.cleanSelection();
       }
+      // this.cleanSelection();
       this.updateAllSelected();
     } else {
       const rowKey = states.rowKey;

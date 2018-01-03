@@ -501,6 +501,7 @@
         handler(val) {
           this.store.commit('setData', val);
           if (this.$ready) this.doLayout();
+          this.$nextTick(_ => this.store.commit('updateCompare'));
         }
       },
 
