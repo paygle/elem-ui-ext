@@ -34,7 +34,14 @@
       </a>
     </div>
     <div class="panel-tool">
-      <span v-show="anymore" @click="updateDom" v-popover:poplayer class="el-icon-circle-plus">&nbsp;更多</span>
+      <span
+        class="el-icon-circle-plus"
+        v-show="anymore"
+        @click="clicked"
+        @mouseover="hovered"
+        v-popover:poplayer >
+        &nbsp;更多
+      </span>
     </div>
   </div>
 </template>
@@ -54,7 +61,10 @@ export default {
     panelStyl: Array,
     placement: String,
     ctxHeight: String,
-    trigger: String,
+    trigger: {
+      type: String,
+      default: 'click'
+    },
     urltmpl: Function,        // a 标签模板配置回调函数
     data: Object,
     store: Object
@@ -96,6 +106,12 @@ export default {
   },
 
   methods: {
+    hovered() {
+      if (this.trigger === 'hover') this.updateDom();
+    },
+    clicked() {
+      if (this.trigger === 'click') this.updateDom();
+    },
     updateDom() {
       let bw = Number(getComputedStyle(this.store.GridLayer.$el).width.toString().replace('px', ''));
       let maxpage = Math.floor(bw /348);
