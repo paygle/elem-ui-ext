@@ -32,7 +32,9 @@ export default {
       default() {
         return [10, 20, 30, 40, 50, 100];
       }
-    }
+    },
+
+    params: null  // ×·¼Ó²ÎÊý
   },
 
   data() {
@@ -170,7 +172,7 @@ export default {
         handleChange(val) {
           if (val !== this.$parent.internalPageSize) {
             this.$parent.internalPageSize = val = parseInt(val, 10);
-            this.$parent.$emit('size-change', val);
+            this.$parent.$emit('size-change', val, this.params);
           }
         }
       }
@@ -341,12 +343,12 @@ export default {
           this.internalCurrentPage = newVal;
           if (oldVal !== newVal) {
             this.$emit('update:currentPage', newVal);
-            this.$emit('current-change', this.internalCurrentPage);
+            this.$emit('current-change', this.internalCurrentPage, this.params);
           }
         });
       } else {
         this.$emit('update:currentPage', newVal);
-        this.$emit('current-change', this.internalCurrentPage);
+        this.$emit('current-change', this.internalCurrentPage, this.params);
       }
     },
 
