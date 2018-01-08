@@ -102,5 +102,6 @@
   "form-table-column": "./packages/form-table-column/index.js",
   "sys-notify": "./packages/sys-notify/index.js",
   "grid-layer": "./packages/grid-layer/index.js",
-  "wrap-route": "./packages/wrap-route/index.js"
+  "wrap-route": "./packages/wrap-route/index.js",
+  "excel-import": "./packages/excel-import/index.js"
 }

@@ -1,6 +1,18 @@
 @charset "UTF-8";
 @import "./var.css";
 
+.excel-imp-msg{
+  float: left;
+  color:#20a0ff;
+}
+.excel-imp-keyword{
+  display: inline;
+  padding-left: 10px;
+}
+.excel-imp-keyword input{
+  width: 180px;
+}
+
 div .el-input-number__decrease {
   right: 25px;
 }

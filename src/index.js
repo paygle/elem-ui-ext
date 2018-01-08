@@ -103,6 +103,7 @@ import FormTableColumn from '../packages/form-table-column/index.js';
 import SysNotify from '../packages/sys-notify/index.js';
 import GridLayer from '../packages/grid-layer/index.js';
 import WrapRoute from '../packages/wrap-route/index.js';
+import ExcelImport from '../packages/excel-import/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
 
@@ -206,6 +207,7 @@ const components = [
   SysNotify,
   GridLayer,
   WrapRoute,
+  ExcelImport,
   CollapseTransition
 ];
 
@@ -345,5 +347,6 @@ module.exports = {
   FormTableColumn,
   SysNotify,
   GridLayer,
-  WrapRoute
+  WrapRoute,
+  ExcelImport
 };
