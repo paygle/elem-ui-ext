@@ -301,7 +301,11 @@
       // 数据修改比较
       modifiedCompare() {
         clearTimeout(this.timeHanlder);  // 一定要使用定时器，否则严重损耗性能
-        this.timeHanlder = setTimeout(() => { this.store.commit('modifiedCompare'); }, 500);
+        this.timeHanlder = setTimeout(() => {
+          this.store.states.compareMap = {};
+          this.store.commit('updateCompare');
+          this.store.commit('modifiedCompare');
+        }, 500);
       },
       // 比较清除
       compareClear() {

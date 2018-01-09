@@ -63,7 +63,7 @@ const compareChgStyl = function(table, states) {
   let data = table.data;  // 表数据
   let compareMap = states.compareMap;
 
-  function setCustomStyle(row, rowIndex, cp, styl) {
+  function setCustomStyle(row, rowIndex, cp, styl, force) {
     let fields = cp.stylefields || cp.fields;
     fields.forEach((f) => {
       for (let prop in row) {
@@ -71,7 +71,11 @@ const compareChgStyl = function(table, states) {
           typeof row[prop] !== 'undefined') {
           let st = compareMap['row' + rowIndex + f] || {};
           for (let p in styl) {
-            if (styl.hasOwnProperty(p)) st[p] = styl[p];
+            if (styl.hasOwnProperty(p) && force) {
+              st[p] = styl[p];
+            } else if (typeof st[p] === 'undefined' || st[p] === ''){
+              st[p] = styl[p];
+            }
           }
           compareMap['row' + rowIndex + f] = st;
         }
@@ -82,13 +86,13 @@ const compareChgStyl = function(table, states) {
   table.compareStyl.forEach((cp)=>{
     for (let i=0; i < data.length; i++) {
       if (cp.compare.call(null, data[i], cp.fields, i)) {
-        setCustomStyle(data[i], i, cp, cp.style);
+        setCustomStyle(data[i], i, cp, cp.style, true);
       } else {
         let empty = {};
         for (let p in cp.style) {
           if (cp.style.hasOwnProperty(p)) empty[p] = '';
         }
-        setCustomStyle(data[i], i, cp, empty);
+        setCustomStyle(data[i], i, cp, empty, false);
       }
     }
   });
@@ -283,7 +287,6 @@ TableStore.prototype.mutations = {
       }
       return false;
     }
-
     // 合并样式
     function mergeStyl(origin, cover) {
       if (typeof origin['col'] === 'object' && typeof cover === 'object') {
