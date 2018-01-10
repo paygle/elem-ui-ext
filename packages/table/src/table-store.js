@@ -42,17 +42,17 @@ const toggleRowSelection = function(states, row, selected) {
   return changed;
 };
 
-/* ±ÈÖµÑùÊ½¼ÆËã
+/* æ¯”å€¼æ ·å¼è®¡ç®—
 [
  {
-   style: {                 // ×Ô¶¨ÒåÑùÊ½
+   style: {                 // è‡ªå®šä¹‰æ ·å¼
      color: '#fff',
      background: 'green'
    },
-   fields: ['name', 'desc'], // ĞèÒª±È½Ï´¥·¢¼ÆËãµÄ×Ö¶Î
-   stylefields: ['desc'], // ĞèÒªÉèÖÃÑùÊ½µÄ×Ö¶Î£¨Ê¡ÂÔÊ±£¬Í¬fields)
+   fields: ['name', 'desc'], // éœ€è¦æ¯”è¾ƒè§¦å‘è®¡ç®—çš„å­—æ®µ
+   stylefields: ['desc'], // éœ€è¦è®¾ç½®æ ·å¼çš„å­—æ®µï¼ˆçœç•¥æ—¶ï¼ŒåŒfields)
    compare:function(data) {
-     return data.name > data.desc;    // ·µ»ØÎªÕæÊ±ÉèÖÃ¸ø¶¨ÑùÊ½
+     return data.name > data.desc;    // è¿”å›ä¸ºçœŸæ—¶è®¾ç½®ç»™å®šæ ·å¼
    }
  }
 ]
@@ -60,7 +60,7 @@ const toggleRowSelection = function(states, row, selected) {
 const compareChgStyl = function(table, states) {
 
   if (!Array.isArray(table.compareStyl) || !Array.isArray(table.data)) return;
-  let data = table.data;  // ±íÊı¾İ
+  let data = table.data;  // è¡¨æ•°æ®
   let compareMap = states.compareMap;
 
   function setCustomStyle(row, rowIndex, cp, styl, force) {
@@ -82,7 +82,7 @@ const compareChgStyl = function(table, states) {
       }
     });
   }
-  // Éè¶¨±í¸ñÑùÊ½
+  // è®¾å®šè¡¨æ ¼æ ·å¼
   table.compareStyl.forEach((cp)=>{
     for (let i=0; i < data.length; i++) {
       if (cp.compare.call(null, data[i], cp.fields, i)) {
@@ -96,7 +96,7 @@ const compareChgStyl = function(table, states) {
       }
     }
   });
-  // äÖÈ¾ÑùÊ½
+  // æ¸²æŸ“æ ·å¼
   let dom, input, compSty;
   for (let key in states.compareMap) {
     dom = table.$el.querySelector('.' + key);
@@ -171,16 +171,16 @@ const TableStore = function(table, initialState = {}) {
     selection: [],
     reserveSelection: false,
     selectable: null,
-    enableInputcolor: table.enableInputcolor || false, // ÊÇ·ñÆôÓÃÊäÈë¿òÄÚÑÕÉ«ÑùÊ½
+    enableInputcolor: table.enableInputcolor || false, // æ˜¯å¦å¯ç”¨è¾“å…¥æ¡†å†…é¢œè‰²æ ·å¼
     currentRow: null,
     hoverRow: null,
     filters: {},
     expandRows: [],
     defaultExpandAll: false,
-    delRowCount: 0,     // É¾³ıĞĞÊı
-    _initialData: [],   // ³õÊ¼»¯Êı¾İ
-    modifiedMap: {},    // Êı¾İĞŞ¸Ä±È¶ÔÓ³Éä£¬Êı¾İ¸ñÊ½£º{ row: {background: 'green' },  col: {background: 'red' } }
-    compareMap: {}      // ±È½ÏÖµÑùÊ½Ó³Éä
+    delRowCount: 0,     // åˆ é™¤è¡Œæ•°
+    _initialData: [],   // åˆå§‹åŒ–æ•°æ®
+    modifiedMap: {},    // æ•°æ®ä¿®æ”¹æ¯”å¯¹æ˜ å°„ï¼Œæ•°æ®æ ¼å¼ï¼š{ row: {background: 'green' },  col: {background: 'red' } }
+    compareMap: {}      // æ¯”è¾ƒå€¼æ ·å¼æ˜ å°„
   };
 
   for (let prop in initialState) {
@@ -201,19 +201,19 @@ TableStore.prototype.updateTabindex = function(startindex, direction) {
 };
 
 TableStore.prototype.mutations = {
-  // ¸üĞÂ±È½ÏÑùÊ½
+  // æ›´æ–°æ¯”è¾ƒæ ·å¼
   updateCompare(states) {
     if (Array.isArray(this.table.compareStyl)) {
       compareChgStyl.call(this, this.table, states);
     }
   },
-  // Êı¾İ±È½ÏÓ³ÉäÉ¾³ı´¦Àí
+  // æ•°æ®æ¯”è¾ƒæ˜ å°„åˆ é™¤å¤„ç†
   compareDel(states, rowIndex) {
 
     if (!isNaN(rowIndex)) {
       if (rowIndex < states._initialData.length) {
         let k, x, n, key1, key2, item, modifiedMap = {}, compareMap = {};
-        let reg = new RegExp(`row${rowIndex}[a-z]+[a-z0-9]*$`, 'ig');
+        let reg = new RegExp(`row${rowIndex}[a-z]+[a-z0-9_]*$`, 'ig');
         for (k in states.modifiedMap) {
           reg.lastIndex = 0;
           if (states.modifiedMap.hasOwnProperty(k) && reg.test(k)) {
@@ -230,7 +230,7 @@ TableStore.prototype.mutations = {
 
         for (n = 0; n < states._initialData.length; n++) {
           item = states._initialData[n];
-          // ´¦ÀíÉ¾³ıÔªËØÇ°²¿·Ö
+          // å¤„ç†åˆ é™¤å…ƒç´ å‰éƒ¨åˆ†
           if (n < rowIndex && typeof item === 'object') {
             for (key1 in item) {
               if (item.hasOwnProperty(key1)) {
@@ -238,7 +238,7 @@ TableStore.prototype.mutations = {
                 modifiedMap[`row${n}${key1}`] = states.modifiedMap[`row${n}${key1}`];
               }
             }
-          // ´¦ÀíÉ¾³ıÔªËØºó²¿·Ö
+          // å¤„ç†åˆ é™¤å…ƒç´ åéƒ¨åˆ†
           } else if (n > rowIndex && typeof item === 'object') {
 
             for (key2 in item) {
@@ -256,10 +256,10 @@ TableStore.prototype.mutations = {
       }
     }
   },
-  // Êı¾İĞŞ¸Ä±È½Ï
+  // æ•°æ®ä¿®æ”¹æ¯”è¾ƒ
   modifiedCompare(states) {
     let row,itemStyl,table = this.table;
-    // ±È½Ï¶ÔÏóÊÇ·ñÏàµÈ
+    // æ¯”è¾ƒå¯¹è±¡æ˜¯å¦ç›¸ç­‰
     function isEqualObj(item$1, item$2) {
 
       function equalObj(item1, item2) {
@@ -276,7 +276,7 @@ TableStore.prototype.mutations = {
           for (let k = 0; k < item$1.length; k++) {
             if (item$1[k] !== item$2[k]) return false;
           }
-          return true; // ÏàµÈ
+          return true; // ç›¸ç­‰
         }
         return false;
       } else if (typeof item$1 === 'object' && typeof item$2 === 'object') {
@@ -287,7 +287,7 @@ TableStore.prototype.mutations = {
       }
       return false;
     }
-    // ºÏ²¢ÑùÊ½
+    // åˆå¹¶æ ·å¼
     function mergeStyl(origin, cover) {
       if (typeof origin['col'] === 'object' && typeof cover === 'object') {
         for (let k in cover) {
@@ -302,7 +302,7 @@ TableStore.prototype.mutations = {
       }
       return origin;
     }
-    // Êı¾İĞŞ¸Ä±È½Ï´¦Àí
+    // æ•°æ®ä¿®æ”¹æ¯”è¾ƒå¤„ç†
     if (Array.isArray(states.data) && Array.isArray(states._initialData) && typeof table.modifiedStyl === 'function') {
       for (let rowindex = 0; rowindex < states._initialData.length; rowindex++) {
         row = states._initialData[rowindex];
@@ -311,14 +311,14 @@ TableStore.prototype.mutations = {
             if (typeof row[prop] !== 'object') {
               itemStyl = table.modifiedStyl.call(null, row[prop] !== states.data[rowindex][prop], row, prop, rowindex, states.delRowCount);
               states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
-            } else if (typeof row[prop] === 'object') {
+            } else if (typeof row[prop] === 'object' && row[prop] != null) {
               itemStyl = table.modifiedStyl.call(null, !isEqualObj(states.data[rowindex][prop], row[prop]), row, prop, rowindex, states.delRowCount);
               states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
             }
           }
         }
       }
-      // äÖÈ¾ÑùÊ½
+      // æ¸²æŸ“æ ·å¼
       let dom, rowStyl, colStyl, rowSet = {}, rowIdx;
       for (let key in states.modifiedMap) {
         dom = table.$el.querySelector('.' + key);
@@ -333,7 +333,7 @@ TableStore.prototype.mutations = {
             }
           }
 
-          rowIdx = key.replace('row', '').replace(/[a-z]+[a-z0-9]*$/ig, '');
+          rowIdx = key.replace('row', '').replace(/[a-z]+[a-z0-9_]*$/ig, '');
           if (!rowSet[rowIdx] && states.modifiedMap[key]['todo'] === 'set') {
             table.setRowStyle(rowIdx, rowStyl);
             rowSet[rowIdx] = true;
@@ -348,7 +348,7 @@ TableStore.prototype.mutations = {
 
   },
 
-  //Ëø¶¨³õÊ¼Êı¾İÓÃÓÚÅĞ¶¨ÊÇ·ñÎªĞŞ¸Ä
+  //é”å®šåˆå§‹æ•°æ®ç”¨äºåˆ¤å®šæ˜¯å¦ä¸ºä¿®æ”¹
   lockData(states) {
     states.modifiedMap = {};
     if (states.data) {
@@ -503,7 +503,7 @@ TableStore.prototype.mutations = {
 
     this.updateAllSelected();
   },
-  // ´ò¿ªÒ»¸ö£¬ÆäÓàÈ«²¿¹Ø±Õ
+  // æ‰“å¼€ä¸€ä¸ªï¼Œå…¶ä½™å…¨éƒ¨å…³é—­
   toggleOneRowExpanded: function(states, row, expanded) {
     if (states.expandRows.indexOf(row) === -1) {
       states.expandRows = [];

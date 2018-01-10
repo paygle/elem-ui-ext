@@ -318,7 +318,7 @@ TableStore.prototype.mutations = {
     if (!isNaN(rowIndex)) {
       if (rowIndex < states._initialData.length) {
         let k, x, n, key1, key2, item, modifiedMap = {}, compareMap = {};
-        let reg = new RegExp(`row${rowIndex}[a-z]+[a-z0-9]*$`, 'ig');
+        let reg = new RegExp(`row${rowIndex}[a-z]+[a-z0-9_]*$`, 'ig');
         for (k in states.modifiedMap) {
           reg.lastIndex = 0;
           if (states.modifiedMap.hasOwnProperty(k) && reg.test(k)) {
@@ -416,7 +416,7 @@ TableStore.prototype.mutations = {
             if (typeof row[prop] !== 'object') {
               itemStyl = table.modifiedStyl.call(null, row[prop] !== states.data[rowindex][prop], row, prop, rowindex, states.delRowCount);
               states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
-            } else if (typeof row[prop] === 'object') {
+            } else if (typeof row[prop] === 'object' && row[prop] != null) {
               itemStyl = table.modifiedStyl.call(null, !isEqualObj(states.data[rowindex][prop], row[prop]), row, prop, rowindex, states.delRowCount);
               states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
             }
@@ -438,7 +438,7 @@ TableStore.prototype.mutations = {
             }
           }
 
-          rowIdx = key.replace('row', '').replace(/[a-z]+[a-z0-9]*$/ig, '');
+          rowIdx = key.replace('row', '').replace(/[a-z]+[a-z0-9_]*$/ig, '');
           if (!rowSet[rowIdx] && states.modifiedMap[key]['todo'] === 'set') {
             table.setRowStyle(rowIdx, rowStyl);
             rowSet[rowIdx] = true;
