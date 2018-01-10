@@ -309,10 +309,10 @@ TableStore.prototype.mutations = {
         for (let prop in row) {
           if (row.hasOwnProperty(prop)) {
             if (typeof row[prop] !== 'object') {
-              itemStyl = table.modifiedStyl.call(null, row[prop] !== states.data[rowindex][prop], row, prop, rowindex, states.delRowCount);
+              itemStyl = table.modifiedStyl.call(null, row[prop] !== states.data[rowindex][prop], states.data[rowindex], prop, rowindex, states.delRowCount);
               states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
             } else if (typeof row[prop] === 'object' && row[prop] != null) {
-              itemStyl = table.modifiedStyl.call(null, !isEqualObj(states.data[rowindex][prop], row[prop]), row, prop, rowindex, states.delRowCount);
+              itemStyl = table.modifiedStyl.call(null, !isEqualObj(states.data[rowindex][prop], row[prop]), states.data[rowindex], prop, rowindex, states.delRowCount);
               states.modifiedMap['row' + rowindex + prop] = mergeStyl(itemStyl, states.compareMap['row' + rowindex + prop]);
             }
           }
