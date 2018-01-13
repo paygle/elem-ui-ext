@@ -8,6 +8,7 @@ const SideStore = function (sider, initState={}){
   this.sider = sider;
 
   this.states = {
+    isUpdateStyle : false , //用于side-guide暴露给业务组件刷新side-guide所有位置使用
     width: initState.width,              // 菜单宽度
     align: initState.align,              // 文字对齐   left | center | right
     displaySide: initState.displaySide,  // 菜单显示位置  left | right
@@ -73,6 +74,9 @@ SideStore.prototype.mutations = {
         states.data[typeIndex]['list'].splice(listIndex, 1);
       }
     }
+  },
+  updateStyle(states, isUpdateStyle){
+    states.isUpdateStyle = isUpdateStyle;
   }
 };
 

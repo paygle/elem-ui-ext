@@ -86,6 +86,12 @@ export default {
       handler(val) {
         this.store.commit('setData', val);
       }
+    },
+    "store.states.isUpdateStyle": function(val , old){
+      if(val){
+        this.$nextTick(()=>{ this.updateStyle(); }) ;
+        this.store.commit("updateStyle", false ) ;
+      }
     }
   },
   methods:{
