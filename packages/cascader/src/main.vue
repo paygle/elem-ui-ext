@@ -18,6 +18,7 @@
       ref="input"
       :tabindex="tabindex"
       :readonly="readonly || !filterable"
+      :class="{'is-readonly-nil': !readonly}"
       :placeholder="currentLabels.length ? undefined : placeholder"
       v-model="inputValue"
       @focus="focushandle"

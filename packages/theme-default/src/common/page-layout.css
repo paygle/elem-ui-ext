@@ -476,6 +476,11 @@ div{
   .el-input__inner{
     background-color: var(--input-inn-color);
   }
+
+  div .is-readonly.is-readonly-nil .el-input__inner{
+    background-color: white;
+  }
+
   .el-select .is-readonly .el-input__inner{
     background-color: #eef1f6;
   }

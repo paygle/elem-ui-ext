@@ -33,7 +33,6 @@
         @focus="visible = true"
         :tabindex="tabindex"
         :disabled="disabled"
-        :readonly="readonly"
         @keyup="managePlaceholder"
         @keydown="resetInputState"
         @keydown.down.prevent="navigateOptions('next')"
@@ -62,6 +61,7 @@
       :tabindex="tabindex"
       :disabled="disabled"
       :readonly="!filterable || multiple || readonly"
+      :class="{'is-readonly-nil': !readonly}"
       :validate-event="false"
       @focus="handleFocus"
       @click="handleIconClick"
@@ -219,10 +219,10 @@
         type: String,
         default: 'ValidItem'
       },
+      tabindex: null,
       getFillStyl: Function,           // 获取自定义组件配色
       optionsData: [Array, Object],    // Option初始化数据
       translated: Boolean,             // 是否翻译代码为中文
-      tabindex: null,
       id: String,
       size: String,
       readonly: Boolean,

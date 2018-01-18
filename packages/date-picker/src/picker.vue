@@ -1,7 +1,7 @@
 <template>
   <el-input
     class="el-date-editor"
-    :class="'el-date-editor--' + type"
+    :class="['el-date-editor--' + type, {'is-readonly-nil': !readonly}]"
     :readonly="disabledTime || !editable || readonly"
     :disabled="disabled"
     :size="size"
