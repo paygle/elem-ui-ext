@@ -229,9 +229,17 @@
         default: 'light'
       },
 
-      disableField: [String, Object] ,   //是否使用禁用字段
+      disableField: [String, Object] ,   // 是否使用禁用字段
 
-      enableInputcolor: Boolean,  // 是否启用输入框内颜色样式
+      initDisfields: Object,             // 禁用字段初始化映射 如：{aa:true, bb:false}
+
+      initDisall: Boolean,               // 是否全部初始化禁用
+
+      initValidfields: Object,           // 验证字段初始化映射 如：{aa:true, bb:false}
+
+      initValidall: Boolean,             // 是否全部初始化验证
+
+      enableInputcolor: Boolean,         // 是否启用输入框内颜色样式
 
       startTabindex: {   // tabindex开始数值
         type: Number,
@@ -591,6 +599,8 @@
         immediate: true,
         handler(val) {
           this.store.commit('setData', val);
+          this.store.initLastRowDisFields(this.initDisall);
+          this.store.initLastValidateFields(this.initValidall);
           if (this.$ready) this.doLayout();
           this.$nextTick(_ => {
             this.store.states.modifiedMap = {};

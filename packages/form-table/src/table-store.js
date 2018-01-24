@@ -272,7 +272,8 @@ const TableStore = function(table, initialState = {}) {
     editable: null, // 是否可以编辑
     errCount: {}, // 错误总数统计 {row0col:true}
     operindex: 0, // 当前操作行
-    disableField: {  //是否使用禁用字段
+    disabledMap: {},      // 单元格内容禁用控制映射
+    disableField: {       //是否使用禁用字段
       field: 'disabled',  // 禁用字段名称
       trueVal: '1',
       falseVal: '0'
@@ -282,6 +283,7 @@ const TableStore = function(table, initialState = {}) {
     filters: {},
     expandRows: [],
     defaultExpandAll: false,
+    validateMap: {},    // 验证控制映射
     delRowCount: 0,     // 删除行数
     _initialData: [],   // 初始化数据
     modifiedMap: {},    // 数据修改比对映射，数据格式：{ row: {background: 'green' },  col: {background: 'red' } }
@@ -305,7 +307,61 @@ TableStore.prototype.updateTabindex = function(startindex, direction) {
   this.states._tabidxs = setTabindex(direction, startindex, this.states.data, this.states.colIndexOrder);
 };
 
+TableStore.prototype.getValidateField = function(prop) {
+  if (typeof this.states.validateMap[prop] !== 'undefined') {
+    return Boolean(this.states.validateMap[prop]);
+  }
+  return false;
+};
+// 设置最后一行或全部 Boolean 值映射
+const initLastRowBoolMap = function(states, mp, initObj, initValidall) {
+  let idx = states.data.length - 1;
+  if (typeof initObj === 'object' && idx > -1) {
+    for (let item in initObj) {
+      if (initObj.hasOwnProperty(item)) {
+        if (initValidall) {
+          for (let i = 0; i <= idx; i++) {
+            states[mp]['row'+i+item] = initObj[item];
+          }
+        } else {
+          states[mp]['row'+idx+item] = initObj[item];
+        }
+      }
+    }
+  }
+};
+
+TableStore.prototype.initLastValidateFields = function(initValidall) {
+  initLastRowBoolMap(this.states, 'validateMap', this.table.initValidfields, initValidall);
+};
+
+TableStore.prototype.initLastRowDisFields = function(initValidall) {
+  initLastRowBoolMap(this.states, 'disabledMap', this.table.initDisfields, initValidall);
+};
+// 设置单行数据 Boolean 值映射
+const setBoolMapData = function(initmap, prop, index, value) {
+  if (!isNaN(index) && typeof prop === 'string') {
+    initmap['row'+index+prop] = value;
+  } else if (!isNaN(index) && prop !== null && typeof prop === 'object') {
+    for (let item in prop) {
+      if (prop.hasOwnProperty(item)) {
+        initmap['row'+index+item] = prop[item];
+      }
+    }
+  }
+};
+
 TableStore.prototype.mutations = {
+  // 验证添加，供外部使用
+  disValidateSet(states, prop, index, value) {
+    // prop 参数可以是 {aa:true, bb:false} 这样的对象 或 字段名称
+    setBoolMapData(states.validateMap, prop, index, value);
+  },
+  // 禁用添加，供外部使用
+  disInputSet(states, prop, index, value) {
+    // prop 参数可以是 {aa:true, bb:false} 这样的对象 或 字段名称
+    setBoolMapData(states.disabledMap, prop, index, value);
+  },
   // 更新比较样式
   updateCompare(states) {
     if (Array.isArray(this.table.compareStyl)) {
@@ -649,8 +705,8 @@ TableStore.prototype.mutations = {
     const changed = tableInputChange(states, row, column, val);
     const rowIndex = states.data.indexOf(row);
     if (changed) {
-      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data);
-      this.table.$emit('input-change', row, column['property'], rowIndex, val, states.data);
+      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data, this.table);
+      this.table.$emit('input-change', row, column['property'], rowIndex, val, states.data, this.table);
     }
   },
   // checkbox header 选择
@@ -668,8 +724,8 @@ TableStore.prototype.mutations = {
     if (changed) {
       const table = this.table;
       const selection = states.selection;
-      table.$emit('table-change', row, column['property'], rowIndex, val, states.data);
-      table.$emit('check-change', row, column['property'], rowIndex, val, states.data);
+      table.$emit('table-change', row, column['property'], rowIndex, val, states.data, this.table);
+      table.$emit('check-change', row, column['property'], rowIndex, val, states.data, this.table);
 
       if (TypeOf(column.checkedSelection) === 'Function') {
 
@@ -688,8 +744,8 @@ TableStore.prototype.mutations = {
     const changed = tableSwitchChanged(states, row, column, val);
     const rowIndex = states.data.indexOf(row);
     if (changed) {
-      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data);
-      this.table.$emit('switch-change', row, column['property'], rowIndex, val, states.data);
+      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data, this.table);
+      this.table.$emit('switch-change', row, column['property'], rowIndex, val, states.data, this.table);
     }
   },
   // 处理下拉框
@@ -697,8 +753,8 @@ TableStore.prototype.mutations = {
     const changed = tableSelectChange(states, row, column, val);
     const rowIndex = states.data.indexOf(row);
     if (changed) {
-      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data);
-      this.table.$emit('select-change', row, column['property'], rowIndex, val, states.data);
+      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data, this.table);
+      this.table.$emit('select-change', row, column['property'], rowIndex, val, states.data, this.table);
     }
   },
   // 日期选择
@@ -706,8 +762,8 @@ TableStore.prototype.mutations = {
     const changed = tableDatePickerChanged(states, row, column, val);
     const rowIndex = states.data.indexOf(row);
     if (changed) {
-      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data);
-      this.table.$emit('date-change', row, column['property'], rowIndex, val, states.data);
+      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data, this.table);
+      this.table.$emit('date-change', row, column['property'], rowIndex, val, states.data, this.table);
     }
   },
   // 地址选择
@@ -715,8 +771,8 @@ TableStore.prototype.mutations = {
     const changed = tableAddressChanged(states, row, column, val);
     const rowIndex = states.data.indexOf(row);
     if (changed) {
-      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data);
-      this.table.$emit('address-change', row, column['property'], rowIndex, val, states.data);
+      this.table.$emit('table-change', row, column['property'], rowIndex, val, states.data, this.table);
+      this.table.$emit('address-change', row, column['property'], rowIndex, val, states.data, this.table);
     }
   },
   // 打开一个，其余全部关闭

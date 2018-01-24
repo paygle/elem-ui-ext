@@ -41,8 +41,6 @@ const setOptionData = function(callOption, row, column, $index, option){
 // 获取禁用值
 const getDisabledVal = function(row, column, store, $index, type) {
   let disableField = store.states.disableField;
-  let isDisField = Boolean(store.table.disableField) && Boolean(store.table.disableField);
-  let trueVal = disableField.trueVal;
 
   function getCallOp() {
     return  column.selectable ? !column.selectable.call(null, row, $index) : false;
@@ -50,9 +48,11 @@ const getDisabledVal = function(row, column, store, $index, type) {
   function getCallEdit() {
     return column.editable ? !column.editable.call(null, row, $index) : false;
   }
+  // 禁用MAP值
+  if (store.states.disabledMap[`row${$index}${column.property}`]) return true;
 
-  if (isDisField) {
-    if (row[disableField.field] === trueVal) return true;
+  if (store.table.disableField && store.table.disableField) {
+    if (row[disableField.field] === disableField.trueVal) return true;
     return type === 'op' ? getCallOp() : getCallEdit();
   }
   return type === 'op' ? getCallOp() : getCallEdit();
@@ -809,7 +809,7 @@ export default {
 
     column.renderCell = function(h, data) {
 
-      let {row, column, store} = data;
+      let {row, column, $index, store} = data;
       data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {};
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
@@ -835,14 +835,19 @@ export default {
         renderCell = DEFAULT_RENDER_CELL;
       }
 
-      return (_self.showOverflowTooltip || _self.showTooltipWhenOverflow) && _self.type === 'default'
+      let isTooltip = _self.showOverflowTooltip || _self.showTooltipWhenOverflow;
+      let isDisable = getDisabledVal(row, column, store, $index);
+      let stopValidate = store.getValidateField('row'+$index+column.property);
+      if (isDisable) store.commit('disErrCount', 'row'+$index+column.property);
+
+      return isDisable || stopValidate || (_self.type === 'default' && isTooltip)
         ? <div
-          class={ 'cell el-tooltip ' + 'row' + data.$index + data.column.property }
-          style={'width:' + (data.column.realWidth || data.column.width) + 'px'}>{ renderCell(h, data, _self) }</div>
+          class={ 'cell el-tooltip ' + 'row' + $index + column.property }
+          style={'width:' + (column.realWidth || column.width) + 'px'}>{ renderCell(h, data, _self) }</div>
         : <form-table-item
              prop={data}
-             property={ 'row' + data.$index + data.column.property }
-             class={ 'row' + data.$index + data.column.property }
+             property={ 'row' + $index + column.property }
+             class={ 'row' + $index + column.property }
              value={row[column.property]}>
               { renderCell(h, data, _self) }
           </form-table-item>;
