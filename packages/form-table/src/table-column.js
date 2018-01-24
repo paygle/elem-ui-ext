@@ -810,6 +810,7 @@ export default {
     column.renderCell = function(h, data) {
 
       let {row, column, $index, store} = data;
+      data.ctrls = {}; // 添加 控制字段对象
       data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {};
       // 未来版本移除
       if (_self.$vnode.data.inlineTemplate) {
@@ -838,6 +839,13 @@ export default {
       let isTooltip = _self.showOverflowTooltip || _self.showTooltipWhenOverflow;
       let isDisable = getDisabledVal(row, column, store, $index);
       let stopValidate = store.getValidateField('row'+$index+column.property);
+      if (column.property) {
+        // 自定义禁用和验证字段设置
+        let disabled = store.states.disabledMap[`disabled${$index}${column.property}`];
+        let validate = store.getValidateField('validate'+$index+column.property);
+        if (typeof disabled !== 'undefined') data.ctrls['disabled'+$index+column.property] = disabled;
+        if (typeof validate !== 'undefined') data.ctrls['validate'+$index+column.property] = validate;
+      }
       if (isDisable) store.commit('disErrCount', 'row'+$index+column.property);
 
       return isDisable || stopValidate || (_self.type === 'default' && isTooltip)

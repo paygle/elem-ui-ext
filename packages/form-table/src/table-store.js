@@ -321,8 +321,14 @@ const initLastRowBoolMap = function(states, mp, initObj, initValidall) {
       if (initObj.hasOwnProperty(item)) {
         if (initValidall) {
           for (let i = 0; i <= idx; i++) {
-            states[mp]['row'+i+item] = initObj[item];
+            if (/#/g.test(item)) {
+              states[mp][item.replace('#', i)] = initObj[item];
+            } else {
+              states[mp]['row'+i+item] = initObj[item];
+            }
           }
+        } else if (/#/g.test(item)) {
+          states[mp][item.replace('#', idx)] = initObj[item];
         } else {
           states[mp]['row'+idx+item] = initObj[item];
         }
@@ -341,11 +347,19 @@ TableStore.prototype.initLastRowDisFields = function(initValidall) {
 // 设置单行数据 Boolean 值映射
 const setBoolMapData = function(initmap, prop, index, value) {
   if (!isNaN(index) && typeof prop === 'string') {
-    initmap['row'+index+prop] = value;
+    if (/#/g.test(prop)) {
+      initmap[prop.replace('#', index)] = value;
+    } else {
+      initmap['row'+index+prop] = value;
+    }
   } else if (!isNaN(index) && prop !== null && typeof prop === 'object') {
     for (let item in prop) {
       if (prop.hasOwnProperty(item)) {
-        initmap['row'+index+item] = prop[item];
+        if (/#/g.test(item)) {
+          initmap[item.replace('#', index)] = prop[item];
+        } else {
+          initmap['row'+index+item] = prop[item];
+        }
       }
     }
   }
