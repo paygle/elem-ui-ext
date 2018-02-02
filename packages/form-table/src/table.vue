@@ -144,7 +144,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import ElCheckbox from 'element-ui/packages/checkbox';
   import throttle from 'throttle-debounce/throttle';
   import debounce from 'throttle-debounce/debounce';
@@ -584,6 +584,7 @@
         this.$nextTick(function(){
           this.validate(()=>{});
           this.$emit('err-change');
+          this.store.states.delStatus = false;
         });
       },
 

@@ -259,6 +259,7 @@ const TableStore = function(table, initialState = {}) {
     filteredData: null,
     data: null,
     propertys: [],
+    delStatus: false,
     sortingColumn: null,
     sortProp: null,
     sortOrder: null,
@@ -317,6 +318,7 @@ TableStore.prototype.getValidateField = function(prop) {
 // 设置最后一行或全部 Boolean 值映射
 const initLastRowBoolMap = function(states, mp, initObj, initValidall) {
   let idx = states.data.length - 1;
+  if (states.delStatus) return;
   if (typeof initObj === 'object' && idx > -1) {
     for (let item in initObj) {
       if (initObj.hasOwnProperty(item)) {
@@ -386,7 +388,7 @@ TableStore.prototype.mutations = {
   delRowStatus(states, index) {
     let propertys = states.propertys;
     let rows = Array.isArray(index) ? index : [index];
-
+    states.delStatus = true;
     function delStatus(index) {
       propertys.forEach(field => {
         // 删除禁用template状态
@@ -404,6 +406,44 @@ TableStore.prototype.mutations = {
       });
     }
 
+    // 重置序列
+    function delOrder() {
+      let idxs = [], rp, disabledMap={}, validateMap={};
+      let re1 = /^(disabled|row)/g;
+      let re2 = /[a-zA-Z]\w*/g;
+      let regx = /^(disabled|row)\d+[a-zA-Z]\w*/g;
+
+      // 添加序号
+      function addIdxs(delmap) {
+        for(let p in delmap) {
+          regx.lastIndex = 0;
+          if (delmap.hasOwnProperty(p) && regx.test(p)) {
+            rp = p.replace(re1, '').replace(re2, '');
+            if (idxs.indexOf(rp) < 0) idxs.push(rp);
+          }
+        }
+      }
+      addIdxs(states.disabledMap);
+      addIdxs(states.validateMap);
+      idxs.sort();
+      // 序化重置状态
+      for (let i = 0; i < idxs.length; i++) {
+        propertys.forEach(field => {
+          if (typeof states.disabledMap[`disabled${idxs[i]}${field}`] === 'boolean') {
+            disabledMap[`disabled${i}${field}`] = states.disabledMap[`disabled${idxs[i]}${field}`];
+          }
+          if (typeof states.disabledMap[`row${idxs[i]}${field}`] === 'boolean') {
+            disabledMap[`row${i}${field}`] = states.disabledMap[`row${idxs[i]}${field}`];
+          }
+          if (typeof states.validateMap[`row${idxs[i]}${field}`] === 'boolean') {
+            validateMap[`row${i}${field}`] = states.validateMap[`row${idxs[i]}${field}`];
+          }
+        });
+      }
+      states.disabledMap = disabledMap;
+      states.validateMap = validateMap;
+    }
+
     for (let i = 0; i < rows.length; i++) {
       if (rows[i] != null && !isNaN(rows[i])) {
         delStatus(rows[i]);
@@ -411,6 +451,7 @@ TableStore.prototype.mutations = {
         delStatus(states.data.indexOf(rows[i]));
       }
     }
+    delOrder();
   },
   // 更新比较样式
   updateCompare(states) {
@@ -717,10 +758,14 @@ TableStore.prototype.mutations = {
     this.scheduleLayout();
   },
 
-  removeColumn(states, column) {
-    let _columns = states._columns;
-    if (_columns) {
-      _columns.splice(_columns.indexOf(column), 1);
+  removeColumn(states, column, parent) {
+    let array = states._columns;
+    if (parent) {
+      array = parent.children;
+      if (!array) array = parent.children = [];
+    }
+    if (array) {
+      array.splice(array.indexOf(column), 1);
     }
 
     this.updateColumns();  // hack for dynamics remove column
