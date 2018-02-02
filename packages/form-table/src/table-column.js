@@ -788,6 +788,11 @@ export default {
     let renderCell = column.renderCell;
     let _self = this, hiddenExpandIcon = '';
 
+    // 添加字段名称
+    if (this.prop && owner.store.states.propertys.indexOf(this.prop) < 0) {
+      owner.store.states.propertys.push(this.prop);
+    }
+
     if (type === 'expand') {
        // 自定义隐藏展开式编辑
       if(this.owner.store.table.expandIconHidden){
@@ -840,7 +845,7 @@ export default {
       let isDisable = getDisabledVal(row, column, store, $index);
       let stopValidate = store.getValidateField('row'+$index+column.property);
       if (column.property) {
-        // 自定义禁用和验证字段设置
+        // 自定义禁用和验证字段设置, 在外部 <template/> 中使用
         let disabled = store.states.disabledMap[`disabled${$index}${column.property}`];
         let validate = store.getValidateField('validate'+$index+column.property);
         if (typeof disabled !== 'undefined') data.ctrls['disabled'+$index+column.property] = disabled;
@@ -864,7 +869,8 @@ export default {
 
   destroyed() {
     if (!this.$parent) return;
-    this.owner.store.commit('removeColumn', this.columnConfig);
+    const parent = this.$parent;
+    this.owner.store.commit('removeColumn', this.columnConfig, this.isSubColumn ? parent.columnConfig : null);
   },
 
   watch: {

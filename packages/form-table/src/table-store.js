@@ -258,6 +258,7 @@ const TableStore = function(table, initialState = {}) {
     _data: null,
     filteredData: null,
     data: null,
+    propertys: [],
     sortingColumn: null,
     sortProp: null,
     sortOrder: null,
@@ -345,7 +346,7 @@ TableStore.prototype.initLastRowDisFields = function(initValidall) {
   initLastRowBoolMap(this.states, 'disabledMap', this.table.initDisfields, initValidall);
 };
 // 设置单行数据 Boolean 值映射
-const setBoolMapData = function(initmap, prop, index, value) {
+const setBoolMapData = function(initmap, prop, index, value /*或 length*/) {
   if (!isNaN(index) && typeof prop === 'string') {
     if (/#/g.test(prop)) {
       initmap[prop.replace('#', index)] = value;
@@ -353,12 +354,17 @@ const setBoolMapData = function(initmap, prop, index, value) {
       initmap['row'+index+prop] = value;
     }
   } else if (!isNaN(index) && prop !== null && typeof prop === 'object') {
-    for (let item in prop) {
-      if (prop.hasOwnProperty(item)) {
-        if (/#/g.test(item)) {
-          initmap[item.replace('#', index)] = prop[item];
-        } else {
-          initmap['row'+index+item] = prop[item];
+    let len = value && !isNaN(value) ? value : 1;
+    for (let i = index; i > index - len; i--) {
+      for (let item in prop) {
+        if (prop.hasOwnProperty(item)) {
+          if (/#/g.test(item)) {
+            // 禁用的key格式： disabled#editabled
+            initmap[item.replace('#', i)] = prop[item];
+          } else {
+            // 验证的Key格式： row#property
+            initmap['row'+i+item] = prop[item];
+          }
         }
       }
     }
@@ -375,6 +381,36 @@ TableStore.prototype.mutations = {
   disInputSet(states, prop, index, value) {
     // prop 参数可以是 {aa:true, bb:false} 这样的对象 或 字段名称
     setBoolMapData(states.disabledMap, prop, index, value);
+  },
+  // 删除row验证和禁用状态，供外部使用
+  delRowStatus(states, index) {
+    let propertys = states.propertys;
+    let rows = Array.isArray(index) ? index : [index];
+
+    function delStatus(index) {
+      propertys.forEach(field => {
+        // 删除禁用template状态
+        if (typeof states.disabledMap[`disabled${index}${field}`] === 'boolean') {
+          delete states.disabledMap[`disabled${index}${field}`];
+        }
+        // 删除禁用row状态
+        if (typeof states.disabledMap[`row${index}${field}`] === 'boolean') {
+          delete states.disabledMap[`row${index}${field}`];
+        }
+        // 删除验证状态
+        if (typeof states.validateMap[`row${index}${field}`] === 'boolean') {
+          delete states.validateMap[`row${index}${field}`];
+        }
+      });
+    }
+
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i] != null && !isNaN(rows[i])) {
+        delStatus(rows[i]);
+      } if (rows[i] && typeof rows[i] === 'object') {
+        delStatus(states.data.indexOf(rows[i]));
+      }
+    }
   },
   // 更新比较样式
   updateCompare(states) {
@@ -538,6 +574,7 @@ TableStore.prototype.mutations = {
       index = data.indexOf(row);
       if (index !== -1) {
         data.splice(index, 1);
+        store.commit('delRowStatus', index);
         store.commit('compareDel', index);
       }
     });
@@ -551,6 +588,7 @@ TableStore.prototype.mutations = {
     if (index !== -1) {
       states.data.splice(index, 1);
       store.updateTabindex(store.table.startTabindex);
+      store.commit('delRowStatus', index);
       store.commit('compareDel', index);
     }
   },
