@@ -65,6 +65,8 @@ export default {
       template.data.class += ' el-pagination--small';
     }
 
+    if (!template.children) template.children = [];
+
     components.forEach(compo => {
       if (compo === '->') {
         haveRightWrapper = true;
