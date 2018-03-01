@@ -328,7 +328,7 @@
         this.cachedPlaceHolder = this.currentPlaceholder = val;
       },
 
-      value(val) {
+      value(val,old) {
         if (val === null || val === 'null') this.$emit('input', '');  // 处理值为null时为空
         if (this.multiple) {
           this.resetInputHeight();
@@ -350,6 +350,13 @@
 
         if(val && this.comboItems.length==0){
             this.comboLoading=true;//赋值时下拉框还没有加载的话就自动加载
+        }else if(val && !old){
+          //处理当下拉自动分页，value初始刚被赋值时，old未有值，value不能被翻译的问题
+          let data=this.$store.state.dictStore.dict[this.dictId];
+          if(data && data.length>0){
+            this.fillComboDatas(data);
+            this.$nextTick(()=>this.setSelected());
+          }
         }
       },
 

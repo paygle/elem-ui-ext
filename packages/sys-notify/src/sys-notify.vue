@@ -22,12 +22,21 @@
           <span class="btn el-icon-delete" @click="delMsg(item)"></span>
         </div>
        </li>
-       <li class="list-bottom" v-if="unShowTotal>0">
-         <a @click="moreClick">未读数&nbsp;
+       <li class="list-bottom" >
+          <!-- v-if="unShowTotal>0"
+          <a @click="moreClick">未读数&nbsp;
            <span class="total" v-text="unreadTotal"></span> &nbsp条，&nbsp;未显示&nbsp;
            <span class="total" v-text="unShowTotal"></span> &nbsp;条，查看更多
            <i class="el-icon-d-arrow-right"></i>
           </a>
+          -->
+          <el-pagination
+            small
+            :total="msgExist"
+            :current-page.sync="currentPage"
+            @current-change="changePage"
+            layout="total, prev, pager, next">
+          </el-pagination>
        </li>
      </ul>
     </el-popover>
@@ -63,11 +72,13 @@
 </template>
 <script>
 import ElPopover from 'element-ui/packages/popover';
+import ElPagination from 'element-ui/packages/pagination' ;
 
 export default {
   name: 'SysNotify',
   components: {
-    ElPopover
+    ElPopover,
+    ElPagination
   },
   props: {
     msgData: Array,    // 消息数据
@@ -133,7 +144,8 @@ export default {
     return {
       msgList: [],
       shwCount: false,
-      msgTotal: 0
+      msgTotal: 0,
+      currentPage : 1
     };
   },
   watch: {
@@ -144,6 +156,7 @@ export default {
     },
     'msgCount'(n, o) {
       this.msgTotal = n;
+      this.currentPage = 1 ; //有新消息涌入，分页重置为第一页
     }
   },
   computed: {
@@ -223,6 +236,9 @@ export default {
     },
     delMsg(item){
       this.$emit('del-msg', item);
+    },
+    changePage(val){
+      this.$emit("change-page", val, 10) ;
     }
   },
   updated(){
