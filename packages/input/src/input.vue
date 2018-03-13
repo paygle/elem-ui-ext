@@ -325,7 +325,7 @@
         }
       },
       fixIeReadonly(e){ // 修复IE下readonly后退问题
-        if(this.readonly){
+        if(this.readonly && e.keyCode === 8){
           e.preventDefault();
         }
       },

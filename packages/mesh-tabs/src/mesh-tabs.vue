@@ -116,7 +116,7 @@ export default {
       this.activeTab = activeName;
       // 删除处理
       if(typeof this.closeCall === 'function') {
-        this.closeCall.call(null, this.delTarget, targetName, filterData);
+        this.closeCall.call(null, this.delTarget, targetName, filterData, activeName);
       } else {
         this.delTarget(targetName);
         this.$emit('tab-remove', filterData, targetName);

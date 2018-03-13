@@ -1074,7 +1074,8 @@
       //如果dictId不为空，则加载已有的下拉框数据
       if(this.dictId){
         var data=this.$store.state.dictStore.dict[this.dictId];
-        if(data && data.length>0){
+        if(data && data.length>0 && JSON.stringify(this.dictParams)=='{}'){ 
+          //当参数为空时才从store加载，防止相同dictId不同参数的下拉框翻译出问题
           this.fillComboDatas(data);
         }else{ //缓存中没有数据时
           if(this.value && this.value.length>0){ //有默认值时立即加载后台数据

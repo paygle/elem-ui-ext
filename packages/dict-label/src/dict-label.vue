@@ -102,7 +102,7 @@ export default {
         }
       }
       var data = this.$store.state.dictStore.dict[this.dictId];
-      if (data && data.length > 0 && !this.forceRefresh) {
+      if (data && data.length > 0  && !this.forceRefresh && JSON.stringify(this.dictParams)=='{}') {
         this.comboItems = data;
         this.computedDictText();
       } else { //缓存中没有数据时
@@ -160,7 +160,8 @@ export default {
         }
       }
       var data = this.$store.state.dictStore.dict[this.dictId];
-      if (data && data.length > 0) {
+      if (data && data.length > 0 && JSON.stringify(this.dictParams)=='{}') {
+         //当参数为空时才从store加载，防止相同dictId不同参数的下拉框翻译出问题
         this.comboItems = data;
         this.computedDictText();
       } else { //缓存中没有数据时
