@@ -290,6 +290,7 @@ export default {
       xhrFields: { //跨域发送Ajax时，Request header中便会带上 Cookie 信息
         withCredentials: true
       },
+      cache:false, //防止在IE下请求结果被缓存，多次切换机构时没有往后台发请求的bug
       headers: {
         "X-Custom-Header": "Ajax"
       },
