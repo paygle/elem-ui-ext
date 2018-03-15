@@ -30,8 +30,6 @@
 </script>
 ## MainNav 多页面路由主菜单
 
-通过鼠标或键盘输入字符
-
 ### 基础用法
 
 ::: demo
@@ -74,7 +72,11 @@
 
 ### MainNav Attributes
 ```
-全局配置对象 window.COMPONENTS_CONFIG.MAIN_MENUS 
+  全局配置对象 window.COMPONENTS_CONFIG.MAIN_MENUS
+
+  url属性使用 ~/index.html/#/ 模式可以直接访问网站根目录
+
+  url属性使用 @/index.html/#/ 模式可以在浏览器上打开一个新的页面
 ```
 
 | 参数          | 说明            | 类型         | 可选值                 | 默认值   |

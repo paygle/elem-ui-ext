@@ -152,29 +152,28 @@ export default {
 		routeGo(e) {
 			let regx = /(\w+\-?\w+)+\.html/i;
 			let attrs = e.target.attributes;
-			let _Path = attrs['url'], $this = this;
+			let Url = attrs['url'], $this = this;
 			let query = typeof attrs['query'] !== 'undefined' ? attrs['query'].value : '';
 
-			if (_Path) {
+			if (Url) {
 				let cpath = location.pathname.match(regx) ? location.pathname.match(regx)[0] : '';
-				let path = _Path.value.match(regx) ? _Path.value.match(regx)[0] : '';
-				let value =  _Path.value.replace(regx, '');
-				/** 支持 ~/ 跳转到根目录导航 */
-				if(/^~\//g.test(_Path.value)){
-					location.href = '//' + location.host + _Path.value.replace(/^~\//g, '/');
-				}else{
-					if (this.$router && cpath === path) {
-						let param = {path: value === '' ? '/' : value};
-						if (typeof query === 'string' && query !== '') {
-							param['query'] = JSON.parse(query) ;
-						}
-						this.$router.push(param);
-					} else {
-						location.href = '//' + location.host +
-						location.pathname.replace(regx, '') + path + '#' + value;
-					}
-				}
-				
+				let path = Url.value.match(regx) ? Url.value.match(regx)[0] : '';
+				let value =  Url.value.replace(regx, '');
+        let act = /^[~@]{1,2}\//g.test(Url.value) ? Url.value.substr(0, Url.value.indexOf('/')) : undefined;
+
+        if (act && act.indexOf('@') > -1) { // 打开新窗口
+          window.open('//' + location.host + Url.value.replace(/^[~@]{1,2}\//g, '/'), '_blank');
+        } else if (act && act.indexOf('~') > -1) { /** 支持 ~/ 跳转到根目录导航 */
+					location.href = '//' + location.host + Url.value.replace(/^[~@]{1,2}\//g, '/');
+				} else if (this.$router && cpath === path) {
+          let param = {path: value === '' ? '/' : value};
+          if (typeof query === 'string' && query !== '') param['query'] = JSON.parse(query);
+          this.$router.push(param);
+        } else {
+          location.href = '//' + location.host +
+          location.pathname.replace(regx, '') + path + '#' + value;
+        }
+
 				this.toggleHide = true;
 				setTimeout(function () { $this.toggleHide = false; }, 1000);
 			}
