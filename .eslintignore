@@ -1,6 +1,8 @@
 src/utils/popper.js
 src/utils/date.js
 src/utils/web-storage-cache.js
+examples
+packages
 *.sh
 node_modules
 lib
