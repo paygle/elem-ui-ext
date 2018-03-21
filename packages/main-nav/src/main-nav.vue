@@ -93,7 +93,11 @@ export default {
 			default: function () {
 				return MAIN_MENUS;
 			}
-		}
+    },
+    appPath: { // 应用路径，默认根目录
+      type: String,
+      default: '/'
+    }
 	},
 	computed: {
 		// 过滤 subMenu
@@ -152,7 +156,7 @@ export default {
 		routeGo(e) {
 			let regx = /(\w+\-?\w+)+\.html/i;
 			let attrs = e.target.attributes;
-			let Url = attrs['url'], $this = this;
+			let Url = attrs['url'], apath = '', $this = this;
 			let query = typeof attrs['query'] !== 'undefined' ? attrs['query'].value : '';
 
 			if (Url) {
@@ -161,17 +165,19 @@ export default {
 				let value =  Url.value.replace(regx, '');
         let act = /^[~@]{1,2}\//g.test(Url.value) ? Url.value.substr(0, Url.value.indexOf('/')) : undefined;
 
-        if (act && act.indexOf('@') > -1) { // 打开新窗口
-          window.open('//' + location.host + Url.value.replace(/^[~@]{1,2}\//g, '/'), '_blank');
+        if (/^(^https?:)?\/\/\w+/ig.test(Url.value)) {
+          window.open(Url.value, '_blank'); // 打开其他网站页面
+        } else if (act && act.indexOf('@') > -1) { // 打开新窗口
+          window.open(`//${location.host + this.appPath + Url.value.replace(/^[~@]{1,2}\//g, '')}`, '_blank');
         } else if (act && act.indexOf('~') > -1) { /** 支持 ~/ 跳转到根目录导航 */
-					location.href = '//' + location.host + Url.value.replace(/^[~@]{1,2}\//g, '/');
+					location.href = `//${location.host + this.appPath + Url.value.replace(/^[~@]{1,2}\//g, '')}`;
 				} else if (this.$router && cpath === path) {
           let param = {path: value === '' ? '/' : value};
           if (typeof query === 'string' && query !== '') param['query'] = JSON.parse(query);
           this.$router.push(param);
         } else {
-          location.href = '//' + location.host +
-          location.pathname.replace(regx, '') + path + '#' + value;
+          apath = location.pathname.replace(regx, '') === '/' ? this.appPath : location.pathname.replace(regx, '');
+          location.href = `//${location.host + apath}${path}#${value}`;
         }
 
 				this.toggleHide = true;
