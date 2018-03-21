@@ -77,10 +77,12 @@
   url属性使用 ~/index.html/#/ 模式可以直接访问网站根目录
 
   url属性使用 @/index.html/#/ 模式可以在浏览器上打开一个新的页面
+
+  url属性使用 //www.abc.com 或 https://www.abc.com 模式可以在浏览器上打开一个其他网站的新页面
 ```
 
 | 参数          | 说明            | 类型         | 可选值                 | 默认值   |
 |-------------  |---------------- |-------------|---------------------- |-------- |
 |  menusData |  菜单列表数据        |   Array   |   ——    | MAIN_MENUS 配置|
 |  homeHide  |  指示器第一页面隐藏  |   Boolean |   true 或 false    |  false|
- 
+|  app-path  |  应用路径，默认根目录    |   String   |   ——     |  '/'
